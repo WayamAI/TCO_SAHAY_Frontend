@@ -94,7 +94,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 className={cn(
                   "flex items-center gap-2.5 rounded-md border-l-2 px-2.5 py-2 text-[13px] transition-colors",
                   active
-                    ? "border-primary bg-primary/10 font-semibold text-foreground shadow-[inset_0_0_20px_oklch(0.62_0.19_255/8%)]"
+                    ? "border-primary bg-primary/10 font-semibold text-foreground shadow-[inset_0_0_20px_oklch(0.69_0.18_49/8%)]"
                     : "border-transparent text-text-secondary hover:bg-surface-2 hover:text-foreground",
                 )}
               >

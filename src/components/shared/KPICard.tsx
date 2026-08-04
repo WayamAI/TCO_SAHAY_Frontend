@@ -15,7 +15,7 @@ interface KPICardProps {
 }
 
 const glowClass: Record<string, string> = {
-  blue: "shadow-[0_0_24px_oklch(0.62_0.19_255/15%)] border-primary/25",
+  blue: "shadow-[0_0_24px_oklch(0.69_0.18_49/15%)] border-primary/25",
   teal: "shadow-[0_0_24px_oklch(0.78_0.14_175/15%)] border-teal/25",
   purple: "shadow-[0_0_24px_oklch(0.54_0.22_293/18%)] border-purple/30",
   yellow: "shadow-[0_0_24px_oklch(0.77_0.16_70/15%)] border-yellow/25",
