@@ -80,7 +80,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <img src="/wayam-logo.svg" alt="Wayam AI" className="h-10 w-auto object-contain" />
           </div>
           <p className="font-display mt-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-text-secondary">
-            Locomotive TCO Intelligence
+            Locomotive Wayam Intelligence
           </p>
         </div>
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-3">

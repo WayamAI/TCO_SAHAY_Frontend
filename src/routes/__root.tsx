@@ -79,14 +79,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Locomotive TCO Intelligence Platform | Wayam AI" },
+      { title: "Locomotive Wayam Intelligence Platform | Wayam AI" },
       {
         name: "description",
         content:
           "Lifecycle cost intelligence for locomotive fleets — TCO simulation, Weibull reliability, Monte Carlo risk, forecasting and tender decision support.",
       },
       { name: "author", content: "Wayam AI" },
-      { property: "og:title", content: "Locomotive TCO Intelligence Platform" },
+      { property: "og:title", content: "Locomotive Wayam Intelligence Platform" },
       {
         property: "og:description",
         content: "Fleet lifecycle simulation, forecasting and risk intelligence for locomotive tenders.",

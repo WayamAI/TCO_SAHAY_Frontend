@@ -45,7 +45,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/simulation")({
   head: () => ({
     meta: [
-      { title: "TCO Simulation Playground | Locomotive TCO Intelligence" },
+      { title: "TCO Simulation Playground | Locomotive Wayam Intelligence" },
       { name: "description", content: "Interactive lifecycle cost simulation with Weibull reliability, inflation and downtime modeling." },
     ],
   }),

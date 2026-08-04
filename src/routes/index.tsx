@@ -26,7 +26,7 @@ import { fmtCompact } from "@/utils/formatters";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Command Center | Locomotive TCO Intelligence" },
+      { title: "Command Center | Locomotive Wayam Intelligence" },
       { name: "description", content: "Fleet-wide TCO, forecast accuracy and availability at a glance." },
     ],
   }),

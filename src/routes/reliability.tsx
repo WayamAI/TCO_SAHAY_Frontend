@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/reliability")({
   head: () => ({
     meta: [
-      { title: "Reliability & Warranty Analytics | Locomotive TCO Intelligence" },
+      { title: "Reliability & Warranty Analytics | Locomotive Wayam Intelligence" },
       { name: "description", content: "RAMS dashboard, remaining useful life, warranty analytics and failure heatmap." },
     ],
   }),

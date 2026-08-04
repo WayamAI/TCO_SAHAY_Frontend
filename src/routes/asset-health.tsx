@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/asset-health")({
   head: () => ({
     meta: [
-      { title: "Asset Health Index | Locomotive TCO Intelligence" },
+      { title: "Asset Health Index | Locomotive Wayam Intelligence" },
       { name: "description", content: "Hierarchical health scores: component → system → locomotive → fleet." },
     ],
   }),
