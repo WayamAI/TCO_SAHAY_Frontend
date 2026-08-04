@@ -77,7 +77,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <aside className="fixed inset-y-0 left-0 z-40 flex w-60 flex-col border-r border-border bg-surface-1/80 backdrop-blur-xl">
         <div className="border-b border-border px-4 py-4">
           <div className="flex items-center justify-start px-2 py-2">
-            <img src="/wayam-logo.svg" alt="Wayam AI" className="h-10 w-auto object-contain" />
+            <img src={`${import.meta.env.BASE_URL}wayam-logo.svg`} alt="Wayam AI" className="h-10 w-auto object-contain" />
           </div>
           <p className="font-display mt-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-text-secondary">
             Locomotive Wayam Intelligence
