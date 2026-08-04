@@ -4,9 +4,12 @@ TCO simulation, forecasting, and risk intelligence platform for locomotive fleet
 
 ## Live site
 
-**https://arkabera2004.github.io/locomotive/**
+- **GitHub Pages:** https://arkabera2004.github.io/locomotive/
+- **Vercel:** https://locomotivewabtec-main.vercel.app
 
-Hosted on GitHub Pages as a fully static, prerendered single-page app — every route in the sidebar (Command Center, Fleet Explorer, BOM Explorer, Simulation, Forecasting, Monte Carlo, etc.) is pre-generated to static HTML and hydrates client-side. It redeploys automatically on every push to `main` via [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml).
+The GitHub Pages build is a fully static, prerendered single-page app — every route in the sidebar (Command Center, Fleet Explorer, BOM Explorer, Simulation, Forecasting, Monte Carlo, etc.) is pre-generated to static HTML and hydrates client-side. It redeploys automatically on every push to `main` via [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml).
+
+The Vercel deployment runs the same app as a full Node SSR server (via Nitro's `vercel` preset) at the domain root — `vite.config.ts` detects the `VERCEL` build environment variable and switches the base path and build mode automatically, so both targets build from the same source without manual config changes.
 
 ## Running locally
 
