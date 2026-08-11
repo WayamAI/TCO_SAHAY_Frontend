@@ -11,7 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportAppError } from "../lib/error-reporting";
-import { AppShell } from "@/components/layout/AppShell";
+import { AuthGate } from "@/components/auth/AuthGate";
 
 
 function NotFoundComponent() {
@@ -79,14 +79,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Locomotive Wayam Intelligence Platform | Wayam AI" },
+      { title: "TCO Intelligence Platform | Wayam AI" },
       {
         name: "description",
         content:
           "Lifecycle cost intelligence for locomotive fleets — TCO simulation, Weibull reliability, Monte Carlo risk, forecasting and tender decision support.",
       },
       { name: "author", content: "Wayam AI" },
-      { property: "og:title", content: "Locomotive Wayam Intelligence Platform" },
+      { property: "og:title", content: "TCO Intelligence Platform" },
       {
         property: "og:description",
         content: "Fleet lifecycle simulation, forecasting and risk intelligence for locomotive tenders.",
@@ -133,10 +133,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppShell>
+      <AuthGate>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
-      </AppShell>
+      </AuthGate>
     </QueryClientProvider>
   );
 }

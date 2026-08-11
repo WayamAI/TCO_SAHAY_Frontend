@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/scenarios")({
   head: () => ({
     meta: [
-      { title: "Scenario Comparator | Locomotive Wayam Intelligence" },
+      { title: "Scenario Comparator | TCO Intelligence" },
       { name: "description", content: "Compare up to three TCO scenarios side by side with synchronized charts." },
     ],
   }),

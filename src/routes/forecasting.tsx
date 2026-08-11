@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/forecasting")({
   head: () => ({
     meta: [
-      { title: "Forecasting Engine | Locomotive Wayam Intelligence" },
+      { title: "Forecasting Engine | TCO Intelligence" },
       { name: "description", content: "Trend-based lifecycle cost forecasting with confidence intervals and calibration." },
     ],
   }),

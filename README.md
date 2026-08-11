@@ -1,4 +1,4 @@
-# Locomotive Wayam Intelligence
+# TCO Intelligence
 
 TCO simulation, forecasting, and risk intelligence platform for locomotive fleets, built by Wayam AI.
 

@@ -62,7 +62,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/bom")({
   head: () => ({
     meta: [
-      { title: "BOM Explorer | Locomotive Wayam Intelligence" },
+      { title: "BOM Explorer | TCO Intelligence" },
       {
         name: "description",
         content:

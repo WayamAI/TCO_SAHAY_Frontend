@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/glossary")({
   head: () => ({
     meta: [
-      { title: "Glossary & Definitions | Locomotive Wayam Intelligence" },
+      { title: "Glossary & Definitions | TCO Intelligence" },
       {
         name: "description",
         content: "What every TCO cost category includes — maintenance, labour, consumables, failures, downtime, warranty reserve.",

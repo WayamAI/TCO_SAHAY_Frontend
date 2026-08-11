@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/configure")({
   head: () => ({
     meta: [
-      { title: "Configuration | Locomotive Wayam Intelligence" },
+      { title: "Configuration | TCO Intelligence" },
       { name: "description", content: "Product hierarchy configuration, maintenance rule builder and standards compliance." },
     ],
   }),

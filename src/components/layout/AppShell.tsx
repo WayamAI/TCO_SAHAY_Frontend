@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   Network,
@@ -18,11 +18,13 @@ import {
   Plug,
   Library,
   BookOpen,
+  LogOut,
 } from "lucide-react";
 import CountUp from "@/components/shared/CountUp";
 import { useSimulationStore, formatHorizon, HORIZON_ANNUAL_KM } from "@/store/simulationStore";
 import { LOCOMOTIVES } from "@/data/syntheticData";
 import { cn } from "@/lib/utils";
+import { getSession, logout } from "@/lib/auth";
 import type { ReactNode } from "react";
 
 const NAV = [
@@ -67,9 +69,16 @@ const ROUTE_TITLES: Record<string, string> = {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const router = useRouter();
   const { params, result, activeScenarioName, setParams, horizonUnit, setHorizonUnit } = useSimulationStore();
   const loco = LOCOMOTIVES.find((l) => l.id === params.locomotiveId) ?? LOCOMOTIVES[0];
   const shortModel = loco.model.split(" ")[0];
+  const session = getSession();
+
+  function handleLogout() {
+    logout();
+    router.navigate({ to: "/login" });
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -80,7 +89,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <img src={`${import.meta.env.BASE_URL}wayam-logo.svg`} alt="Wayam AI" className="h-10 w-auto object-contain" />
           </div>
           <p className="font-display mt-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-text-secondary">
-            Locomotive Wayam Intelligence
+            TCO Intelligence
           </p>
         </div>
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-3">
@@ -124,6 +133,17 @@ export function AppShell({ children }: { children: ReactNode }) {
               ${(result.totalTCO / 1e6).toFixed(2)}M TCO
             </p>
           </div>
+          {session ? (
+            <button
+              onClick={handleLogout}
+              className="mt-2 flex w-full items-center gap-2 rounded-md border-l-2 border-transparent px-2.5 py-2 text-[13px] text-text-secondary transition-colors hover:bg-surface-2 hover:text-foreground"
+              title={session.email}
+            >
+              <LogOut size={16} />
+              <span className="min-w-0 flex-1 truncate text-left">{session.email}</span>
+              <span className="font-mono-data text-[10px] uppercase text-text-muted">Sign out</span>
+            </button>
+          ) : null}
         </div>
       </aside>
 

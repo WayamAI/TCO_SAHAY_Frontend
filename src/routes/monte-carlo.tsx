@@ -21,7 +21,7 @@ import { fmtCompact } from "@/utils/formatters";
 export const Route = createFileRoute("/monte-carlo")({
   head: () => ({
     meta: [
-      { title: "Monte Carlo Risk Simulation | Locomotive Wayam Intelligence" },
+      { title: "Monte Carlo Risk Simulation | TCO Intelligence" },
       { name: "description", content: "1,000-run probabilistic TCO simulation with percentile bands and variance drivers." },
     ],
   }),

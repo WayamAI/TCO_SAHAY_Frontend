@@ -17,6 +17,7 @@ import { Route as ScenariosRouteImport } from './routes/scenarios'
 import { Route as ReliabilityRouteImport } from './routes/reliability'
 import { Route as MonteCarloRouteImport } from './routes/monte-carlo'
 import { Route as MaintenanceRouteImport } from './routes/maintenance'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as IntegrationsRouteImport } from './routes/integrations'
 import { Route as GlossaryRouteImport } from './routes/glossary'
@@ -66,6 +67,11 @@ const MonteCarloRoute = MonteCarloRouteImport.update({
 const MaintenanceRoute = MaintenanceRouteImport.update({
   id: '/maintenance',
   path: '/maintenance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryRoute = LibraryRouteImport.update({
@@ -130,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/glossary': typeof GlossaryRoute
   '/integrations': typeof IntegrationsRoute
   '/library': typeof LibraryRoute
+  '/login': typeof LoginRoute
   '/maintenance': typeof MaintenanceRoute
   '/monte-carlo': typeof MonteCarloRoute
   '/reliability': typeof ReliabilityRoute
@@ -150,6 +157,7 @@ export interface FileRoutesByTo {
   '/glossary': typeof GlossaryRoute
   '/integrations': typeof IntegrationsRoute
   '/library': typeof LibraryRoute
+  '/login': typeof LoginRoute
   '/maintenance': typeof MaintenanceRoute
   '/monte-carlo': typeof MonteCarloRoute
   '/reliability': typeof ReliabilityRoute
@@ -171,6 +179,7 @@ export interface FileRoutesById {
   '/glossary': typeof GlossaryRoute
   '/integrations': typeof IntegrationsRoute
   '/library': typeof LibraryRoute
+  '/login': typeof LoginRoute
   '/maintenance': typeof MaintenanceRoute
   '/monte-carlo': typeof MonteCarloRoute
   '/reliability': typeof ReliabilityRoute
@@ -193,6 +202,7 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/integrations'
     | '/library'
+    | '/login'
     | '/maintenance'
     | '/monte-carlo'
     | '/reliability'
@@ -213,6 +223,7 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/integrations'
     | '/library'
+    | '/login'
     | '/maintenance'
     | '/monte-carlo'
     | '/reliability'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/integrations'
     | '/library'
+    | '/login'
     | '/maintenance'
     | '/monte-carlo'
     | '/reliability'
@@ -254,6 +266,7 @@ export interface RootRouteChildren {
   GlossaryRoute: typeof GlossaryRoute
   IntegrationsRoute: typeof IntegrationsRoute
   LibraryRoute: typeof LibraryRoute
+  LoginRoute: typeof LoginRoute
   MaintenanceRoute: typeof MaintenanceRoute
   MonteCarloRoute: typeof MonteCarloRoute
   ReliabilityRoute: typeof ReliabilityRoute
@@ -320,6 +333,13 @@ declare module '@tanstack/react-router' {
       path: '/maintenance'
       fullPath: '/maintenance'
       preLoaderRoute: typeof MaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/library': {
@@ -406,6 +426,7 @@ const rootRouteChildren: RootRouteChildren = {
   GlossaryRoute: GlossaryRoute,
   IntegrationsRoute: IntegrationsRoute,
   LibraryRoute: LibraryRoute,
+  LoginRoute: LoginRoute,
   MaintenanceRoute: MaintenanceRoute,
   MonteCarloRoute: MonteCarloRoute,
   ReliabilityRoute: ReliabilityRoute,

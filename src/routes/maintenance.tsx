@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/maintenance")({
   head: () => ({
     meta: [
-      { title: "Maintenance & Service | Locomotive Wayam Intelligence" },
+      { title: "Maintenance & Service | TCO Intelligence" },
       {
         name: "description",
         content: "Part-specific maintenance schedule — what is serviced at each event, with quantity, price, labour and warranty status.",

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/benchmark")({
   head: () => ({
     meta: [
-      { title: "Benchmark Arena | Locomotive Wayam Intelligence" },
+      { title: "Benchmark Arena | TCO Intelligence" },
       { name: "description", content: "Competitor TCO leaderboard, radar comparison and savings calculator." },
     ],
   }),

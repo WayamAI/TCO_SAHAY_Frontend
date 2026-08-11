@@ -8,7 +8,7 @@ import { SUSTAINABILITY_DATA, CHART_COLORS } from "@/data/syntheticData";
 export const Route = createFileRoute("/sustainability")({
   head: () => ({
     meta: [
-      { title: "Sustainability Dashboard | Locomotive Wayam Intelligence" },
+      { title: "Sustainability Dashboard | TCO Intelligence" },
       { name: "description", content: "Fleet CO₂ emissions, carbon cost and sustainability scoring." },
     ],
   }),

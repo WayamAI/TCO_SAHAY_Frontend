@@ -10,7 +10,7 @@ import { fmtCompact, fmtUSD } from "@/utils/formatters";
 export const Route = createFileRoute("/tender")({
   head: () => ({
     meta: [
-      { title: "Tender Optimization | Locomotive Wayam Intelligence" },
+      { title: "Tender Optimization | TCO Intelligence" },
       { name: "description", content: "Build commercial locomotive tender proposals from live simulation output." },
     ],
   }),

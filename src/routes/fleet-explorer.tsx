@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/fleet-explorer")({
   head: () => ({
     meta: [
-      { title: "Fleet Explorer | Locomotive Wayam Intelligence" },
+      { title: "Fleet Explorer | TCO Intelligence" },
       { name: "description", content: "Explore the locomotive → system → assembly → component hierarchy with health and reliability detail." },
     ],
   }),
