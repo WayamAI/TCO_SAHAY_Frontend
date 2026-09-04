@@ -4,12 +4,410 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================================
+   DESIGN SYSTEM — 2-tier tokens
+   REFERENCE TOKENS  ->  SEMANTIC TOKENS  ->  TAILWIND UTILITIES  ->  COMPONENTS
+
+   Components must never consume --ref-* directly. The only exception is the
+   chart palette in src/data/syntheticData.ts, where Recharts needs concrete
+   colour strings for SVG fills; it reads --ref-* through var().
+   ========================================================================= */
+
+/* ---------------------------------------------------------------------------
+   TIER 1 — REFERENCE TOKENS (raw palette, no meaning attached)
+   ------------------------------------------------------------------------ */
+:root {
+  --ref-white: #ffffff;
+  --ref-black: #000000;
+
+  /* Neutral gray ramp — finer steps in the dark end where the UI lives */
+  --ref-gray-50: #f7f7f8;
+  --ref-gray-100: #ededef;
+  --ref-gray-200: #d9d9dd;
+  --ref-gray-300: #c2c2c8;
+  --ref-gray-400: #a3a3ab;
+  --ref-gray-500: #85858e;
+  --ref-gray-550: #767680;
+  --ref-gray-600: #67676f;
+  --ref-gray-650: #5a5a62;
+  --ref-gray-700: #4c4c54;
+  --ref-gray-750: #3e3e45;
+  --ref-gray-800: #303036;
+  --ref-gray-825: #2a2a30;
+  --ref-gray-850: #232328;
+  --ref-gray-900: #1a1a1e;
+  --ref-gray-950: #101013;
+
+  --ref-red-50: #fef2f2;
+  --ref-red-100: #fee2e2;
+  --ref-red-200: #fecaca;
+  --ref-red-300: #fca5a5;
+  --ref-red-400: #f87171;
+  --ref-red-500: #ef4444;
+  --ref-red-600: #dc2626;
+  --ref-red-700: #b91c1c;
+  --ref-red-800: #991b1b;
+  --ref-red-900: #7f1d1d;
+  --ref-red-950: #450a0a;
+
+  --ref-purple-50: #f5f3ff;
+  --ref-purple-100: #ede9fe;
+  --ref-purple-200: #ddd6fe;
+  --ref-purple-300: #c4b5fd;
+  --ref-purple-400: #a78bfa;
+  --ref-purple-500: #8b5cf6;
+  --ref-purple-600: #7c3aed;
+  --ref-purple-700: #6d28d9;
+  --ref-purple-800: #5b21b6;
+  --ref-purple-900: #4c1d95;
+  --ref-purple-950: #2e1065;
+
+  --ref-blue-50: #eff6ff;
+  --ref-blue-100: #dbeafe;
+  --ref-blue-200: #bfdbfe;
+  --ref-blue-300: #93c5fd;
+  --ref-blue-400: #60a5fa;
+  --ref-blue-500: #3b82f6;
+  --ref-blue-600: #2563eb;
+  --ref-blue-700: #1d4ed8;
+  --ref-blue-800: #1e40af;
+  --ref-blue-900: #1e3a8a;
+  --ref-blue-950: #172554;
+
+  --ref-cyan-50: #ecfeff;
+  --ref-cyan-100: #cffafe;
+  --ref-cyan-200: #a5f3fc;
+  --ref-cyan-300: #67e8f9;
+  --ref-cyan-400: #22d3ee;
+  --ref-cyan-500: #06b6d4;
+  --ref-cyan-600: #0891b2;
+  --ref-cyan-700: #0e7490;
+  --ref-cyan-800: #155e75;
+  --ref-cyan-900: #164e63;
+  --ref-cyan-950: #083344;
+
+  --ref-teal-50: #f0fdfa;
+  --ref-teal-100: #ccfbf1;
+  --ref-teal-200: #99f6e4;
+  --ref-teal-300: #5eead4;
+  --ref-teal-400: #2dd4bf;
+  --ref-teal-500: #14b8a6;
+  --ref-teal-600: #0d9488;
+  --ref-teal-700: #0f766e;
+  --ref-teal-800: #115e59;
+  --ref-teal-900: #134e4a;
+  --ref-teal-950: #042f2e;
+
+  --ref-green-50: #f0fdf4;
+  --ref-green-100: #dcfce7;
+  --ref-green-200: #bbf7d0;
+  --ref-green-300: #86efac;
+  --ref-green-400: #4ade80;
+  --ref-green-500: #22c55e;
+  --ref-green-600: #16a34a;
+  --ref-green-700: #15803d;
+  --ref-green-800: #166534;
+  --ref-green-900: #14532d;
+  --ref-green-950: #052e16;
+
+  --ref-yellow-50: #fefce8;
+  --ref-yellow-100: #fef9c3;
+  --ref-yellow-200: #fef08a;
+  --ref-yellow-300: #fde047;
+  --ref-yellow-400: #facc15;
+  --ref-yellow-500: #eab308;
+  --ref-yellow-600: #ca8a04;
+  --ref-yellow-700: #a16207;
+  --ref-yellow-800: #854d0e;
+  --ref-yellow-900: #713f12;
+  --ref-yellow-950: #422006;
+
+  --ref-amber-50: #fffbeb;
+  --ref-amber-100: #fef3c7;
+  --ref-amber-200: #fde68a;
+  --ref-amber-300: #fcd34d;
+  --ref-amber-400: #fbbf24;
+  --ref-amber-500: #f59e0b;
+  --ref-amber-600: #d97706;
+  --ref-amber-700: #b45309;
+  --ref-amber-800: #92400e;
+  --ref-amber-900: #78350f;
+  --ref-amber-950: #451a03;
+
+  --ref-orange-50: #fff7ed;
+  --ref-orange-100: #ffedd5;
+  --ref-orange-200: #fed7aa;
+  --ref-orange-300: #fdba74;
+  --ref-orange-400: #fb923c;
+  --ref-orange-500: #f97316;
+  --ref-orange-600: #ea580c;
+  --ref-orange-700: #c2410c;
+  --ref-orange-800: #9a3412;
+  --ref-orange-900: #7c2d12;
+  --ref-orange-950: #431407;
+
+  /* deep-orange-500 is the Wayam brand accent — kept from the existing brand */
+  --ref-deep-orange-50: #fff3ef;
+  --ref-deep-orange-100: #ffe2d6;
+  --ref-deep-orange-200: #ffc4ad;
+  --ref-deep-orange-300: #ff9e7a;
+  --ref-deep-orange-400: #ff7a4d;
+  --ref-deep-orange-500: #ff6b2b;
+  --ref-deep-orange-600: #e8500f;
+  --ref-deep-orange-700: #bf3d08;
+  --ref-deep-orange-800: #96310a;
+  --ref-deep-orange-900: #78290c;
+  --ref-deep-orange-950: #401304;
+}
+
+/* ---------------------------------------------------------------------------
+   TIER 2 — SEMANTIC TOKENS (dark mode; the only mode implemented today)
+
+   Light mode can be added later by filling in the `.light` block at the bottom
+   of this section — no component needs to change.
+   ------------------------------------------------------------------------ */
+:root {
+  /* text -------------------------------------------------------------- */
+  --sem-text-primary: var(--ref-gray-50);
+  --sem-text-secondary: var(--ref-gray-200);
+  --sem-text-tertiary: var(--ref-gray-400);
+  --sem-text-quaternary: var(--ref-gray-500);
+  --sem-text-on-color: var(--ref-gray-950);
+
+  /* icon -------------------------------------------------------------- */
+  --sem-icon-primary: var(--ref-gray-50);
+  --sem-icon-secondary: var(--ref-gray-200);
+  --sem-icon-tertiary: var(--ref-gray-400);
+  --sem-icon-quaternary: var(--ref-gray-500);
+  --sem-icon-on-color: var(--ref-gray-950);
+
+  /* stroke ------------------------------------------------------------ */
+  --sem-stroke-default: var(--ref-gray-800);
+  --sem-stroke-active: var(--ref-gray-600);
+  --sem-stroke-muted: var(--ref-gray-850);
+  --sem-stroke-disabled: var(--ref-gray-825);
+  --sem-stroke-on-color: var(--ref-gray-950);
+
+  /* surface ----------------------------------------------------------- */
+  --sem-surface-page-background: var(--ref-black);
+  --sem-surface-container: var(--ref-gray-950);
+  --sem-surface-raised: var(--ref-gray-900);
+  --sem-surface-raised-x2: var(--ref-gray-850);
+  --sem-surface-action: var(--ref-gray-825);
+  --sem-surface-scroll-bar: var(--ref-gray-750);
+
+  /* action-surface / primary — light-on-dark "inverse" treatment ------- */
+  --sem-action-primary-default: var(--ref-gray-100);
+  --sem-action-primary-hover: var(--ref-white);
+  --sem-action-primary-focused: var(--ref-gray-200);
+  --sem-action-primary-disabled: var(--ref-gray-800);
+  --sem-action-primary-content: var(--ref-gray-950);
+  --sem-action-primary-content-disabled: var(--ref-gray-600);
+
+  /* action-surface / secondary ---------------------------------------- */
+  --sem-action-secondary-default: var(--ref-gray-850);
+  --sem-action-secondary-hover: var(--ref-gray-800);
+  --sem-action-secondary-focused: var(--ref-gray-750);
+  --sem-action-secondary-disabled: var(--ref-gray-900);
+  --sem-action-secondary-content: var(--ref-gray-50);
+  --sem-action-secondary-content-disabled: var(--ref-gray-600);
+
+  /* action-surface / tertiary (ghost) ---------------------------------- */
+  --sem-action-tertiary-default: transparent;
+  --sem-action-tertiary-hover: var(--ref-gray-900);
+  --sem-action-tertiary-focused: var(--ref-gray-850);
+  --sem-action-tertiary-disabled: transparent;
+  --sem-action-tertiary-content: var(--ref-gray-300);
+  --sem-action-tertiary-content-disabled: var(--ref-gray-700);
+
+  /* feedback ----------------------------------------------------------- */
+  --sem-feedback-success-content: var(--ref-green-300);
+  --sem-feedback-success-icon: var(--ref-green-400);
+  --sem-feedback-success-stroke: var(--ref-green-800);
+  --sem-feedback-success-background: var(--ref-green-950);
+
+  --sem-feedback-info-content: var(--ref-blue-300);
+  --sem-feedback-info-icon: var(--ref-blue-400);
+  --sem-feedback-info-stroke: var(--ref-blue-800);
+  --sem-feedback-info-background: var(--ref-blue-950);
+
+  --sem-feedback-neutral-content: var(--ref-gray-300);
+  --sem-feedback-neutral-icon: var(--ref-gray-400);
+  --sem-feedback-neutral-stroke: var(--ref-gray-700);
+  --sem-feedback-neutral-background: var(--ref-gray-900);
+
+  --sem-feedback-warning-content: var(--ref-orange-300);
+  --sem-feedback-warning-icon: var(--ref-orange-400);
+  --sem-feedback-warning-stroke: var(--ref-orange-800);
+  --sem-feedback-warning-background: var(--ref-orange-950);
+
+  --sem-feedback-error-content: var(--ref-red-300);
+  --sem-feedback-error-icon: var(--ref-red-400);
+  --sem-feedback-error-stroke: var(--ref-red-800);
+  --sem-feedback-error-background: var(--ref-red-950);
+
+  /* icon sizing scale — consumed by <AppIcon> -------------------------- */
+  --icon-size-xs: 12px;
+  --icon-size-sm: 14px;
+  --icon-size-md: 16px;
+  --icon-size-lg: 18px;
+  --icon-size-xl: 20px;
+  --icon-size-2xl: 24px;
+  --icon-size-3xl: 28px;
+
+  /* motion — one timing convention for the whole app -------------------- */
+  --motion-fast: 120ms;
+  --motion-base: 180ms;
+  --motion-slow: 240ms;
+  --motion-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   LEGACY ALIAS LAYER
+
+   The app predates this design system and consumes shadcn-style names
+   (--background, --surface-2, --text-secondary, ...) in ~17 routes. Rather
+   than rewrite every call site, those names are re-pointed at the semantic
+   tokens above, so existing markup resolves correctly on dark. New code should
+   use the semantic Tailwind utilities (bg-raised, text-fg-secondary, ...).
+   ------------------------------------------------------------------------ */
+:root {
+  --radius: 0.875rem; /* 14px */
+
+  --background: var(--sem-surface-page-background);
+  --foreground: var(--sem-text-primary);
+  --surface-1: var(--sem-surface-container);
+  --surface-2: var(--sem-surface-raised);
+  --surface-3: var(--sem-surface-raised-x2);
+  --card: var(--sem-surface-raised);
+  --card-foreground: var(--sem-text-primary);
+  --popover: var(--sem-surface-raised-x2);
+  --popover-foreground: var(--sem-text-primary);
+
+  /* Brand accent — deliberately preserved from the existing Wayam identity. */
+  --primary: var(--ref-deep-orange-500);
+  --primary-foreground: var(--ref-gray-950);
+
+  --secondary: var(--sem-surface-raised-x2);
+  --secondary-foreground: var(--sem-text-primary);
+  --muted: var(--sem-surface-raised);
+  --muted-foreground: var(--sem-text-tertiary);
+  --accent: var(--sem-surface-raised-x2);
+  --accent-foreground: var(--sem-text-primary);
+  --destructive: var(--sem-feedback-error-icon);
+  --destructive-foreground: var(--ref-gray-950);
+  --border: var(--sem-stroke-default);
+  --input: var(--sem-stroke-default);
+  --ring: var(--sem-stroke-active);
+
+  --text-secondary: var(--sem-text-secondary);
+  --text-muted: var(--sem-text-tertiary);
+
+  /* Named accents used by charts and status text across the app */
+  --teal: var(--ref-teal-400);
+  --orange: var(--ref-orange-400);
+  --purple: var(--ref-purple-400);
+  --yellow: var(--ref-amber-400);
+  --green: var(--ref-green-400);
+  --red: var(--ref-red-400);
+  --blue: var(--ref-blue-400);
+
+  --chart-1: var(--ref-blue-400);
+  --chart-2: var(--ref-teal-400);
+  --chart-3: var(--ref-deep-orange-500);
+  --chart-4: var(--ref-purple-400);
+  --chart-5: var(--ref-amber-400);
+}
+
+/* Light mode placeholder. Fill these in to add a light theme; no component
+   needs to change because everything routes through --sem-*.
+.light {
+}
+*/
+
+/* ---------------------------------------------------------------------------
+   TIER 3 — TAILWIND THEME (utilities generated from the semantic tokens)
+   ------------------------------------------------------------------------ */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
+
+  /* --- semantic: surfaces -> bg-page / bg-container / bg-raised / ... --- */
+  --color-page: var(--sem-surface-page-background);
+  --color-container: var(--sem-surface-container);
+  --color-raised: var(--sem-surface-raised);
+  --color-raised-2: var(--sem-surface-raised-x2);
+  --color-action: var(--sem-surface-action);
+  --color-scrollbar: var(--sem-surface-scroll-bar);
+
+  /* --- semantic: text tiers -> text-fg-* -------------------------------
+     Namespaced as `fg` because `text-primary` / `text-secondary` are already
+     taken by the shadcn brand tokens above. */
+  --color-fg-primary: var(--sem-text-primary);
+  --color-fg-secondary: var(--sem-text-secondary);
+  --color-fg-tertiary: var(--sem-text-tertiary);
+  --color-fg-quaternary: var(--sem-text-quaternary);
+  --color-on-color: var(--sem-text-on-color);
+
+  /* --- semantic: icons -> text-icon-* ---------------------------------- */
+  --color-icon-primary: var(--sem-icon-primary);
+  --color-icon-secondary: var(--sem-icon-secondary);
+  --color-icon-tertiary: var(--sem-icon-tertiary);
+  --color-icon-quaternary: var(--sem-icon-quaternary);
+  --color-icon-on-color: var(--sem-icon-on-color);
+
+  /* --- semantic: strokes -> border-default / border-stroke-* ----------- */
+  --color-default: var(--sem-stroke-default);
+  --color-stroke-active: var(--sem-stroke-active);
+  --color-stroke-muted: var(--sem-stroke-muted);
+  --color-stroke-disabled: var(--sem-stroke-disabled);
+  --color-stroke-on-color: var(--sem-stroke-on-color);
+
+  /* --- semantic: action surfaces -------------------------------------- */
+  --color-action-primary: var(--sem-action-primary-default);
+  --color-action-primary-hover: var(--sem-action-primary-hover);
+  --color-action-primary-focused: var(--sem-action-primary-focused);
+  --color-action-primary-disabled: var(--sem-action-primary-disabled);
+  --color-action-primary-content: var(--sem-action-primary-content);
+  --color-action-secondary: var(--sem-action-secondary-default);
+  --color-action-secondary-hover: var(--sem-action-secondary-hover);
+  --color-action-secondary-focused: var(--sem-action-secondary-focused);
+  --color-action-secondary-disabled: var(--sem-action-secondary-disabled);
+  --color-action-secondary-content: var(--sem-action-secondary-content);
+  --color-action-tertiary-hover: var(--sem-action-tertiary-hover);
+  --color-action-tertiary-focused: var(--sem-action-tertiary-focused);
+  --color-action-tertiary-content: var(--sem-action-tertiary-content);
+
+  /* --- semantic: feedback --------------------------------------------- */
+  --color-success: var(--sem-feedback-success-content);
+  --color-success-icon: var(--sem-feedback-success-icon);
+  --color-success-stroke: var(--sem-feedback-success-stroke);
+  --color-success-bg: var(--sem-feedback-success-background);
+  --color-info: var(--sem-feedback-info-content);
+  --color-info-icon: var(--sem-feedback-info-icon);
+  --color-info-stroke: var(--sem-feedback-info-stroke);
+  --color-info-bg: var(--sem-feedback-info-background);
+  --color-neutral: var(--sem-feedback-neutral-content);
+  --color-neutral-icon: var(--sem-feedback-neutral-icon);
+  --color-neutral-stroke: var(--sem-feedback-neutral-stroke);
+  --color-neutral-bg: var(--sem-feedback-neutral-background);
+  --color-warning: var(--sem-feedback-warning-content);
+  --color-warning-icon: var(--sem-feedback-warning-icon);
+  --color-warning-stroke: var(--sem-feedback-warning-stroke);
+  --color-warning-bg: var(--sem-feedback-warning-background);
+  --color-error: var(--sem-feedback-error-content);
+  --color-error-icon: var(--sem-feedback-error-icon);
+  --color-error-stroke: var(--sem-feedback-error-stroke);
+  --color-error-bg: var(--sem-feedback-error-background);
+
+  /* --- reference escape hatch, charts only ----------------------------- */
+  --color-ref-gray-850: var(--ref-gray-850);
+  --color-ref-gray-800: var(--ref-gray-800);
+
+  /* --- legacy aliases (kept so existing markup keeps compiling) --------- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -38,6 +436,7 @@
   --color-yellow: var(--yellow);
   --color-green: var(--green);
   --color-red: var(--red);
+  --color-blue: var(--blue);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
   --color-chart-1: var(--chart-1);
@@ -45,51 +444,132 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+
+  /* --- typography ------------------------------------------------------
+     Michroma: display / identity / telemetry values only, weight 400.
+     Geist: every other piece of UI text. */
+  --font-display: "Michroma", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist", ui-sans-serif, system-ui, sans-serif;
+
+  /* Michroma display scale (400 only — Michroma has no bold) */
+  --text-display-6xl: 3.75rem;
+  --text-display-6xl--line-height: 1.02;
+  --text-display-6xl--letter-spacing: -0.035em;
+  --text-display-6xl--font-weight: 400;
+  --text-display-5xl: 3rem;
+  --text-display-5xl--line-height: 1.05;
+  --text-display-5xl--letter-spacing: -0.03em;
+  --text-display-5xl--font-weight: 400;
+  --text-display-4xl: 2.25rem;
+  --text-display-4xl--line-height: 1.1;
+  --text-display-4xl--letter-spacing: -0.025em;
+  --text-display-4xl--font-weight: 400;
+  --text-display-3xl: 1.75rem;
+  --text-display-3xl--line-height: 1.15;
+  --text-display-3xl--letter-spacing: -0.02em;
+  --text-display-3xl--font-weight: 400;
+  --text-display-2xl: 1.375rem;
+  --text-display-2xl--line-height: 1.2;
+  --text-display-2xl--letter-spacing: -0.015em;
+  --text-display-2xl--font-weight: 400;
+  --text-display-xl: 1.125rem;
+  --text-display-xl--line-height: 1.25;
+  --text-display-xl--letter-spacing: 0em;
+  --text-display-xl--font-weight: 400;
+  --text-display-lg: 1rem;
+  --text-display-lg--line-height: 1.3;
+  --text-display-lg--letter-spacing: 0em;
+  --text-display-lg--font-weight: 400;
+  --text-display-base: 0.875rem;
+  --text-display-base--line-height: 1.35;
+  --text-display-base--letter-spacing: 0.01em;
+  --text-display-base--font-weight: 400;
+
+  /* Geist UI scale */
+  --text-5xl: 2.25rem;
+  --text-5xl--line-height: 1.1;
+  --text-5xl--letter-spacing: -0.02em;
+  --text-5xl--font-weight: 700;
+  --text-4xl: 1.875rem;
+  --text-4xl--line-height: 1.15;
+  --text-4xl--letter-spacing: -0.018em;
+  --text-4xl--font-weight: 700;
+  --text-3xl: 1.5rem;
+  --text-3xl--line-height: 1.2;
+  --text-3xl--letter-spacing: -0.015em;
+  --text-3xl--font-weight: 600;
+  --text-2xl: 1.25rem;
+  --text-2xl--line-height: 1.3;
+  --text-2xl--letter-spacing: -0.01em;
+  --text-2xl--font-weight: 600;
+  --text-xl: 1.0625rem;
+  --text-xl--line-height: 1.4;
+  --text-xl--font-weight: 600;
+  --text-lg: 0.9375rem;
+  --text-lg--line-height: 1.45;
+  --text-lg--font-weight: 500;
+  --text-base: 0.875rem;
+  --text-base--line-height: 1.5;
+  --text-base--font-weight: 400;
+  --text-sm: 0.8125rem;
+  --text-sm--line-height: 1.5;
+  --text-sm--font-weight: 400;
+  --text-xs: 0.6875rem;
+  --text-xs--line-height: 1.45;
+  --text-xs--font-weight: 500;
+
+  /* Semantic type roles — what components should actually reach for */
+  --text-display-page: 1.5rem;
+  --text-display-page--line-height: 1.15;
+  --text-display-page--letter-spacing: -0.02em;
+  --text-display-page--font-weight: 400;
+  --text-display-metric: 1.625rem;
+  --text-display-metric--line-height: 1.1;
+  --text-display-metric--letter-spacing: -0.015em;
+  --text-display-metric--font-weight: 400;
+  --text-heading-lg: 1.0625rem;
+  --text-heading-lg--line-height: 1.35;
+  --text-heading-lg--letter-spacing: -0.01em;
+  --text-heading-lg--font-weight: 600;
+  --text-heading-md: 0.9375rem;
+  --text-heading-md--line-height: 1.4;
+  --text-heading-md--font-weight: 600;
+  --text-heading-sm: 0.8125rem;
+  --text-heading-sm--line-height: 1.4;
+  --text-heading-sm--font-weight: 600;
+  --text-body-lg: 0.9375rem;
+  --text-body-lg--line-height: 1.55;
+  --text-body-lg--font-weight: 400;
+  --text-body-md: 0.8125rem;
+  --text-body-md--line-height: 1.5;
+  --text-body-md--font-weight: 400;
+  --text-body-sm: 0.75rem;
+  --text-body-sm--line-height: 1.5;
+  --text-body-sm--font-weight: 400;
+  --text-label-md: 0.75rem;
+  --text-label-md--line-height: 1.35;
+  --text-label-md--font-weight: 500;
+  --text-label-sm: 0.6875rem;
+  --text-label-sm--line-height: 1.3;
+  --text-label-sm--letter-spacing: 0.02em;
+  --text-label-sm--font-weight: 500;
+  /* Dense steps below `xs`. This is a telemetry UI with genuine 9-11px label
+     text; these two roles replace the four ad-hoc text-[8px]..text-[11px]
+     sizes the routes used before. Size and leading only. */
+  --text-mini: 0.625rem;
+  --text-mini--line-height: 1.4;
+  --text-micro: 0.5625rem;
+  --text-micro--line-height: 1.4;
+  --text-caption: 0.625rem;
+  --text-caption--line-height: 1.3;
+  --text-caption--letter-spacing: 0.08em;
+  --text-caption--font-weight: 600;
 }
 
-:root {
-  --radius: 0.75rem;
-  /* Clean light theme */
-  --background: oklch(0.98 0.005 255);
-  --foreground: oklch(0.2 0.02 262);
-  --surface-1: oklch(1 0 0);
-  --surface-2: oklch(0.96 0.01 259);
-  --surface-3: oklch(0.92 0.015 258);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.02 262);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.02 262);
-  --primary: oklch(0.69 0.18 49);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.92 0.015 258);
-  --secondary-foreground: oklch(0.2 0.02 262);
-  --muted: oklch(0.96 0.01 259);
-  --muted-foreground: oklch(0.3 0.02 262);
-  --accent: oklch(0.92 0.015 258);
-  --accent-foreground: oklch(0.2 0.02 262);
-  --destructive: oklch(0.63 0.21 25);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.85 0.02 258);
-  --input: oklch(0.85 0.02 258);
-  --ring: oklch(0.69 0.18 49);
-  --teal: oklch(0.78 0.14 175);
-  --orange: oklch(0.7 0.18 40);
-  --purple: oklch(0.54 0.22 293);
-  --yellow: oklch(0.77 0.16 70);
-  --green: oklch(0.72 0.19 150);
-  --red: oklch(0.63 0.21 25);
-  --text-secondary: oklch(0.28 0.02 262);
-  --text-muted: oklch(0.35 0.02 262);
-  --chart-1: oklch(0.69 0.18 49);
-  --chart-2: oklch(0.78 0.14 175);
-  --chart-3: oklch(0.7 0.18 40);
-  --chart-4: oklch(0.54 0.22 293);
-  --chart-5: oklch(0.77 0.16 70);
-}
-
+/* ---------------------------------------------------------------------------
+   BASE
+   ------------------------------------------------------------------------ */
 @layer base {
   * {
     border-color: var(--color-border);
@@ -109,59 +589,84 @@
   }
 
   body {
-    color: var(--color-foreground);
+    background: var(--sem-surface-page-background);
+    color: var(--sem-text-primary);
     font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.6;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-size: 0.875rem;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    background:
-      radial-gradient(ellipse at 20% 20%, oklch(0.69 0.18 49 / 8%) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, oklch(0.54 0.22 293 / 6%) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 50%, oklch(0.78 0.14 175 / 5%) 0%, transparent 60%),
-      var(--background);
-    background-attachment: fixed;
   }
 
-  h1, h2, h3, h4 {
+  /* Michroma has a single weight; never synthesise bold. */
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.25;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  /* Telemetry, currency, percentages and timestamps must not jitter. */
+  .tabular-nums,
+  [class*="tabular-nums"],
+  th,
+  td {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--sem-surface-scroll-bar);
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--ref-gray-700);
+    background-clip: content-box;
   }
 }
 
+/* ---------------------------------------------------------------------------
+   UTILITIES
+
+   `glass-card` keeps its name (19 consumers) but is no longer glassmorphic —
+   it is now the standard raised surface card: opaque, thin border, 14px radius,
+   restrained shadow. Renaming it would churn 19 files for no benefit.
+   ------------------------------------------------------------------------ */
 @utility glass-card {
-  background: oklch(1 0 0 / 70%);
-  backdrop-filter: blur(20px);
-  border: 1px solid oklch(0.69 0.18 49 / 20%);
+  background: var(--sem-surface-raised);
+  border: 1px solid var(--sem-stroke-default);
   border-radius: var(--radius);
-  box-shadow: 0 4px 24px oklch(0.69 0.18 49 / 6%);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 40%);
 }
 
+/* Formerly a coloured glow. Now a single accent hairline. */
 @utility glow-border {
-  box-shadow: 0 0 0 1px oklch(0.69 0.18 49 / 20%), 0 4px 24px oklch(0.69 0.18 49 / 8%);
+  border: 1px solid var(--sem-stroke-active);
 }
 
 @utility dot-grid {
-  background-image: radial-gradient(oklch(0.2 0.02 262 / 4%) 1px, transparent 1px);
+  background-image: radial-gradient(var(--ref-gray-850) 1px, transparent 1px);
   background-size: 18px 18px;
-}
-
-@utility font-display {
-  font-family: var(--font-display);
 }
 
 @utility font-mono-data {
   font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
 }
 
-@keyframes scanline {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(2000%); }
-}
-
+/* Formerly an animated scanline sweep. Now an inert top hairline so the ~19
+   `scanline` call sites keep working without the arcade effect. */
 @utility scanline-overlay {
   position: relative;
   overflow: hidden;
@@ -170,29 +675,47 @@
     position: absolute;
     inset-inline: 0;
     top: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, oklch(0.69 0.18 49 / 18%), transparent);
-    animation: scanline 8s linear infinite;
+    height: 1px;
+    background: var(--sem-stroke-active);
+    opacity: 0.5;
     pointer-events: none;
   }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 @utility animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
+  animation: pulse-soft 2.4s var(--motion-ease) infinite;
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @utility animate-fade-up {
-  animation: fade-up 0.4s ease-out both;
+  animation: fade-up 0.32s var(--motion-ease) both;
+}
+
+/* One transition convention for every interactive surface in the app. */
+@utility transition-ui {
+  transition-property: color, background-color, border-color, box-shadow, opacity;
+  transition-duration: var(--motion-base);
+  transition-timing-function: var(--motion-ease);
 }
 
 /* range input styling */
@@ -201,7 +724,7 @@
     appearance: none;
     height: 4px;
     border-radius: 9999px;
-    background: var(--surface-3);
+    background: var(--sem-surface-action);
     outline: none;
   }
   input[type="range"]::-webkit-slider-thumb {
@@ -209,18 +732,16 @@
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--primary);
-    border: 2px solid oklch(0.95 0.012 255);
-    box-shadow: 0 0 8px oklch(0.69 0.18 49 / 60%);
+    background: var(--sem-action-primary-default);
+    border: 2px solid var(--sem-surface-raised);
     cursor: pointer;
   }
   input[type="range"]::-moz-range-thumb {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--primary);
-    border: 2px solid oklch(0.95 0.012 255);
-    box-shadow: 0 0 8px oklch(0.69 0.18 49 / 60%);
+    background: var(--sem-action-primary-default);
+    border: 2px solid var(--sem-surface-raised);
     cursor: pointer;
   }
 }

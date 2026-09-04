@@ -1,12 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import {
-  Wrench, Users, Droplets, AlertTriangle, Clock, ShieldCheck, PiggyBank,
-  Package, TrendingDown, Gauge, Percent, Calculator,
-} from "lucide-react";
 import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
 import { CHART_COLORS } from "@/data/syntheticData";
-import { cn } from "@/lib/utils";
+import { alpha, cn } from "@/lib/utils";
+import { AppIcon } from "@/components/icons/AppIcon";
+import type { IconName } from "@/components/icons/registry";
 
 export const Route = createFileRoute("/glossary")({
   head: () => ({
@@ -14,7 +12,8 @@ export const Route = createFileRoute("/glossary")({
       { title: "Glossary & Definitions | TCO Intelligence" },
       {
         name: "description",
-        content: "What every TCO cost category includes — maintenance, labour, consumables, failures, downtime, warranty reserve.",
+        content:
+          "What every TCO cost category includes — maintenance, labour, consumables, failures, downtime, warranty reserve.",
       },
     ],
   }),
@@ -26,7 +25,7 @@ type Group = "Cost categories" | "Warranty & risk" | "TCO views" | "Rates & inte
 interface Definition {
   term: string;
   group: Group;
-  icon: React.ComponentType<{ size?: number }>;
+  icon: IconName;
   color: string;
   summary: string;
   includes: string[];
@@ -38,7 +37,7 @@ const DEFINITIONS: Definition[] = [
   {
     term: "Maintenance",
     group: "Cost categories",
-    icon: Wrench,
+    icon: "maintenance",
     color: CHART_COLORS.teal,
     summary:
       "Planned, part-level work carried out at a fixed interval. Every maintenance record belongs to a specific part — never to the locomotive as a whole.",
@@ -53,7 +52,7 @@ const DEFINITIONS: Definition[] = [
   {
     term: "Labour",
     group: "Cost categories",
-    icon: Users,
+    icon: "users",
     color: CHART_COLORS.purple,
     summary:
       "The workshop cost of performing maintenance. It is never entered by hand — it is derived from the parts spend on every occurrence.",
@@ -64,17 +63,21 @@ const DEFINITIONS: Definition[] = [
   {
     term: "Consumables",
     group: "Cost categories",
-    icon: Droplets,
+    icon: "fluid",
     color: CHART_COLORS.yellow,
     summary:
       "Fluids and short-life items replaced on a fixed cadence rather than on condition. Expensed, not capitalised.",
-    includes: ["Oils, coolants, greases, refrigerant", "Filters and gaskets", "Anything with a sub-year replacement interval"],
+    includes: [
+      "Oils, coolants, greases, refrigerant",
+      "Filters and gaskets",
+      "Anything with a sub-year replacement interval",
+    ],
     excludes: ["Rotables and unit-exchange parts", "Anything carrying a core credit"],
   },
   {
     term: "Failures",
     group: "Cost categories",
-    icon: AlertTriangle,
+    icon: "warning",
     color: CHART_COLORS.red,
     summary:
       "Unplanned breakdowns — the expected cost of parts failing before their scheduled replacement, weighted by how likely each failure is.",
@@ -89,7 +92,7 @@ const DEFINITIONS: Definition[] = [
   {
     term: "Downtime",
     group: "Cost categories",
-    icon: Clock,
+    icon: "clock",
     color: CHART_COLORS.orange,
     summary:
       "Revenue lost while the locomotive is out of service. Measured from the moment the unit stops earning to the moment it returns to traffic.",
@@ -104,64 +107,87 @@ const DEFINITIONS: Definition[] = [
   {
     term: "Warranty",
     group: "Warranty & risk",
-    icon: ShieldCheck,
+    icon: "warrantyActive",
     color: CHART_COLORS.blue,
     summary:
       "The period during which the manufacturer, not the operator, pays for a failure. Cover has two limits and ends at whichever is reached first.",
-    includes: ["Warranty in years — for parts that age", "Warranty in kilometres — for parts that wear with use"],
+    includes: [
+      "Warranty in years — for parts that age",
+      "Warranty in kilometres — for parts that wear with use",
+    ],
     formula: "Covered = (Years elapsed ≤ Warranty Years) AND (Km run ≤ Warranty Km)",
   },
   {
     term: "Failure Probability",
     group: "Warranty & risk",
-    icon: Percent,
+    icon: "percent",
     color: CHART_COLORS.red,
     summary:
       "How likely a given part is to fail within its warranty window, expressed as a percentage. Trended against hours in service rather than held as a fixed number.",
-    includes: ["Derived from criticality and replacement cadence", "Rises with accumulated wear", "Editable per part in the Library"],
+    includes: [
+      "Derived from criticality and replacement cadence",
+      "Rises with accumulated wear",
+      "Editable per part in the Library",
+    ],
   },
   {
     term: "Company Buffer (Warranty Reserve)",
     group: "Warranty & risk",
-    icon: PiggyBank,
+    icon: "savings",
     color: CHART_COLORS.orange,
     summary:
       "The money the organization should set aside per part to cover warranty claims it expects to receive.",
-    includes: ["Held per part, then rolled up across the BOM", "Recalculates whenever price or failure probability changes"],
+    includes: [
+      "Held per part, then rolled up across the BOM",
+      "Recalculates whenever price or failure probability changes",
+    ],
     formula: "Company Buffer = Part Cost × Failure Probability",
   },
   {
     term: "Customer TCO",
     group: "TCO views",
-    icon: Gauge,
+    icon: "gauge",
     color: CHART_COLORS.teal,
     summary: "Everything the operator actually pays across the planning horizon.",
-    includes: ["Maintenance parts and derived labour", "Consumables", "Out-of-warranty failures", "Downtime"],
+    includes: [
+      "Maintenance parts and derived labour",
+      "Consumables",
+      "Out-of-warranty failures",
+      "Downtime",
+    ],
     excludes: ["Anything the warranty covers", "The manufacturer's warranty reserve"],
     formula: "Customer TCO = Total Cost − Warranty-Covered Cost",
   },
   {
     term: "Organization TCO",
     group: "TCO views",
-    icon: Calculator,
+    icon: "calculator",
     color: CHART_COLORS.purple,
     summary: "What the manufacturer carries — the mirror image of the customer's bill.",
-    includes: ["Warranty replacement cost", "Service forecasting", "Company warranty reserve across all parts"],
+    includes: [
+      "Warranty replacement cost",
+      "Service forecasting",
+      "Company warranty reserve across all parts",
+    ],
     formula: "Organization TCO = Warranty-Covered Cost + Company Buffer",
   },
   {
     term: "Maintenance Interval",
     group: "Rates & intervals",
-    icon: Clock,
+    icon: "clock",
     color: CHART_COLORS.blue,
     summary:
       "How often a part needs attention, expressed in the unit that actually governs it. Where several limits apply, whichever is reached first triggers the work.",
-    includes: ["Running hours — engine internals", "Kilometres — running gear and brakes", "Months — calendar-driven inspections"],
+    includes: [
+      "Running hours — engine internals",
+      "Kilometres — running gear and brakes",
+      "Months — calendar-driven inspections",
+    ],
   },
   {
     term: "Extended Cost",
     group: "Rates & intervals",
-    icon: Package,
+    icon: "package",
     color: CHART_COLORS.green,
     summary: "The cost of a whole part line rather than a single unit.",
     formula: "Extended Cost = Unit Price × Quantity per Component",
@@ -170,11 +196,14 @@ const DEFINITIONS: Definition[] = [
   {
     term: "Depreciation",
     group: "Rates & intervals",
-    icon: TrendingDown,
+    icon: "trendDown",
     color: CHART_COLORS.purple,
     summary:
       "How a capitalised part loses book value over its useful life. Each part depreciates on its own schedule (IAS 16 component approach).",
-    includes: ["Straight-line for steady-wear parts", "Units-of-production where charge scales with utilisation"],
+    includes: [
+      "Straight-line for steady-wear parts",
+      "Units-of-production where charge scales with utilisation",
+    ],
     excludes: ["Consumables — expensed as incurred, never capitalised"],
   },
 ];
@@ -213,8 +242,10 @@ function Glossary() {
               key={g}
               onClick={() => setGroup(g as Group | "All")}
               className={cn(
-                "rounded-md px-2.5 py-1.5 text-[11px] transition-colors",
-                group === g ? "bg-primary font-semibold text-primary-foreground" : "bg-surface-2 text-text-secondary hover:text-foreground",
+                "rounded-md px-2.5 py-1.5 text-mini transition-colors",
+                group === g
+                  ? "bg-raised-2 font-medium text-fg-primary"
+                  : "transition-ui bg-action text-fg-tertiary hover:bg-raised-2 hover:text-fg-secondary",
               )}
             >
               {g}
@@ -225,32 +256,37 @@ function Glossary() {
 
       <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
         {filtered.map((d) => {
-          const Icon = d.icon;
           return (
             <GlassCard key={d.term} className="space-y-2.5">
               <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md" style={{ background: `${d.color}1f`, color: d.color }}>
-                  <Icon size={14} />
+                <span
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md"
+                  style={{ background: alpha(d.color, 12), color: d.color }}
+                >
+                  <AppIcon name={d.icon} size="sm" />
                 </span>
                 <div className="min-w-0">
                   <h3 className="font-display text-sm font-bold leading-tight">{d.term}</h3>
-                  <p className="text-[9px] uppercase tracking-wider text-text-muted">{d.group}</p>
+                  <p className="text-micro uppercase tracking-wider text-text-muted">{d.group}</p>
                 </div>
               </div>
 
-              <p className="text-[11px] leading-relaxed text-text-secondary">{d.summary}</p>
+              <p className="text-mini leading-relaxed text-text-secondary">{d.summary}</p>
 
               {d.formula && (
-                <p className="font-mono-data rounded-md bg-surface-2/80 px-2 py-1.5 text-[10px] leading-relaxed" style={{ color: d.color }}>
+                <p
+                  className="font-mono-data rounded-md bg-surface-2/80 px-2 py-1.5 text-mini leading-relaxed"
+                  style={{ color: d.color }}
+                >
                   {d.formula}
                 </p>
               )}
 
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-text-muted">Includes</p>
+                <p className="text-micro uppercase tracking-wider text-text-muted">Includes</p>
                 <ul className="mt-1 space-y-0.5">
                   {d.includes.map((i) => (
-                    <li key={i} className="flex gap-1.5 text-[11px] text-text-secondary">
+                    <li key={i} className="flex gap-1.5 text-mini text-text-secondary">
                       <span className="text-green">+</span>
                       <span>{i}</span>
                     </li>
@@ -260,10 +296,10 @@ function Glossary() {
 
               {d.excludes && (
                 <div>
-                  <p className="text-[9px] uppercase tracking-wider text-text-muted">Excludes</p>
+                  <p className="text-micro uppercase tracking-wider text-text-muted">Excludes</p>
                   <ul className="mt-1 space-y-0.5">
                     {d.excludes.map((i) => (
-                      <li key={i} className="flex gap-1.5 text-[11px] text-text-muted">
+                      <li key={i} className="flex gap-1.5 text-mini text-text-muted">
                         <span className="text-red">−</span>
                         <span>{i}</span>
                       </li>
@@ -277,7 +313,9 @@ function Glossary() {
       </div>
 
       {filtered.length === 0 && (
-        <GlassCard className="py-10 text-center text-sm text-text-muted">No definition matches “{query}”.</GlassCard>
+        <GlassCard className="py-10 text-center text-sm text-text-muted">
+          No definition matches “{query}”.
+        </GlassCard>
       )}
     </div>
   );

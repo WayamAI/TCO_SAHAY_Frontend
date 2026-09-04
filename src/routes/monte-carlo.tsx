@@ -11,18 +11,22 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { Zap } from "lucide-react";
 import { KPICard } from "@/components/shared/KPICard";
 import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
 import { ChartTooltip } from "@/components/shared/ChartTooltip";
 import { MONTE_CARLO_RESULTS, CHART_COLORS } from "@/data/syntheticData";
 import { fmtCompact } from "@/utils/formatters";
+import { AppIcon } from "@/components/icons/AppIcon";
 
 export const Route = createFileRoute("/monte-carlo")({
   head: () => ({
     meta: [
       { title: "Monte Carlo Risk Simulation | TCO Intelligence" },
-      { name: "description", content: "1,000-run probabilistic TCO simulation with percentile bands and variance drivers." },
+      {
+        name: "description",
+        content:
+          "1,000-run probabilistic TCO simulation with percentile bands and variance drivers.",
+      },
     ],
   }),
   component: MonteCarloPage,
@@ -76,10 +80,44 @@ function MonteCarloPage() {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        <KPICard label="P50 Median TCO" value={3.82} prefix="$" suffix="M" decimals={2} glow="blue" sub="Most likely outcome" />
-        <KPICard label="P90 (Worst 10%)" value={4.35} prefix="$" suffix="M" decimals={2} glow="red" sub="+$530k vs baseline" delay={100} />
-        <KPICard label="P10 (Best 10%)" value={3.42} prefix="$" suffix="M" decimals={2} glow="teal" sub="−$400k vs baseline" delay={200} />
-        <KPICard label="Risk Range P10→P90" value={930} prefix="$" suffix="K" glow="purple" sub={`σ = ${fmtCompact(MC.stdDev)} · n=${MC.n}`} delay={300} />
+        <KPICard
+          label="P50 Median TCO"
+          value={3.82}
+          prefix="$"
+          suffix="M"
+          decimals={2}
+          glow="blue"
+          sub="Most likely outcome"
+        />
+        <KPICard
+          label="P90 (Worst 10%)"
+          value={4.35}
+          prefix="$"
+          suffix="M"
+          decimals={2}
+          glow="red"
+          sub="+$530k vs baseline"
+          delay={100}
+        />
+        <KPICard
+          label="P10 (Best 10%)"
+          value={3.42}
+          prefix="$"
+          suffix="M"
+          decimals={2}
+          glow="teal"
+          sub="−$400k vs baseline"
+          delay={200}
+        />
+        <KPICard
+          label="Risk Range P10→P90"
+          value={930}
+          prefix="$"
+          suffix="K"
+          glow="purple"
+          sub={`σ = ${fmtCompact(MC.stdDev)} · n=${MC.n}`}
+          delay={300}
+        />
       </div>
 
       <div className="grid gap-5 xl:grid-cols-5">
@@ -92,26 +130,54 @@ function MonteCarloPage() {
               disabled={running}
               className="flex items-center gap-1.5 rounded-md bg-primary/15 px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/25 disabled:opacity-50"
             >
-              <Zap size={12} /> {running ? "Running…" : "Re-run Monte Carlo"}
+              <AppIcon name="power" size="xs" /> {running ? "Running…" : "Re-run Monte Carlo"}
             </button>
           </div>
           {running && (
             <div className="mb-3">
               <div className="h-1.5 overflow-hidden rounded-full bg-surface-3">
-                <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
+                <div
+                  className="h-full rounded-full bg-primary transition-all"
+                  style={{ width: `${progress}%` }}
+                />
               </div>
-              <p className="font-mono-data mt-1 text-[10px] text-text-secondary">
+              <p className="font-mono-data mt-1 text-mini text-text-secondary">
                 {Math.round((progress / 100) * 1000)} / 1,000 simulations
               </p>
             </div>
           )}
           <ResponsiveContainer width="100%" height={330}>
-            <BarChart data={MC.histogram} style={{ opacity: running ? 0.3 : 1, transition: "opacity 0.3s" }}>
+            <BarChart
+              data={MC.histogram}
+              style={{ opacity: running ? 0.3 : 1, transition: "opacity 0.3s" }}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
-              <XAxis dataKey="bin" stroke={CHART_COLORS.textMuted} fontSize={9} angle={-20} textAnchor="end" height={50} />
-              <YAxis stroke={CHART_COLORS.textMuted} fontSize={10} label={{ value: "Runs", angle: -90, fontSize: 10, fill: CHART_COLORS.textMuted, position: "insideLeft" }} />
+              <XAxis
+                dataKey="bin"
+                stroke={CHART_COLORS.textMuted}
+                fontSize={9}
+                angle={-20}
+                textAnchor="end"
+                height={50}
+              />
+              <YAxis
+                stroke={CHART_COLORS.textMuted}
+                fontSize={10}
+                label={{
+                  value: "Runs",
+                  angle: -90,
+                  fontSize: 10,
+                  fill: CHART_COLORS.textMuted,
+                  position: "insideLeft",
+                }}
+              />
               <Tooltip content={<ChartTooltip formatter={(v) => `${v} runs`} />} />
-              <ReferenceLine x="$3.8M – $4.0M" stroke="#E8F0FE" strokeDasharray="3 3" label={{ value: "P50", fill: "#E8F0FE", fontSize: 10 }} />
+              <ReferenceLine
+                x="$3.8M – $4.0M"
+                stroke="var(--ref-gray-300)"
+                strokeDasharray="3 3"
+                label={{ value: "P50", fill: "var(--ref-gray-300)", fontSize: 10 }}
+              />
               <Bar dataKey="count" name="Simulation runs" radius={[4, 4, 0, 0]}>
                 {MC.histogram.map((_, i) => (
                   <Cell key={i} fill={barColor(i)} />
@@ -119,7 +185,9 @@ function MonteCarloPage() {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-          <p className="text-center text-[10px] text-text-muted">Based on 1,000 Monte Carlo simulations · 20yr horizon</p>
+          <p className="text-center text-mini text-text-muted">
+            Based on 1,000 Monte Carlo simulations · 20yr horizon
+          </p>
         </GlassCard>
 
         {/* Variance drivers */}
@@ -129,17 +197,29 @@ function MonteCarloPage() {
             <BarChart data={MC.varianceDrivers} layout="vertical" margin={{ left: 30 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} horizontal={false} />
               <XAxis type="number" stroke={CHART_COLORS.textMuted} fontSize={10} unit="%" />
-              <YAxis type="category" dataKey="param" stroke={CHART_COLORS.textMuted} fontSize={10} width={100} />
+              <YAxis
+                type="category"
+                dataKey="param"
+                stroke={CHART_COLORS.textMuted}
+                fontSize={10}
+                width={100}
+              />
               <Tooltip content={<ChartTooltip formatter={(v) => `${v}%`} />} />
               <Bar dataKey="contribution" name="Variance share" radius={[0, 4, 4, 0]}>
                 {MC.varianceDrivers.map((_, i) => (
-                  <Cell key={i} fill={i === 0 ? CHART_COLORS.red : i < 3 ? CHART_COLORS.orange : CHART_COLORS.blue} />
+                  <Cell
+                    key={i}
+                    fill={
+                      i === 0 ? CHART_COLORS.red : i < 3 ? CHART_COLORS.orange : CHART_COLORS.blue
+                    }
+                  />
                 ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-          <p className="mt-2 text-[11px] leading-relaxed text-text-secondary">
-            Failure-rate uncertainty is now the largest driver (22%). Condition-based maintenance and reman parts tighten this distribution the most.
+          <p className="mt-2 text-mini leading-relaxed text-text-secondary">
+            Failure-rate uncertainty is now the largest driver (22%). Condition-based maintenance
+            and reman parts tighten this distribution the most.
           </p>
         </GlassCard>
       </div>
@@ -150,7 +230,7 @@ function MonteCarloPage() {
           <SectionTitle className="mb-3">Percentile Outcomes</SectionTitle>
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-border text-[10px] uppercase text-text-muted">
+              <tr className="border-b border-border text-mini uppercase text-text-muted">
                 <th className="py-2">Percentile</th>
                 <th className="py-2">TCO</th>
                 <th className="py-2">vs Baseline</th>
@@ -163,8 +243,12 @@ function MonteCarloPage() {
                   <tr key={row.p} className="border-b border-border/40">
                     <td className="py-2 font-sans text-text-secondary">{row.p}</td>
                     <td className="py-2">{fmtCompact(row.v)}</td>
-                    <td className={`py-2 ${d < 0 ? "text-teal" : d > 0 ? "text-red" : "text-text-muted"}`}>
-                      {d === 0 ? "—" : `${d > 0 ? "+" : "−"}${fmtCompact(Math.abs(d))} (${d > 0 ? "+" : "−"}${Math.abs((d / MC.p50) * 100).toFixed(0)}%)`}
+                    <td
+                      className={`py-2 ${d < 0 ? "text-teal" : d > 0 ? "text-red" : "text-text-muted"}`}
+                    >
+                      {d === 0
+                        ? "—"
+                        : `${d > 0 ? "+" : "−"}${fmtCompact(Math.abs(d))} (${d > 0 ? "+" : "−"}${Math.abs((d / MC.p50) * 100).toFixed(0)}%)`}
                     </td>
                   </tr>
                 );
@@ -178,7 +262,7 @@ function MonteCarloPage() {
           <SectionTitle className="mb-3">Randomized Input Distributions</SectionTitle>
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-border text-[10px] uppercase text-text-muted">
+              <tr className="border-b border-border text-mini uppercase text-text-muted">
                 <th className="py-2">Input</th>
                 <th className="py-2">Distribution</th>
                 <th className="py-2">Min</th>
@@ -198,8 +282,9 @@ function MonteCarloPage() {
               ))}
             </tbody>
           </table>
-          <p className="mt-3 text-[11px] text-text-secondary">
-            Each run samples all four inputs and re-computes the full 20-year TCO with Weibull failure draws.
+          <p className="mt-3 text-mini text-text-secondary">
+            Each run samples all four inputs and re-computes the full 20-year TCO with Weibull
+            failure draws.
           </p>
         </GlassCard>
       </div>

@@ -11,7 +11,10 @@ export const Route = createFileRoute("/tender")({
   head: () => ({
     meta: [
       { title: "Tender Optimization | TCO Intelligence" },
-      { name: "description", content: "Build commercial locomotive tender proposals from live simulation output." },
+      {
+        name: "description",
+        content: "Build commercial locomotive tender proposals from live simulation output.",
+      },
     ],
   }),
   component: TenderMode,
@@ -32,7 +35,12 @@ function TenderMode() {
     { name: "Capital", value: result.breakdown.capital, color: CHART_COLORS.blue },
     { name: "Maintenance", value: result.breakdown.maintenance, color: CHART_COLORS.teal },
     { name: "Failures", value: result.breakdown.failures, color: CHART_COLORS.red },
-    { name: "Other", value: result.breakdown.consumables + result.breakdown.replacements + result.breakdown.downtime, color: CHART_COLORS.purple },
+    {
+      name: "Other",
+      value:
+        result.breakdown.consumables + result.breakdown.replacements + result.breakdown.downtime,
+      color: CHART_COLORS.purple,
+    },
   ].filter((d) => d.value > 0);
 
   return (
@@ -43,23 +51,46 @@ function TenderMode() {
         <div className="grid gap-3 md:grid-cols-4">
           <label className="text-xs text-text-secondary">
             Customer
-            <input value={customer} onChange={(e) => setCustomer(e.target.value)} className="mt-1 w-full rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-primary/50" />
+            <input
+              value={customer}
+              onChange={(e) => setCustomer(e.target.value)}
+              className="mt-1 w-full rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-primary/50"
+            />
           </label>
           <label className="text-xs text-text-secondary">
             Locomotives required
-            <input type="number" value={qty} min={1} max={100} onChange={(e) => setQty(Number(e.target.value) || 1)} className="font-mono-data mt-1 w-full rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-primary/50" />
+            <input
+              type="number"
+              value={qty}
+              min={1}
+              max={100}
+              onChange={(e) => setQty(Number(e.target.value) || 1)}
+              className="font-mono-data mt-1 w-full rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-primary/50"
+            />
           </label>
           <label className="text-xs text-text-secondary">
             Operating profile
-            <select value={profileId} onChange={(e) => setProfileId(e.target.value)} className="mt-1 w-full rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-foreground outline-none">
+            <select
+              value={profileId}
+              onChange={(e) => setProfileId(e.target.value)}
+              className="mt-1 w-full rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-foreground outline-none"
+            >
               {OPERATING_PROFILES.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
               ))}
             </select>
           </label>
           <label className="text-xs text-text-secondary">
             Budget target ($)
-            <input type="number" value={budget} step={1000000} onChange={(e) => setBudget(Number(e.target.value) || 0)} className="font-mono-data mt-1 w-full rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-primary/50" />
+            <input
+              type="number"
+              value={budget}
+              step={1000000}
+              onChange={(e) => setBudget(Number(e.target.value) || 0)}
+              className="font-mono-data mt-1 w-full rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-primary/50"
+            />
           </label>
         </div>
       </GlassCard>
@@ -75,14 +106,22 @@ function TenderMode() {
               { l: "Maint $/km", v: `$${result.financials.costPerKm.toFixed(2)}` },
             ].map((k) => (
               <div key={k.l} className="rounded-md bg-surface-2 p-2.5 text-center">
-                <p className="text-[9px] uppercase text-text-muted">{k.l}</p>
+                <p className="text-micro uppercase text-text-muted">{k.l}</p>
                 <p className="font-mono-data mt-1 text-sm font-bold">{k.v}</p>
               </div>
             ))}
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
-              <Pie data={donut} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2} strokeWidth={0}>
+              <Pie
+                data={donut}
+                dataKey="value"
+                nameKey="name"
+                innerRadius={45}
+                outerRadius={75}
+                paddingAngle={2}
+                strokeWidth={0}
+              >
                 {donut.map((d) => (
                   <Cell key={d.name} fill={d.color} />
                 ))}
@@ -91,7 +130,9 @@ function TenderMode() {
               <Legend wrapperStyle={{ fontSize: 10 }} />
             </PieChart>
           </ResponsiveContainer>
-          <div className={`rounded-md p-3 text-xs ${vsBudget >= 0 ? "bg-teal/10 text-teal" : "bg-red/10 text-red"}`}>
+          <div
+            className={`rounded-md p-3 text-xs ${vsBudget >= 0 ? "bg-teal/10 text-teal" : "bg-red/10 text-red"}`}
+          >
             {vsBudget >= 0
               ? `Your fleet TCO is ${vsBudget.toFixed(1)}% below the customer budget target.`
               : `Fleet TCO exceeds customer budget by ${Math.abs(vsBudget).toFixed(1)}% — consider extended maintenance intervals or warranty options.`}
@@ -114,20 +155,50 @@ function TenderMode() {
                 <span>{v}</span>
               </div>
             ))}
-            <p className="pt-3 text-[10px] font-bold uppercase tracking-wider text-primary">Included Warranties</p>
-            <div className="flex justify-between border-b border-border/40 py-2"><span className="font-sans text-text-secondary">Standard</span><span>3 years</span></div>
-            <div className="flex justify-between border-b border-border/40 py-2"><span className="font-sans text-text-secondary">Extended option</span><span>+2 yr / $85k per loco</span></div>
-            <p className="pt-3 text-[10px] font-bold uppercase tracking-wider text-primary">Lifecycle Cost Guarantee</p>
-            <div className="flex justify-between border-b border-border/40 py-2"><span className="font-sans text-text-secondary">20yr Fleet TCO</span><span>{fmtCompact(fleetTco)}</span></div>
-            <div className="flex justify-between border-b border-border/40 py-2"><span className="font-sans text-text-secondary">Maint $/km</span><span>$0.18 (best in class)</span></div>
-            <div className="flex justify-between border-b border-border/40 py-2"><span className="font-sans text-text-secondary">Availability SLA</span><span>≥ 94%</span></div>
-            <p className="pt-3 text-[10px] font-bold uppercase tracking-wider text-primary">vs Competitors</p>
-            <div className="flex justify-between py-2"><span className="font-sans text-text-secondary">Savings vs GE</span><span className="text-teal">−{fmtCompact(160000 * qty)} fleet TCO</span></div>
-            <div className="flex justify-between py-2"><span className="font-sans text-text-secondary">Savings vs Alstom</span><span className="text-teal">−{fmtCompact(230000 * qty)} fleet TCO</span></div>
+            <p className="pt-3 text-mini font-bold uppercase tracking-wider text-primary">
+              Included Warranties
+            </p>
+            <div className="flex justify-between border-b border-border/40 py-2">
+              <span className="font-sans text-text-secondary">Standard</span>
+              <span>3 years</span>
+            </div>
+            <div className="flex justify-between border-b border-border/40 py-2">
+              <span className="font-sans text-text-secondary">Extended option</span>
+              <span>+2 yr / $85k per loco</span>
+            </div>
+            <p className="pt-3 text-mini font-bold uppercase tracking-wider text-primary">
+              Lifecycle Cost Guarantee
+            </p>
+            <div className="flex justify-between border-b border-border/40 py-2">
+              <span className="font-sans text-text-secondary">20yr Fleet TCO</span>
+              <span>{fmtCompact(fleetTco)}</span>
+            </div>
+            <div className="flex justify-between border-b border-border/40 py-2">
+              <span className="font-sans text-text-secondary">Maint $/km</span>
+              <span>$0.18 (best in class)</span>
+            </div>
+            <div className="flex justify-between border-b border-border/40 py-2">
+              <span className="font-sans text-text-secondary">Availability SLA</span>
+              <span>≥ 94%</span>
+            </div>
+            <p className="pt-3 text-mini font-bold uppercase tracking-wider text-primary">
+              vs Competitors
+            </p>
+            <div className="flex justify-between py-2">
+              <span className="font-sans text-text-secondary">Savings vs GE</span>
+              <span className="text-teal">−{fmtCompact(160000 * qty)} fleet TCO</span>
+            </div>
+            <div className="flex justify-between py-2">
+              <span className="font-sans text-text-secondary">Savings vs Alstom</span>
+              <span className="text-teal">−{fmtCompact(230000 * qty)} fleet TCO</span>
+            </div>
           </div>
-          <div className="mt-4 flex flex-wrap gap-2 text-[11px]">
+          <div className="mt-4 flex flex-wrap gap-2 text-mini">
             {["📄 Export Tender PDF", "📊 Export Excel Model", "💾 Save Scenario"].map((b) => (
-              <button key={b} className="rounded-md border border-border bg-surface-2 px-3 py-1.5 text-text-secondary transition-colors hover:border-primary/40 hover:text-foreground">
+              <button
+                key={b}
+                className="rounded-md border border-border bg-surface-2 px-3 py-1.5 text-text-secondary transition-colors hover:border-primary/40 hover:text-foreground"
+              >
                 {b}
               </button>
             ))}

@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Plus, Trash2, Wrench, ShieldCheck, AlertTriangle, PiggyBank } from "lucide-react";
 import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
 import { KPICard } from "@/components/shared/KPICard";
 import { COMPONENTS, CHART_COLORS } from "@/data/syntheticData";
@@ -9,6 +8,7 @@ import { usePartsStore, type NewPartInput } from "@/store/partsStore";
 import { fmtUSD, fmtCompact } from "@/utils/formatters";
 import { fleetTCO, partTCO, formatInterval, DEFAULT_DUTY } from "@/utils/tcoEngine";
 import { cn } from "@/lib/utils";
+import { AppIcon } from "@/components/icons/AppIcon";
 
 export const Route = createFileRoute("/library")({
   head: () => ({
@@ -124,7 +124,7 @@ function MaintenanceLibrary() {
             onClick={() => setShowForm((s) => !s)}
             className="ml-auto flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/20"
           >
-            <Plus size={14} /> Add Part
+            <AppIcon name="add" size="sm" /> Add Part
           </button>
         </div>
 
@@ -145,7 +145,9 @@ function MaintenanceLibrary() {
                 className={inputCls}
               >
                 {COMPONENTS.map((c) => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
                 ))}
               </select>
             </Field>
@@ -159,10 +161,16 @@ function MaintenanceLibrary() {
                 />
                 <select
                   value={form.maintIntervalUnit}
-                  onChange={(e) => setForm({ ...form, maintIntervalUnit: e.target.value as MaintIntervalUnit })}
+                  onChange={(e) =>
+                    setForm({ ...form, maintIntervalUnit: e.target.value as MaintIntervalUnit })
+                  }
                   className={cn(inputCls, "w-20")}
                 >
-                  {INTERVAL_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
+                  {INTERVAL_UNITS.map((u) => (
+                    <option key={u} value={u}>
+                      {u}
+                    </option>
+                  ))}
                 </select>
               </div>
             </Field>
@@ -211,7 +219,9 @@ function MaintenanceLibrary() {
               <input
                 type="number"
                 value={form.failureProbabilityPct}
-                onChange={(e) => setForm({ ...form, failureProbabilityPct: Number(e.target.value) })}
+                onChange={(e) =>
+                  setForm({ ...form, failureProbabilityPct: Number(e.target.value) })
+                }
                 className={inputCls}
               />
             </Field>
@@ -224,7 +234,10 @@ function MaintenanceLibrary() {
                 Save Part
               </button>
               <button
-                onClick={() => { setShowForm(false); setForm(EMPTY_FORM); }}
+                onClick={() => {
+                  setShowForm(false);
+                  setForm(EMPTY_FORM);
+                }}
                 className="rounded-md border border-border px-3 py-1.5 text-xs text-text-secondary"
               >
                 Cancel
@@ -237,20 +250,42 @@ function MaintenanceLibrary() {
       {/* Library table */}
       <GlassCard>
         <SectionTitle className="mb-3 flex items-center gap-1.5">
-          <Wrench size={13} /> Maintenance Library — every value below is editable and drives the TCO
+          <AppIcon name="maintenance" size="sm" /> Maintenance Library — every value below is
+          editable and drives the TCO
         </SectionTitle>
         <div className="max-h-[560px] overflow-auto">
           <table className="w-full text-left text-xs">
             <thead className="sticky top-0 z-10 bg-surface-1">
-              <tr className="border-b border-border text-[9px] uppercase tracking-wider text-text-muted">
-                {["Part", "Interval", "Qty", "Unit", "Price", "Warr. Yrs", "Warr. Km", "Fail %", `TCO ${HORIZON}yr`, "Avg/yr", "Buffer", ""].map((h) => (
-                  <th key={h} className="px-2 py-2 font-medium">{h}</th>
+              <tr className="border-b border-border text-micro uppercase tracking-wider text-text-muted">
+                {[
+                  "Part",
+                  "Interval",
+                  "Qty",
+                  "Unit",
+                  "Price",
+                  "Warr. Yrs",
+                  "Warr. Km",
+                  "Fail %",
+                  `TCO ${HORIZON}yr`,
+                  "Avg/yr",
+                  "Buffer",
+                  "",
+                ].map((h) => (
+                  <th key={h} className="px-2 py-2 font-medium">
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {visible.map((p) => (
-                <LibraryRow key={p.id} part={p} laborPct={laborPct} onChange={updatePart} onRemove={removePart} />
+                <LibraryRow
+                  key={p.id}
+                  part={p}
+                  laborPct={laborPct}
+                  onChange={updatePart}
+                  onRemove={removePart}
+                />
               ))}
               {visible.length === 0 && (
                 <tr>
@@ -267,7 +302,9 @@ function MaintenanceLibrary() {
       {/* Labour charge + full cost */}
       <div className="grid gap-5 xl:grid-cols-3">
         <GlassCard className="xl:col-span-2">
-          <SectionTitle className="mb-3">Labour Charge — auto-calculated, never entered by hand</SectionTitle>
+          <SectionTitle className="mb-3">
+            Labour Charge — auto-calculated, never entered by hand
+          </SectionTitle>
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
               <span className="text-xs text-text-secondary">Labour rate</span>
@@ -292,7 +329,7 @@ function MaintenanceLibrary() {
             />
             <button
               onClick={() => setLaborPct(18)}
-              className="rounded-md border border-border px-2 py-1 text-[10px] text-text-secondary hover:text-foreground"
+              className="rounded-md border border-border px-2 py-1 text-mini text-text-secondary hover:text-foreground"
             >
               Reset to 18%
             </button>
@@ -305,7 +342,7 @@ function MaintenanceLibrary() {
               <Row label="Full cost" value={fmtUSD(totals.totalCost)} bold />
             </div>
           </div>
-          <p className="mt-2 text-[10px] text-text-muted">
+          <p className="mt-2 text-mini text-text-muted">
             Labour Cost = Sum(Part Prices) × {laborPct}% — applied to every maintenance occurrence.
           </p>
         </GlassCard>
@@ -314,21 +351,21 @@ function MaintenanceLibrary() {
           <SectionTitle className="mb-3">Customer vs Organization</SectionTitle>
           <div className="space-y-2.5">
             <SplitRow
-              icon={<Wrench size={13} />}
+              icon={<AppIcon name="maintenance" size="sm" />}
               label="Customer TCO"
               hint="Excludes warranty-covered failures"
               value={totals.customerTCO}
               color={CHART_COLORS.teal}
             />
             <SplitRow
-              icon={<ShieldCheck size={13} />}
+              icon={<AppIcon name="warrantyActive" size="sm" />}
               label="Warranty covered"
               hint="Paid by the organization"
               value={totals.warrantyCoveredCost}
               color={CHART_COLORS.blue}
             />
             <SplitRow
-              icon={<PiggyBank size={13} />}
+              icon={<AppIcon name="savings" size="sm" />}
               label="Company buffer"
               hint="Part cost × failure probability"
               value={totals.buffer}
@@ -336,7 +373,7 @@ function MaintenanceLibrary() {
             />
             <div className="border-t border-border pt-2.5">
               <SplitRow
-                icon={<AlertTriangle size={13} />}
+                icon={<AppIcon name="warning" size="sm" />}
                 label="Organization TCO"
                 hint="Warranty replacement + reserve"
                 value={totals.organizationTCO}
@@ -357,23 +394,46 @@ const inputCls =
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1">
-      <label className="text-[10px] uppercase tracking-wider text-text-muted">{label}</label>
+      <label className="text-mini uppercase tracking-wider text-text-muted">{label}</label>
       {children}
     </div>
   );
 }
 
-function Row({ label, value, accent, bold }: { label: string; value: string; accent?: boolean; bold?: boolean }) {
+function Row({
+  label,
+  value,
+  accent,
+  bold,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+  bold?: boolean;
+}) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-text-secondary">{label}</span>
-      <span className={cn("tabular-nums", accent && "text-primary", bold && "font-bold text-foreground")}>{value}</span>
+      <span
+        className={cn(
+          "tabular-nums",
+          accent && "text-primary",
+          bold && "font-bold text-foreground",
+        )}
+      >
+        {value}
+      </span>
     </div>
   );
 }
 
 function SplitRow({
-  icon, label, hint, value, color, bold,
+  icon,
+  label,
+  hint,
+  value,
+  color,
+  bold,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -384,12 +444,19 @@ function SplitRow({
 }) {
   return (
     <div className="flex items-start gap-2">
-      <span className="mt-0.5 shrink-0" style={{ color }}>{icon}</span>
+      <span className="mt-0.5 shrink-0" style={{ color }}>
+        {icon}
+      </span>
       <div className="min-w-0 flex-1">
-        <p className={cn("text-xs", bold ? "font-bold text-foreground" : "text-text-secondary")}>{label}</p>
-        <p className="text-[10px] text-text-muted">{hint}</p>
+        <p className={cn("text-xs", bold ? "font-bold text-foreground" : "text-text-secondary")}>
+          {label}
+        </p>
+        <p className="text-mini text-text-muted">{hint}</p>
       </div>
-      <span className={cn("font-mono-data shrink-0 text-sm tabular-nums", bold && "font-bold")} style={{ color }}>
+      <span
+        className={cn("font-mono-data shrink-0 text-sm tabular-nums", bold && "font-bold")}
+        style={{ color }}
+      >
         {fmtCompact(value)}
       </span>
     </div>
@@ -398,7 +465,10 @@ function SplitRow({
 
 /** One editable library row — edits flow straight into every other page. */
 function LibraryRow({
-  part, laborPct, onChange, onRemove,
+  part,
+  laborPct,
+  onChange,
+  onRemove,
 }: {
   part: Part;
   laborPct: number;
@@ -411,44 +481,90 @@ function LibraryRow({
   return (
     <tr className="border-b border-border/40 hover:bg-surface-2/50">
       <td className="px-2 py-1.5">
-        <span className="block max-w-[190px] truncate" title={part.name}>{part.name}</span>
-        <span className="text-[9px] text-text-muted">{formatInterval(part)} · {part.partClass}</span>
+        <span className="block max-w-[190px] truncate" title={part.name}>
+          {part.name}
+        </span>
+        <span className="text-micro text-text-muted">
+          {formatInterval(part)} · {part.partClass}
+        </span>
       </td>
       <td className="px-2 py-1.5">
         <div className="flex items-center gap-1">
-          <NumCell value={part.maintIntervalValue} onChange={(v) => onChange(part.id, { maintIntervalValue: v })} width="w-16" />
+          <NumCell
+            value={part.maintIntervalValue}
+            onChange={(v) => onChange(part.id, { maintIntervalValue: v })}
+            width="w-16"
+          />
           <select
             value={part.maintIntervalUnit}
-            onChange={(e) => onChange(part.id, { maintIntervalUnit: e.target.value as MaintIntervalUnit })}
-            className="rounded border border-transparent bg-transparent text-[10px] text-text-secondary hover:border-border focus:border-primary/50"
+            onChange={(e) =>
+              onChange(part.id, { maintIntervalUnit: e.target.value as MaintIntervalUnit })
+            }
+            className="rounded border border-transparent bg-transparent text-mini text-text-secondary hover:border-border focus:border-primary/50"
           >
-            {INTERVAL_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
+            {INTERVAL_UNITS.map((u) => (
+              <option key={u} value={u}>
+                {u}
+              </option>
+            ))}
           </select>
         </div>
       </td>
       <td className="px-2 py-1.5">
-        <NumCell value={part.maintQty} onChange={(v) => onChange(part.id, { maintQty: v })} width="w-12" />
+        <NumCell
+          value={part.maintQty}
+          onChange={(v) => onChange(part.id, { maintQty: v })}
+          width="w-12"
+        />
       </td>
-      <td className="px-2 py-1.5 text-[10px] text-text-secondary">{part.uom}</td>
+      <td className="px-2 py-1.5 text-mini text-text-secondary">{part.uom}</td>
       <td className="px-2 py-1.5">
-        <NumCell value={part.unitPriceNew} onChange={(v) => onChange(part.id, { unitPriceNew: v })} width="w-20" prefix="$" />
+        <NumCell
+          value={part.unitPriceNew}
+          onChange={(v) => onChange(part.id, { unitPriceNew: v })}
+          width="w-20"
+          prefix="$"
+        />
       </td>
       <td className="px-2 py-1.5">
-        <NumCell value={part.warrantyYears} step={0.5} onChange={(v) => onChange(part.id, { warrantyYears: v })} width="w-12" />
+        <NumCell
+          value={part.warrantyYears}
+          step={0.5}
+          onChange={(v) => onChange(part.id, { warrantyYears: v })}
+          width="w-12"
+        />
       </td>
       <td className="px-2 py-1.5">
-        <NumCell value={part.warrantyKm} step={10000} onChange={(v) => onChange(part.id, { warrantyKm: v })} width="w-20" />
+        <NumCell
+          value={part.warrantyKm}
+          step={10000}
+          onChange={(v) => onChange(part.id, { warrantyKm: v })}
+          width="w-20"
+        />
       </td>
       <td className="px-2 py-1.5">
-        <NumCell value={part.failureProbabilityPct} onChange={(v) => onChange(part.id, { failureProbabilityPct: v })} width="w-12" suffix="%" />
+        <NumCell
+          value={part.failureProbabilityPct}
+          onChange={(v) => onChange(part.id, { failureProbabilityPct: v })}
+          width="w-12"
+          suffix="%"
+        />
       </td>
       <td className="font-mono-data px-2 py-1.5 tabular-nums">{fmtCompact(tco.totalCost)}</td>
-      <td className="font-mono-data px-2 py-1.5 tabular-nums text-text-secondary">{fmtCompact(tco.avgAnnualCost)}</td>
-      <td className="font-mono-data px-2 py-1.5 tabular-nums text-orange">{fmtCompact(tco.buffer)}</td>
+      <td className="font-mono-data px-2 py-1.5 tabular-nums text-text-secondary">
+        {fmtCompact(tco.avgAnnualCost)}
+      </td>
+      <td className="font-mono-data px-2 py-1.5 tabular-nums text-orange">
+        {fmtCompact(tco.buffer)}
+      </td>
       <td className="px-2 py-1.5">
         {isUserPart && (
-          <button onClick={() => onRemove(part.id)} className="text-text-muted transition-colors hover:text-red" title="Remove part">
-            <Trash2 size={13} />
+          <button
+            onClick={() => onRemove(part.id)}
+            className="text-text-muted transition-colors hover:text-red"
+            title="Remove part"
+          >
+            <AppIcon name="delete" size="sm" />
           </button>
         )}
       </td>
@@ -457,7 +573,12 @@ function LibraryRow({
 }
 
 function NumCell({
-  value, onChange, width, step = 1, prefix, suffix,
+  value,
+  onChange,
+  width,
+  step = 1,
+  prefix,
+  suffix,
 }: {
   value: number;
   onChange: (v: number) => void;
@@ -467,7 +588,7 @@ function NumCell({
   suffix?: string;
 }) {
   return (
-    <span className="font-mono-data inline-flex items-center text-[11px]">
+    <span className="font-mono-data inline-flex items-center text-mini">
       {prefix && <span className="text-text-muted">{prefix}</span>}
       <input
         type="number"

@@ -13,7 +13,6 @@ import appCss from "../styles.css?url";
 import { reportAppError } from "../lib/error-reporting";
 import { AuthGate } from "@/components/auth/AuthGate";
 
-
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -89,7 +88,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "TCO Intelligence Platform" },
       {
         property: "og:description",
-        content: "Fleet lifecycle simulation, forecasting and risk intelligence for locomotive tenders.",
+        content:
+          "Fleet lifecycle simulation, forecasting and risk intelligence for locomotive tenders.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -103,7 +103,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Michroma&family=Geist:wght@400..700&display=swap",
       },
       { rel: "icon", href: `${import.meta.env.BASE_URL}favicon.svg`, type: "image/svg+xml" },
     ],
@@ -140,4 +140,3 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-
