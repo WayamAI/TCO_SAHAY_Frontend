@@ -7,6 +7,9 @@ import { login } from "@/lib/auth";
 import { AppIcon } from "@/components/icons/AppIcon";
 
 export const Route = createFileRoute("/login")({
+  head: () => ({
+    meta: [{ title: "Sign In | SAHAY" }],
+  }),
   component: LoginPage,
 });
 
@@ -47,10 +50,10 @@ function LoginPage() {
             className="h-12 w-auto object-contain"
           />
           <h1 className="mt-4 font-display text-lg font-bold tracking-tight text-primary">
-            TCO Intelligence Platform
+            SAHAY
           </h1>
           <p className="mt-1 text-caption text-secondary">
-            Sign in to continue to the fleet dashboard
+            Fleet Lifecycle Intelligence Platform
           </p>
         </div>
 
