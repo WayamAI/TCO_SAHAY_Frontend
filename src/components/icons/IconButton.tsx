@@ -1,60 +1,88 @@
 import type { ButtonHTMLAttributes } from "react";
-import { AppIcon, type IconSize } from "@/components/icons/AppIcon";
+import { AppIcon, type IconSize, type IconTone } from "@/components/icons/AppIcon";
 import type { IconName } from "@/components/icons/registry";
 import { cn } from "@/lib/utils";
 
 /**
- * Icon-only button. `aria-label` is required by the type signature — an
- * unlabelled icon button is unusable with a screen reader, so it is not
- * expressible here.
+ * Reusable IconButton component conforming to Prompt 5 iconography system.
  *
- * Variants map straight onto the action-surface tokens:
- *   ghost   — transparent, action-surface.tertiary on hover
- *   subtle  — surface.action, lifts to surface.raised-2 on hover
- *   inverse — action-surface.primary (light on dark); the selected/active state
+ * Variants:
+ *  - ghost: transparent, hover: action-tertiary-hover, active: action-tertiary-focused
+ *  - subtle: surface.action, hover: surface.raised, active: surface.raised-2
+ *  - inverse: action-surface.primary (light gray) with icon.on-color (near-black)
+ *
+ * Sizes:
+ *  - sm: 32 x 32px (14px icon)
+ *  - md: 36 x 36px (16px icon)
+ *  - lg: 40 x 40px (18px icon)
  */
-type Variant = "ghost" | "subtle" | "inverse";
-type Size = "sm" | "md" | "lg";
+export type IconButtonVariant = "ghost" | "subtle" | "inverse";
+export type IconButtonSize = "sm" | "md" | "lg";
 
-const VARIANT: Record<Variant, string> = {
+const VARIANT: Record<IconButtonVariant, string> = {
   ghost:
-    "bg-transparent text-icon-tertiary hover:bg-action-tertiary-hover hover:text-icon-secondary active:bg-action-tertiary-focused disabled:text-icon-quaternary",
+    "bg-transparent text-icon-tertiary hover:bg-action-tertiary-hover hover:text-icon-secondary active:bg-action-tertiary-focused active:text-icon-primary disabled:bg-transparent disabled:text-icon-quaternary",
   subtle:
-    "bg-action text-icon-secondary hover:bg-raised-2 hover:text-icon-primary active:bg-action-secondary-focused disabled:bg-action-secondary-disabled disabled:text-icon-quaternary",
+    "bg-action text-icon-secondary hover:bg-raised hover:text-icon-primary active:bg-raised-2 active:text-icon-primary disabled:bg-action-secondary-disabled disabled:text-icon-quaternary",
   inverse:
     "bg-action-primary text-icon-on-color hover:bg-action-primary-hover active:bg-action-primary-focused disabled:bg-action-primary-disabled disabled:text-icon-quaternary",
 };
 
-const BOX: Record<Size, string> = {
-  sm: "h-8 w-8", // 32
-  md: "h-9 w-9", // 36
-  lg: "h-10 w-10", // 40
+const BOX: Record<IconButtonSize, string> = {
+  sm: "h-8 w-8", // 32px
+  md: "h-9 w-9", // 36px
+  lg: "h-10 w-10", // 40px
 };
 
-const ICON_SIZE: Record<Size, IconSize> = { sm: "sm", md: "md", lg: "lg" };
+const ICON_SIZE: Record<IconButtonSize, IconSize> = {
+  sm: "sm", // 14px
+  md: "md", // 16px
+  lg: "lg", // 18px
+};
 
 export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
+  /** The semantic icon name from the registry */
   icon: IconName;
-  "aria-label": string;
-  variant?: Variant;
-  size?: Size;
+  /** Accessible label for screen readers. Can be passed via `label` or `aria-label`. */
+  label?: string;
+  "aria-label"?: string;
+  /** Visual variant: ghost, subtle, inverse */
+  variant?: IconButtonVariant;
+  /** Container box size: sm (32px), md (36px), lg (40px) */
+  size?: IconButtonSize;
+  /** Optional explicit override for icon size */
   iconSize?: IconSize;
+  /** Optional explicit override for icon tone */
+  tone?: IconTone;
+  /** Optional active/selected state toggle */
+  active?: boolean;
 }
 
 export function IconButton({
   icon,
-  variant = "ghost",
+  label,
+  "aria-label": ariaLabel,
+  variant: propVariant,
+  active = false,
   size = "md",
   iconSize,
+  tone,
   className,
   type = "button",
+  title,
   ...props
 }: IconButtonProps) {
+  const accessibleLabel = label ?? ariaLabel ?? title ?? "";
+  const variant: IconButtonVariant = active ? "inverse" : (propVariant ?? "ghost");
+
   return (
     <button
       type={type}
+      aria-label={accessibleLabel || undefined}
+      aria-current={active ? "page" : undefined}
+      title={title ?? (accessibleLabel ? accessibleLabel : undefined)}
       className={cn(
-        "transition-ui inline-flex items-center justify-center rounded-full outline-none",
+        "transition-ui inline-flex shrink-0 items-center justify-center rounded-full outline-none select-none",
         "focus-visible:ring-2 focus-visible:ring-stroke-active disabled:cursor-not-allowed",
         BOX[size],
         VARIANT[variant],
@@ -62,7 +90,7 @@ export function IconButton({
       )}
       {...props}
     >
-      <AppIcon name={icon} size={iconSize ?? ICON_SIZE[size]} />
+      <AppIcon name={icon} size={iconSize ?? ICON_SIZE[size]} tone={tone} />
     </button>
   );
 }
