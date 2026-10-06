@@ -131,9 +131,7 @@ function ScenarioComparator() {
                   <div className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full" style={{ background: s.color }} />
                     <span className="text-body-sm font-semibold text-primary">{s.name}</span>
-                    {isBest && (
-                      <StatusBadge tone="success">Optimal</StatusBadge>
-                    )}
+                    {isBest && <StatusBadge tone="success">Optimal</StatusBadge>}
                   </div>
                 }
                 action={
@@ -154,8 +152,8 @@ function ScenarioComparator() {
                     {fmtCompact(s.tco)}
                   </p>
                   <p className="font-mono-data mt-1 text-caption text-tertiary">
-                    {s.planningHorizonYears}yr horizon · {s.discountRate}% discount · ${s.laborRate}/hr ·{" "}
-                    {s.operatingProfile.replace("-", " ")}
+                    {s.planningHorizonYears}yr horizon · {s.discountRate}% discount · ${s.laborRate}
+                    /hr · {s.operatingProfile.replace("-", " ")}
                   </p>
                 </div>
               </Panel>
@@ -163,7 +161,8 @@ function ScenarioComparator() {
           })}
           {comparisonScenarios.length < 3 && (
             <div className="flex min-h-[110px] items-center justify-center rounded-lg border border-dashed border-muted bg-container/40 p-4 text-caption text-quaternary text-center">
-              Click a scenario pill in the header to activate ({3 - comparisonScenarios.length} free slot
+              Click a scenario pill in the header to activate ({3 - comparisonScenarios.length} free
+              slot
               {comparisonScenarios.length === 2 ? "" : "s"})
             </div>
           )}
@@ -221,10 +220,7 @@ function ScenarioComparator() {
 
         {/* Bottom Split: Metric Grid and Delta Chart */}
         <SplitRow from="xl" ratio="1/1" className="shrink-0">
-          <Panel
-            title="Parameter & Financial Delta Comparison"
-            padded={false}
-          >
+          <Panel title="Parameter & Financial Delta Comparison" padded={false}>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left">
                 <thead className="bg-container border-b border-muted">
@@ -254,9 +250,7 @@ function ScenarioComparator() {
                           key={s.id}
                           className={cn(
                             "px-3 py-2 text-right text-primary",
-                            s.id === best.id &&
-                              row.label === "Total TCO" &&
-                              "font-bold text-teal",
+                            s.id === best.id && row.label === "Total TCO" && "font-bold text-teal",
                           )}
                         >
                           {row.get(s)}

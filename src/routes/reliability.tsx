@@ -128,7 +128,10 @@ function RamsTab() {
       >
         <div className="h-[320px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={RELIABILITY_CURVE_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <LineChart
+              data={RELIABILITY_CURVE_DATA}
+              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
               <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={11} />
               <YAxis stroke={CHART_COLORS.textMuted} fontSize={11} unit="%" domain={[0, 100]} />
@@ -225,25 +228,22 @@ function RamsTab() {
                       : { label: "Critical", tone: "error" as const };
                 return (
                   <tr key={c.id} className="transition-colors hover:bg-hover">
-                    <td className="px-3 py-2 font-sans font-medium text-primary">
-                      {c.name}
-                    </td>
+                    <td className="px-3 py-2 font-sans font-medium text-primary">{c.name}</td>
                     <td className="px-3 py-2 text-right text-secondary">
                       {c.mtbfHours.toLocaleString()}
                     </td>
-                    <td className="px-3 py-2 text-right text-secondary">
-                      {c.mttrHours}h
-                    </td>
+                    <td className="px-3 py-2 text-right text-secondary">{c.mttrHours}h</td>
                     <td className="px-3 py-2 text-right text-tertiary">
                       {c.currentHours.toLocaleString()}
                     </td>
                     <td className="px-3 py-2 text-right font-medium text-primary">
                       {c.rulYears} yrs
                     </td>
-                    <td className="px-3 py-2 text-right text-secondary">
-                      {c.rulConfidence}%
-                    </td>
-                    <td className="px-3 py-2 text-right font-semibold" style={{ color: healthColor(c.healthScore) }}>
+                    <td className="px-3 py-2 text-right text-secondary">{c.rulConfidence}%</td>
+                    <td
+                      className="px-3 py-2 text-right font-semibold"
+                      style={{ color: healthColor(c.healthScore) }}
+                    >
                       {c.healthScore}%
                     </td>
                     <td className="px-3 py-2">
@@ -300,9 +300,7 @@ function RulTab() {
                 <span className="text-body-sm font-semibold text-primary block">
                   {c.rulYears} yrs
                 </span>
-                <span className="text-caption text-quaternary">
-                  {c.rulConfidence}% conf
-                </span>
+                <span className="text-caption text-quaternary">{c.rulConfidence}% conf</span>
               </div>
               <div className="w-24 shrink-0 text-right">
                 {urgent ? (

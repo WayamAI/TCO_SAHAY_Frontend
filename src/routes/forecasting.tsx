@@ -282,7 +282,9 @@ function ForecastingEngine() {
           >
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {CATEGORY_META.map((c) => {
-                const h2024 = HISTORICAL_TCO[4][c.key as keyof (typeof HISTORICAL_TCO)[0]] as number;
+                const h2024 = HISTORICAL_TCO[4][
+                  c.key as keyof (typeof HISTORICAL_TCO)[0]
+                ] as number;
                 const f2025 = FORECAST_TCO[0][c.key as keyof (typeof FORECAST_TCO)[0]] as number;
                 const f2026 = FORECAST_TCO[1][c.key as keyof (typeof FORECAST_TCO)[0]] as number;
                 const f2029 = FORECAST_TCO[4][c.key as keyof (typeof FORECAST_TCO)[0]] as number;
@@ -317,7 +319,12 @@ function ForecastingEngine() {
                     </div>
                     <div className="mt-3 flex items-center justify-between border-t border-muted pt-2 text-caption">
                       <span className="text-quaternary">5-Yr CAGR</span>
-                      <span className={cn("font-mono-data font-semibold", g > 8 ? "text-error" : g > 4 ? "text-warning" : "text-teal")}>
+                      <span
+                        className={cn(
+                          "font-mono-data font-semibold",
+                          g > 8 ? "text-error" : g > 4 ? "text-warning" : "text-teal",
+                        )}
+                      >
                         ↑ {g.toFixed(1)}%
                       </span>
                     </div>
@@ -329,7 +336,11 @@ function ForecastingEngine() {
 
           <Panel
             title="Model Calibration & Backtest Validation"
-            action={<span className="text-caption text-quaternary">Backtested against known fleet data</span>}
+            action={
+              <span className="text-caption text-quaternary">
+                Backtested against known fleet data
+              </span>
+            }
             padded={false}
           >
             <div className="overflow-x-auto">
@@ -354,9 +365,7 @@ function ForecastingEngine() {
                     const acc = 100 - Math.abs((c.forecast - c.actual) / c.actual) * 100;
                     return (
                       <tr key={c.metric} className="transition-colors hover:bg-hover">
-                        <td className="px-3 py-2 font-sans font-medium text-primary">
-                          {c.metric}
-                        </td>
+                        <td className="px-3 py-2 font-sans font-medium text-primary">{c.metric}</td>
                         <td className="px-3 py-2 text-right text-secondary">
                           {fmtCompact(c.forecast)}
                         </td>
@@ -376,7 +385,9 @@ function ForecastingEngine() {
             </div>
 
             <div className="p-3 border-t border-muted">
-              <p className="text-caption font-medium text-tertiary mb-2">Residual Scatter vs Actuals</p>
+              <p className="text-caption font-medium text-tertiary mb-2">
+                Residual Scatter vs Actuals
+              </p>
               <div className="h-[140px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <ScatterChart margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>

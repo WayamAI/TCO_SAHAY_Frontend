@@ -105,10 +105,7 @@ function buildVisits(parts: Part[], horizon: number, laborPct: number): ServiceV
       const laborCost = events.reduce((s, e) => s + e.laborCost, 0);
       const totalCost = events.reduce((s, e) => s + e.totalCost, 0);
 
-      const warrantyCovered = events.reduce(
-        (s, e) => s + (e.underWarranty ? e.totalCost : 0),
-        0,
-      );
+      const warrantyCovered = events.reduce((s, e) => s + (e.underWarranty ? e.totalCost : 0), 0);
 
       const coveredCount = events.filter((e) => e.underWarranty).length;
       const status: WarrantyStatus =
@@ -350,9 +347,15 @@ function MaintenancePage() {
                       </thead>
                       <tbody>
                         {v.lines.map((l) => (
-                          <tr key={l.part.id} className="border-b border-muted last:border-b-0 hover:bg-raised transition-colors">
+                          <tr
+                            key={l.part.id}
+                            className="border-b border-muted last:border-b-0 hover:bg-raised transition-colors"
+                          >
                             <td className="px-3 py-2">
-                              <span className="block max-w-[220px] truncate font-medium text-primary" title={l.part.name}>
+                              <span
+                                className="block max-w-[220px] truncate font-medium text-primary"
+                                title={l.part.name}
+                              >
                                 {l.part.name}
                                 {l.occurrences > 1 && (
                                   <span className="ml-1.5 rounded bg-raised-2 px-1 text-caption text-secondary">
@@ -367,12 +370,16 @@ function MaintenancePage() {
                             <td className="font-mono-data px-3 py-2 text-secondary tabular text-caption">
                               {formatInterval(l.part)}
                             </td>
-                            <td className="font-mono-data px-3 py-2 text-primary tabular text-caption">{l.qty}</td>
+                            <td className="font-mono-data px-3 py-2 text-primary tabular text-caption">
+                              {l.qty}
+                            </td>
                             <td className="px-3 py-2 text-secondary text-caption">{l.part.uom}</td>
                             <td className="font-mono-data px-3 py-2 text-secondary tabular text-caption">
                               {fmtUSD(l.part.unitPriceNew)}
                             </td>
-                            <td className="font-mono-data px-3 py-2 text-secondary tabular text-caption">{fmtUSD(l.partsCost)}</td>
+                            <td className="font-mono-data px-3 py-2 text-secondary tabular text-caption">
+                              {fmtUSD(l.partsCost)}
+                            </td>
                             <td className="font-mono-data px-3 py-2 text-secondary tabular text-caption">
                               {fmtUSD(l.laborCost)}
                             </td>
@@ -386,14 +393,10 @@ function MaintenancePage() {
                                 </StatusBadge>
                               )}
                               {l.status === "partial" && (
-                                <StatusBadge tone="warning">
-                                  Partly covered
-                                </StatusBadge>
+                                <StatusBadge tone="warning">Partly covered</StatusBadge>
                               )}
                               {l.status === "expired" && (
-                                <StatusBadge tone="neutral">
-                                  Expired
-                                </StatusBadge>
+                                <StatusBadge tone="neutral">Expired</StatusBadge>
                               )}
                             </td>
                           </tr>
@@ -413,7 +416,8 @@ function MaintenancePage() {
           </div>
           {visits.length > 24 && (
             <p className="mt-2 text-caption text-quaternary">
-              Showing first 24 of {visits.length} scheduled visits. Narrow horizon to isolate specific events.
+              Showing first 24 of {visits.length} scheduled visits. Narrow horizon to isolate
+              specific events.
             </p>
           )}
         </Panel>
@@ -461,13 +465,17 @@ function MaintenancePage() {
                 const max = drivers[0].tco.totalCost;
                 const every = partIntervalYears(part);
                 return (
-                  <div key={part.id} className="rounded-lg border border-muted bg-container p-2.5 transition-colors hover:bg-raised">
+                  <div
+                    key={part.id}
+                    className="rounded-lg border border-muted bg-container p-2.5 transition-colors hover:bg-raised"
+                  >
                     <div className="flex items-center gap-2 text-body-sm">
                       <span className="flex-1 truncate font-medium text-primary" title={part.name}>
                         {part.name}
                       </span>
                       <span className="font-mono-data text-caption text-quaternary">
-                        every {every < 1 ? `${(every * 12).toFixed(0)}mo` : `${every.toFixed(1)}y`} · {tco.eventCount}×
+                        every {every < 1 ? `${(every * 12).toFixed(0)}mo` : `${every.toFixed(1)}y`}{" "}
+                        · {tco.eventCount}×
                       </span>
                       <span className="font-mono-data w-16 text-right tabular text-primary font-semibold">
                         {fmtCompact(tco.totalCost)}
@@ -488,9 +496,7 @@ function MaintenancePage() {
                   </div>
                 );
               })}
-              {drivers.length === 0 && (
-                <EmptyState title="No parts due in this horizon" />
-              )}
+              {drivers.length === 0 && <EmptyState title="No parts due in this horizon" />}
             </div>
           </Panel>
         </SplitRow>

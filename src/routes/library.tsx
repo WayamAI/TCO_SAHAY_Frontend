@@ -157,7 +157,9 @@ function MaintenanceLibrary() {
                   <input
                     type="number"
                     value={form.maintIntervalValue}
-                    onChange={(e) => setForm({ ...form, maintIntervalValue: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setForm({ ...form, maintIntervalValue: Number(e.target.value) })
+                    }
                     className={inputCls}
                   />
                   <select
@@ -338,14 +340,26 @@ function MaintenanceLibrary() {
               </div>
 
               <div className="font-mono-data space-y-1.5 rounded-lg border border-muted bg-container p-3 text-body-sm">
-                <Row label="Sum of part prices (maintenance)" value={fmtUSD(totals.maintenanceCost)} />
-                <Row label={`Labour surcharge @ ${laborPct}%`} value={fmtUSD(totals.laborCost)} accent />
+                <Row
+                  label="Sum of part prices (maintenance)"
+                  value={fmtUSD(totals.maintenanceCost)}
+                />
+                <Row
+                  label={`Labour surcharge @ ${laborPct}%`}
+                  value={fmtUSD(totals.laborCost)}
+                  accent
+                />
                 <div className="border-t border-muted pt-1.5">
-                  <Row label="Combined maintenance lifecycle cost" value={fmtUSD(totals.totalCost)} bold />
+                  <Row
+                    label="Combined maintenance lifecycle cost"
+                    value={fmtUSD(totals.totalCost)}
+                    bold
+                  />
                 </div>
               </div>
               <p className="text-caption text-quaternary">
-                Labour Cost = Sum(Part Prices) × {laborPct}% — systematically applied to every scheduled maintenance event.
+                Labour Cost = Sum(Part Prices) × {laborPct}% — systematically applied to every
+                scheduled maintenance event.
               </p>
             </div>
           </Panel>
@@ -465,7 +479,10 @@ function LibraryRow({
   return (
     <tr className="border-b border-muted transition-colors hover:bg-raised group">
       <td className="sticky left-0 z-10 bg-container group-hover:bg-raised px-3 py-2 whitespace-nowrap">
-        <span className="block max-w-[200px] truncate text-body-sm font-medium text-primary" title={part.name}>
+        <span
+          className="block max-w-[200px] truncate text-body-sm font-medium text-primary"
+          title={part.name}
+        >
           {part.name}
         </span>
         <span className="text-caption text-quaternary font-mono-data block">

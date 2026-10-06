@@ -236,7 +236,11 @@ function Glossary() {
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative flex items-center">
-              <AppIcon name="search" size="xs" className="absolute left-3 text-quaternary pointer-events-none" />
+              <AppIcon
+                name="search"
+                size="xs"
+                className="absolute left-3 text-quaternary pointer-events-none"
+              />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}

@@ -145,7 +145,9 @@ function MonteCarloPage() {
                 <div className="rounded-md border border-muted bg-container p-2">
                   <div className="flex justify-between text-caption text-tertiary mb-1">
                     <span>Sampling stochastic draws...</span>
-                    <span className="font-mono-data">{Math.round((progress / 100) * 1000)} / 1,000</span>
+                    <span className="font-mono-data">
+                      {Math.round((progress / 100) * 1000)} / 1,000
+                    </span>
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-hover">
                     <div
@@ -171,16 +173,18 @@ function MonteCarloPage() {
                       textAnchor="end"
                       height={40}
                     />
-                    <YAxis
-                      stroke={CHART_COLORS.textMuted}
-                      fontSize={10}
-                    />
+                    <YAxis stroke={CHART_COLORS.textMuted} fontSize={10} />
                     <Tooltip content={<ChartTooltip formatter={(v) => `${v} runs`} />} />
                     <ReferenceLine
                       x="$3.8M – $4.0M"
                       stroke="var(--ref-gray-300)"
                       strokeDasharray="3 3"
-                      label={{ value: "P50 MEDIAN", fill: "var(--ref-gray-300)", fontSize: 9, position: "top" }}
+                      label={{
+                        value: "P50 MEDIAN",
+                        fill: "var(--ref-gray-300)",
+                        fontSize: 9,
+                        position: "top",
+                      }}
                     />
                     <Bar dataKey="count" name="Simulation runs" radius={[3, 3, 0, 0]}>
                       {MC.histogram.map((_, i) => (
@@ -191,7 +195,8 @@ function MonteCarloPage() {
                 </ResponsiveContainer>
               </div>
               <p className="text-center text-caption text-quaternary">
-                Bins reflect full fleet replacement, fuel volatility, and Weibull random failure draws.
+                Bins reflect full fleet replacement, fuel volatility, and Weibull random failure
+                draws.
               </p>
             </div>
           </Panel>
@@ -203,8 +208,16 @@ function MonteCarloPage() {
             <div className="space-y-3">
               <div className="h-[260px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={MC.varianceDrivers} layout="vertical" margin={{ left: 10, right: 10, top: 10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} horizontal={false} />
+                  <BarChart
+                    data={MC.varianceDrivers}
+                    layout="vertical"
+                    margin={{ left: 10, right: 10, top: 10, bottom: 0 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke={CHART_COLORS.grid}
+                      horizontal={false}
+                    />
                     <XAxis type="number" stroke={CHART_COLORS.textMuted} fontSize={10} unit="%" />
                     <YAxis
                       type="category"
@@ -219,7 +232,11 @@ function MonteCarloPage() {
                         <Cell
                           key={i}
                           fill={
-                            i === 0 ? CHART_COLORS.red : i < 3 ? CHART_COLORS.orange : CHART_COLORS.blue
+                            i === 0
+                              ? CHART_COLORS.red
+                              : i < 3
+                                ? CHART_COLORS.orange
+                                : CHART_COLORS.blue
                           }
                         />
                       ))}
@@ -228,7 +245,10 @@ function MonteCarloPage() {
                 </ResponsiveContainer>
               </div>
               <p className="text-caption leading-relaxed text-tertiary">
-                Failure-rate uncertainty accounts for <span className="text-primary font-medium">22%</span> of total lifecycle spread. Predictive condition-based maintenance and reman programs compress this risk interval by up to 40%.
+                Failure-rate uncertainty accounts for{" "}
+                <span className="text-primary font-medium">22%</span> of total lifecycle spread.
+                Predictive condition-based maintenance and reman programs compress this risk
+                interval by up to 40%.
               </p>
             </div>
           </Panel>
@@ -238,7 +258,9 @@ function MonteCarloPage() {
         <SplitRow from="xl" ratio="1/1" className="shrink-0">
           <Panel
             title="Confidence Percentile Bands"
-            action={<span className="text-caption text-quaternary">Deterministic baseline: $3.82M</span>}
+            action={
+              <span className="text-caption text-quaternary">Deterministic baseline: $3.82M</span>
+            }
             padded={false}
           >
             <div className="overflow-x-auto">
@@ -261,9 +283,7 @@ function MonteCarloPage() {
                     const d = row.v - MC.p50;
                     return (
                       <tr key={row.p} className="transition-colors hover:bg-hover">
-                        <td className="px-3 py-2 font-sans font-medium text-secondary">
-                          {row.p}
-                        </td>
+                        <td className="px-3 py-2 font-sans font-medium text-secondary">{row.p}</td>
                         <td className="px-3 py-2 text-right font-semibold text-primary">
                           {fmtCompact(row.v)}
                         </td>
@@ -272,7 +292,9 @@ function MonteCarloPage() {
                             <span className="text-tertiary">Baseline</span>
                           ) : (
                             <StatusBadge tone={row.tone}>
-                              {d > 0 ? "+" : "−"}{fmtCompact(Math.abs(d))} ({d > 0 ? "+" : "−"}{Math.abs((d / MC.p50) * 100).toFixed(0)}%)
+                              {d > 0 ? "+" : "−"}
+                              {fmtCompact(Math.abs(d))} ({d > 0 ? "+" : "−"}
+                              {Math.abs((d / MC.p50) * 100).toFixed(0)}%)
                             </StatusBadge>
                           )}
                         </td>
@@ -286,7 +308,11 @@ function MonteCarloPage() {
 
           <Panel
             title="Stochastic Input Parameters & Distributions"
-            action={<span className="text-caption text-quaternary">Monte Carlo parameter distributions</span>}
+            action={
+              <span className="text-caption text-quaternary">
+                Monte Carlo parameter distributions
+              </span>
+            }
             padded={false}
           >
             <div className="overflow-x-auto">
@@ -312,25 +338,18 @@ function MonteCarloPage() {
                       <td className="px-3 py-2.5 font-sans font-medium text-secondary">
                         {r.input}
                       </td>
-                      <td className="px-3 py-2.5 text-tertiary">
-                        {r.dist}
-                      </td>
-                      <td className="px-3 py-2.5 text-right text-primary">
-                        {r.min}
-                      </td>
-                      <td className="px-3 py-2.5 text-right text-primary">
-                        {r.max}
-                      </td>
-                      <td className="px-3 py-2.5 text-right text-secondary">
-                        {r.sd}
-                      </td>
+                      <td className="px-3 py-2.5 text-tertiary">{r.dist}</td>
+                      <td className="px-3 py-2.5 text-right text-primary">{r.min}</td>
+                      <td className="px-3 py-2.5 text-right text-primary">{r.max}</td>
+                      <td className="px-3 py-2.5 text-right text-secondary">{r.sd}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
             <p className="p-3 text-caption text-quaternary border-t border-muted">
-              Each iteration draws independently from the assigned continuous probability density functions.
+              Each iteration draws independently from the assigned continuous probability density
+              functions.
             </p>
           </Panel>
         </SplitRow>

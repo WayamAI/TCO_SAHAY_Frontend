@@ -189,9 +189,7 @@ function Integrations() {
                 title={
                   <div className="flex items-center gap-2">
                     <span>Connector Inspector — {selected.name}</span>
-                    <StatusBadge tone={STATUS_TONE[selected.status]}>
-                      {selected.status}
-                    </StatusBadge>
+                    <StatusBadge tone={STATUS_TONE[selected.status]}>{selected.status}</StatusBadge>
                   </div>
                 }
               >
@@ -237,7 +235,9 @@ function ConnectorCard({
           </span>
           <div className="min-w-0">
             <p className="truncate text-body-sm font-semibold text-primary">{connector.name}</p>
-            <p className="truncate text-caption text-tertiary">{connector.vendor} · {connector.category}</p>
+            <p className="truncate text-caption text-tertiary">
+              {connector.vendor} · {connector.category}
+            </p>
           </div>
         </div>
         <StatusBadge tone={tone}>{connector.status}</StatusBadge>
@@ -249,7 +249,10 @@ function ConnectorCard({
       </div>
       <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-hover">
         <div
-          className={cn("h-full rounded-full transition-all", tone === "success" ? "bg-success" : tone === "warning" ? "bg-warning" : "bg-error")}
+          className={cn(
+            "h-full rounded-full transition-all",
+            tone === "success" ? "bg-success" : tone === "warning" ? "bg-warning" : "bg-error",
+          )}
           style={{ width: `${connector.uptimePct}%` }}
         />
       </div>
@@ -264,21 +267,32 @@ function ConnectorDetail({ connector: c }: { connector: Connector }) {
       <div className="grid grid-cols-4 gap-2 text-center">
         <div className="rounded-md border border-muted bg-container p-2">
           <p className="text-caption uppercase text-quaternary">Frequency</p>
-          <p className="font-mono-data mt-0.5 text-body-sm font-semibold text-primary">{c.syncFrequency.split(" ")[0]}</p>
+          <p className="font-mono-data mt-0.5 text-body-sm font-semibold text-primary">
+            {c.syncFrequency.split(" ")[0]}
+          </p>
         </div>
         <div className="rounded-md border border-muted bg-container p-2">
           <p className="text-caption uppercase text-quaternary">Latency</p>
-          <p className="font-mono-data mt-0.5 text-body-sm font-semibold text-primary">{c.latencyMs}ms</p>
+          <p className="font-mono-data mt-0.5 text-body-sm font-semibold text-primary">
+            {c.latencyMs}ms
+          </p>
         </div>
         <div className="rounded-md border border-muted bg-container p-2">
           <p className="text-caption uppercase text-quaternary">Error Rate</p>
-          <p className={cn("font-mono-data mt-0.5 text-body-sm font-semibold", c.errorRatePct > 1 ? "text-warning" : "text-success")}>
+          <p
+            className={cn(
+              "font-mono-data mt-0.5 text-body-sm font-semibold",
+              c.errorRatePct > 1 ? "text-warning" : "text-success",
+            )}
+          >
             {c.errorRatePct}%
           </p>
         </div>
         <div className="rounded-md border border-muted bg-container p-2">
           <p className="text-caption uppercase text-quaternary">Uptime</p>
-          <p className="font-mono-data mt-0.5 text-body-sm font-semibold text-teal">{c.uptimePct}%</p>
+          <p className="font-mono-data mt-0.5 text-body-sm font-semibold text-teal">
+            {c.uptimePct}%
+          </p>
         </div>
       </div>
 
@@ -321,7 +335,9 @@ function ConnectorDetail({ connector: c }: { connector: Connector }) {
             >
               <span className="flex-1 truncate text-tertiary">{m.source}</span>
               <AppIcon name="arrowRight" size="xs" className="shrink-0 text-quaternary" />
-              <span className="flex-1 truncate text-right text-primary font-medium">{m.canonical}</span>
+              <span className="flex-1 truncate text-right text-primary font-medium">
+                {m.canonical}
+              </span>
             </div>
           ))}
         </div>
@@ -361,7 +377,11 @@ function TopologyView({ onSelect }: { onSelect: (c: Connector) => void }) {
     <div className="flex flex-col gap-4">
       <Panel
         title="Source → Pipeline → Platform Ingest Architecture"
-        action={<span className="text-caption text-quaternary">Real-time event streaming and batch micro-extracts</span>}
+        action={
+          <span className="text-caption text-quaternary">
+            Real-time event streaming and batch micro-extracts
+          </span>
+        }
       >
         <div className="grid items-center gap-4 lg:grid-cols-[1fr_auto_1fr]">
           {/* Sources */}
@@ -403,9 +423,7 @@ function TopologyView({ onSelect }: { onSelect: (c: Connector) => void }) {
                     {s.healthPct}% health · {fmtCompact(s.recordsPerDay).replace("$", "")}/d
                   </p>
                 </div>
-                {i < PIPELINE_STAGES.length - 1 && (
-                  <div className="mx-auto h-2 w-px bg-muted" />
-                )}
+                {i < PIPELINE_STAGES.length - 1 && <div className="mx-auto h-2 w-px bg-muted" />}
               </div>
             ))}
           </div>
@@ -520,7 +538,11 @@ function QualityView() {
     <div className="flex flex-col gap-4">
       <Panel
         title="24-Hour Telemetry & Ingestion Throughput"
-        action={<span className="text-caption text-quaternary">Rolling 24h ingress velocity (thousands of records)</span>}
+        action={
+          <span className="text-caption text-quaternary">
+            Rolling 24h ingress velocity (thousands of records)
+          </span>
+        }
       >
         <div className="h-[200px] w-full">
           <ResponsiveContainer width="100%" height="100%">

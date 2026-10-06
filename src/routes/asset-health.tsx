@@ -20,8 +20,7 @@ export const Route = createFileRoute("/asset-health")({
       { title: "Asset Health Index | TCO Intelligence" },
       {
         name: "description",
-        content:
-          "Hierarchical health scores: component → assembly → system → locomotive → fleet.",
+        content: "Hierarchical health scores: component → assembly → system → locomotive → fleet.",
       },
     ],
   }),
@@ -32,8 +31,7 @@ function AssetHealth() {
   const [locoId, setLocoId] = useState("loco-001");
   const totalFleetCount = LOCOMOTIVES.reduce((s, l) => s + l.fleetCount, 0);
   const fleetHealth =
-    LOCOMOTIVES.reduce((s, l) => s + l.currentHealthScore * l.fleetCount, 0) /
-    totalFleetCount;
+    LOCOMOTIVES.reduce((s, l) => s + l.currentHealthScore * l.fleetCount, 0) / totalFleetCount;
 
   const systems = SYSTEMS.filter((s) => s.locomotiveId === locoId);
   const loco = LOCOMOTIVES.find((l) => l.id === locoId)!;
@@ -46,7 +44,9 @@ function AssetHealth() {
         description="Hierarchical condition monitoring: component → system → locomotive → fleet. Real-time sensor telemetry and Weibull failure risk modeling."
         actions={
           <div className="flex items-center gap-2">
-            <label htmlFor="loco-select" className="text-caption text-tertiary">Active Platform:</label>
+            <label htmlFor="loco-select" className="text-caption text-tertiary">
+              Active Platform:
+            </label>
             <select
               id="loco-select"
               value={locoId}
@@ -122,7 +122,9 @@ function AssetHealth() {
                   >
                     <HealthRing score={l.currentHealthScore} size={80} stroke={7} color={l.color} />
                     <p className="mt-2 text-label-sm font-semibold text-primary">{l.model}</p>
-                    <p className="text-caption text-tertiary">{l.fleetCount} units · {l.fuelType}</p>
+                    <p className="text-caption text-tertiary">
+                      {l.fleetCount} units · {l.fuelType}
+                    </p>
                     <div className="mt-1.5">
                       {l.currentHealthScore >= 80 ? (
                         <StatusBadge tone="success">Optimal</StatusBadge>
@@ -150,13 +152,22 @@ function AssetHealth() {
                 const comps = COMPONENTS.filter((c) => asmIds.includes(c.assemblyId));
                 const topRisk = comps.sort((a, b) => a.rulYears - b.rulYears)[0];
                 const tone =
-                  s.healthScore >= 90 ? ("success" as const) : s.healthScore >= 80 ? ("info" as const) : ("warning" as const);
+                  s.healthScore >= 90
+                    ? ("success" as const)
+                    : s.healthScore >= 80
+                      ? ("info" as const)
+                      : ("warning" as const);
                 return (
-                  <div key={s.id} className="space-y-1 rounded-md border border-muted bg-container p-2.5">
+                  <div
+                    key={s.id}
+                    className="space-y-1 rounded-md border border-muted bg-container p-2.5"
+                  >
                     <div className="flex items-center justify-between text-body-sm">
                       <span className="font-medium text-primary">{s.name}</span>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono-data font-semibold text-primary">{s.healthScore}%</span>
+                        <span className="font-mono-data font-semibold text-primary">
+                          {s.healthScore}%
+                        </span>
                         <StatusBadge tone={tone}>
                           {s.healthScore >= 90 ? "Optimal" : s.healthScore >= 80 ? "Good" : "Watch"}
                         </StatusBadge>
@@ -173,7 +184,9 @@ function AssetHealth() {
                     </div>
                     {topRisk && (
                       <p className="text-caption text-quaternary truncate">
-                        Top critical component: <span className="text-secondary">{topRisk.name}</span> (RUL: {topRisk.rulYears} yrs)
+                        Top critical component:{" "}
+                        <span className="text-secondary">{topRisk.name}</span> (RUL:{" "}
+                        {topRisk.rulYears} yrs)
                       </p>
                     )}
                   </div>
@@ -227,9 +240,7 @@ function AssetHealth() {
                   const isUrgent = c.rulYears < 1;
                   return (
                     <tr key={c.id} className="transition-colors hover:bg-hover">
-                      <td className="px-3 py-2.5 font-sans font-medium text-primary">
-                        {c.name}
-                      </td>
+                      <td className="px-3 py-2.5 font-sans font-medium text-primary">{c.name}</td>
                       <td
                         className="px-3 py-2.5 text-right font-semibold"
                         style={{ color: healthColor(c.healthScore) }}
@@ -242,9 +253,7 @@ function AssetHealth() {
                       <td className="px-3 py-2.5 text-right font-medium text-primary">
                         {c.rulYears} yrs
                       </td>
-                      <td className="px-3 py-2.5 text-right text-tertiary">
-                        {p.toFixed(1)}%
-                      </td>
+                      <td className="px-3 py-2.5 text-right text-tertiary">{p.toFixed(1)}%</td>
                       <td className="px-3 py-2.5">
                         {isUrgent ? (
                           <PriorityBadge priority="critical" />

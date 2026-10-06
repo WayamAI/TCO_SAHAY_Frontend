@@ -177,9 +177,7 @@ function Benchmark() {
         <Panel
           title="OEM Lifecycle TCO Leaderboard"
           action={
-            <span className="text-caption text-quaternary">
-              Ranked by 20-Year Cumulative Cost
-            </span>
+            <span className="text-caption text-quaternary">Ranked by 20-Year Cumulative Cost</span>
           }
         >
           <div className="space-y-2.5">
@@ -201,19 +199,16 @@ function Benchmark() {
                     className="h-2.5 w-2.5 shrink-0 rounded-full"
                     style={{ background: colors[c.id] }}
                   />
-                  <span className="text-body-sm font-semibold text-primary truncate">
-                    {c.name}
-                  </span>
-                  {c.isOwn && (
-                    <StatusBadge tone="success">Active Baseline</StatusBadge>
-                  )}
-                  {i === 0 && (
-                    <StatusBadge tone="info">Lowest TCO</StatusBadge>
-                  )}
+                  <span className="text-body-sm font-semibold text-primary truncate">{c.name}</span>
+                  {c.isOwn && <StatusBadge tone="success">Active Baseline</StatusBadge>}
+                  {i === 0 && <StatusBadge tone="info">Lowest TCO</StatusBadge>}
                 </div>
                 <div className="flex items-center gap-6">
                   <div className="text-right">
-                    <p className="font-mono-data text-body-sm font-bold" style={{ color: colors[c.id] }}>
+                    <p
+                      className="font-mono-data text-body-sm font-bold"
+                      style={{ color: colors[c.id] }}
+                    >
                       {fmtCompact(c.tco20yr)}
                     </p>
                     <p className="text-caption text-quaternary">20-yr total</p>
@@ -254,7 +249,11 @@ function Benchmark() {
         <SplitRow from="xl" ratio="1/1" className="shrink-0">
           <Panel
             title="Six-Axis Competitive Radar"
-            action={<span className="text-caption text-quaternary">Normalized score across 6 key metrics</span>}
+            action={
+              <span className="text-caption text-quaternary">
+                Normalized score across 6 key metrics
+              </span>
+            }
           >
             <div className="h-[340px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -309,9 +308,7 @@ function Benchmark() {
                 <tbody className="divide-y divide-muted font-mono-data text-body-sm">
                   {rows.map((r) => (
                     <tr key={r.label} className="transition-colors hover:bg-hover">
-                      <td className="px-3 py-2 font-sans font-medium text-secondary">
-                        {r.label}
-                      </td>
+                      <td className="px-3 py-2 font-sans font-medium text-secondary">{r.label}</td>
                       {COMPETITORS.map((c) => {
                         const isBest = r.best(c);
                         return (
@@ -334,8 +331,10 @@ function Benchmark() {
             </div>
             <div className="p-3 border-t border-muted bg-container/30">
               <p className="text-caption text-secondary">
-                <span className="font-semibold text-teal">Lifecycle Savings:</span> Over 20 years with 12 locomotives, Wabtec saves{" "}
-                <span className="font-mono-data font-bold text-teal">$1.92M</span> in total lifecycle cost compared to the closest competitor.
+                <span className="font-semibold text-teal">Lifecycle Savings:</span> Over 20 years
+                with 12 locomotives, Wabtec saves{" "}
+                <span className="font-mono-data font-bold text-teal">$1.92M</span> in total
+                lifecycle cost compared to the closest competitor.
               </p>
             </div>
           </Panel>

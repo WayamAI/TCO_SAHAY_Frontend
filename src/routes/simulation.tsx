@@ -165,7 +165,9 @@ function SimulationPlayground() {
             <Panel title="Platform & Operating Profile">
               <div className="space-y-3">
                 <div className="space-y-1.5">
-                  <label className="text-caption font-medium text-tertiary">Select Locomotive</label>
+                  <label className="text-caption font-medium text-tertiary">
+                    Select Locomotive
+                  </label>
                   <div className="space-y-1.5">
                     {LOCOMOTIVES.map((l) => (
                       <button
@@ -207,8 +209,8 @@ function SimulationPlayground() {
                     ))}
                   </div>
                   <div className="font-mono-data rounded-md border border-muted bg-container p-2 text-caption text-tertiary">
-                    Wear ×{profile.wearMultiplier} · Maint ×{profile.maintenanceFreqMultiplier} · Risk ×
-                    {profile.failureProbMultiplier}
+                    Wear ×{profile.wearMultiplier} · Maint ×{profile.maintenanceFreqMultiplier} ·
+                    Risk ×{profile.failureProbMultiplier}
                   </div>
                 </div>
               </div>
@@ -315,7 +317,9 @@ function SimulationPlayground() {
                     />
                     <p className="font-mono-data text-caption text-warning">
                       Labor: ${params.laborRatePerHour}/hr → $
-                      {Math.round(params.laborRatePerHour * Math.pow(1 + params.inflationLabor / 100, 10))}
+                      {Math.round(
+                        params.laborRatePerHour * Math.pow(1 + params.inflationLabor / 100, 10),
+                      )}
                       /hr by Year 10
                     </p>
                   </div>
@@ -390,11 +394,7 @@ function SimulationPlayground() {
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={RELIABILITY_CURVE_DATA}>
                       <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
-                      <XAxis
-                        dataKey="year"
-                        stroke={CHART_COLORS.textMuted}
-                        fontSize={10}
-                      />
+                      <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={10} />
                       <YAxis stroke={CHART_COLORS.textMuted} fontSize={10} unit="%" />
                       <Tooltip content={<ChartTooltip formatter={(v) => `${v}%`} />} />
                       <Legend wrapperStyle={{ fontSize: 10 }} />
@@ -443,8 +443,9 @@ function SimulationPlayground() {
                     Extend brake PM interval 6 → 8 months
                   </p>
                   <p className="text-caption leading-relaxed text-secondary">
-                    <span className="font-semibold text-primary">Root Cause:</span> Weibull β=3.5 shows
-                    wear-out begins at 7,200 hrs. Current 5,500hr trigger is 24% earlier than required.
+                    <span className="font-semibold text-primary">Root Cause:</span> Weibull β=3.5
+                    shows wear-out begins at 7,200 hrs. Current 5,500hr trigger is 24% earlier than
+                    required.
                   </p>
                   <div className="font-mono-data space-y-1 rounded-md border border-muted bg-container p-2.5 text-caption">
                     <p className="text-teal font-medium">Impact: save $84,000 over 20 years</p>
@@ -473,18 +474,26 @@ function SimulationPlayground() {
                 <div className="font-mono-data space-y-2.5 text-body-sm">
                   <div className="flex justify-between">
                     <span className="text-secondary">MTTR (Average)</span>
-                    <span className="font-semibold text-primary">{result.availability.mttrAvg.toFixed(1)} hrs</span>
+                    <span className="font-semibold text-primary">
+                      {result.availability.mttrAvg.toFixed(1)} hrs
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-secondary">MTBF (Fleet Average)</span>
-                    <span className="font-semibold text-primary">{Math.round(result.availability.mtbfFleetAvg).toLocaleString()} hrs</span>
+                    <span className="font-semibold text-primary">
+                      {Math.round(result.availability.mtbfFleetAvg).toLocaleString()} hrs
+                    </span>
                   </div>
                   <div className="flex justify-between border-t border-muted pt-2">
                     <span className="text-secondary">Fleet Availability</span>
-                    <span className="font-bold text-teal">{result.availability.availabilityPct.toFixed(2)}%</span>
+                    <span className="font-bold text-teal">
+                      {result.availability.availabilityPct.toFixed(2)}%
+                    </span>
                   </div>
                 </div>
-                <p className="mt-3 text-caption text-quaternary">Calculated via A = MTBF / (MTBF + MTTR)</p>
+                <p className="mt-3 text-caption text-quaternary">
+                  Calculated via A = MTBF / (MTBF + MTTR)
+                </p>
               </Panel>
             </div>
 
@@ -806,11 +815,15 @@ function TCOSplitCard() {
           <div className="font-mono-data space-y-1.5 rounded-md border border-muted bg-container p-2.5 text-body-sm">
             <div className="flex justify-between">
               <span className="text-secondary">Gross lifecycle cost</span>
-              <span className="text-primary">{fmtCompact(result.totalTCO + result.split.warrantyCovered)}</span>
+              <span className="text-primary">
+                {fmtCompact(result.totalTCO + result.split.warrantyCovered)}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-secondary">Less warranty covered</span>
-              <span className="text-success font-medium">-{fmtCompact(result.split.warrantyCovered)}</span>
+              <span className="text-success font-medium">
+                -{fmtCompact(result.split.warrantyCovered)}
+              </span>
             </div>
           </div>
         </div>
@@ -839,7 +852,8 @@ function TCOSplitCard() {
             </div>
           </div>
           <p className="text-caption text-quaternary">
-            Reserve = Σ(part cost × failure prob) across {parts.length} parts · part-level maint {fmtCompact(partRoll.totalCost)}
+            Reserve = Σ(part cost × failure prob) across {parts.length} parts · part-level maint{" "}
+            {fmtCompact(partRoll.totalCost)}
           </p>
         </div>
       </Panel>

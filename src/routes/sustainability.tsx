@@ -124,21 +124,33 @@ function Sustainability() {
         <SplitRow from="xl" ratio="1/1" className="shrink-0">
           <Panel
             title="Fleet Emissions Trajectory & 2030 Roadmap"
-            action={<span className="text-caption text-quaternary">Trajectory drops 22% by 2030</span>}
+            action={
+              <span className="text-caption text-quaternary">Trajectory drops 22% by 2030</span>
+            }
           >
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={EMISSIONS_TIMELINE} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                <AreaChart
+                  data={EMISSIONS_TIMELINE}
+                  margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
                   <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={11} />
                   <YAxis stroke={CHART_COLORS.textMuted} fontSize={11} />
-                  <Tooltip content={<ChartTooltip formatter={(v) => `${v.toLocaleString()} t`} />} />
+                  <Tooltip
+                    content={<ChartTooltip formatter={(v) => `${v.toLocaleString()} t`} />}
+                  />
                   <Legend wrapperStyle={{ fontSize: 11, paddingTop: 10 }} />
                   <ReferenceLine
                     y={2500}
                     stroke={CHART_COLORS.yellow}
                     strokeDasharray="4 4"
-                    label={{ value: "2030 TARGET: 2,500t", fill: CHART_COLORS.yellow, fontSize: 9, position: "top" }}
+                    label={{
+                      value: "2030 TARGET: 2,500t",
+                      fill: CHART_COLORS.yellow,
+                      fontSize: 9,
+                      position: "top",
+                    }}
                   />
                   <Area
                     type="monotone"
@@ -178,8 +190,16 @@ function Sustainability() {
           >
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={CO2_PER_KM} layout="vertical" margin={{ left: 20, right: 10, top: 10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} horizontal={false} />
+                <BarChart
+                  data={CO2_PER_KM}
+                  layout="vertical"
+                  margin={{ left: 20, right: 10, top: 10, bottom: 0 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={CHART_COLORS.grid}
+                    horizontal={false}
+                  />
                   <XAxis type="number" stroke={CHART_COLORS.textMuted} fontSize={10} unit="g" />
                   <YAxis
                     type="category"
@@ -204,14 +224,24 @@ function Sustainability() {
         <SplitRow from="xl" ratio="1.4/1" className="shrink-0">
           <Panel
             title="Platform Environmental Scoring Matrix"
-            action={<span className="text-caption text-quaternary">3 active fleet locomotive classes</span>}
+            action={
+              <span className="text-caption text-quaternary">
+                3 active fleet locomotive classes
+              </span>
+            }
             padded={false}
           >
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left">
                 <thead className="bg-container border-b border-muted">
                   <tr>
-                    {["Locomotive Platform", "CO₂ / km", "Fuel Efficiency", "Carbon Tax / yr", "ESG Score"].map((h, i) => (
+                    {[
+                      "Locomotive Platform",
+                      "CO₂ / km",
+                      "Fuel Efficiency",
+                      "Carbon Tax / yr",
+                      "ESG Score",
+                    ].map((h, i) => (
                       <th
                         key={h}
                         className={cn(
@@ -227,15 +257,9 @@ function Sustainability() {
                 <tbody className="divide-y divide-muted font-mono-data text-body-sm">
                   {rows.map((r) => (
                     <tr key={r.model} className="transition-colors hover:bg-hover">
-                      <td className="px-3 py-2.5 font-sans font-medium text-primary">
-                        {r.model}
-                      </td>
-                      <td className="px-3 py-2.5 text-right text-secondary">
-                        {r.co2}
-                      </td>
-                      <td className="px-3 py-2.5 text-right text-secondary">
-                        {r.eff} / 100
-                      </td>
+                      <td className="px-3 py-2.5 font-sans font-medium text-primary">{r.model}</td>
+                      <td className="px-3 py-2.5 text-right text-secondary">{r.co2}</td>
+                      <td className="px-3 py-2.5 text-right text-secondary">{r.eff} / 100</td>
                       <td className="px-3 py-2.5 text-right font-semibold text-primary">
                         ${r.cost.toLocaleString()}
                       </td>
@@ -248,7 +272,9 @@ function Sustainability() {
                             />
                           </div>
                           <span className="text-caption text-secondary">{r.score}</span>
-                          <StatusBadge tone={r.tone}>{r.score >= 80 ? "Superior" : r.score >= 60 ? "Compliant" : "Lagging"}</StatusBadge>
+                          <StatusBadge tone={r.tone}>
+                            {r.score >= 80 ? "Superior" : r.score >= 60 ? "Compliant" : "Lagging"}
+                          </StatusBadge>
                         </div>
                       </td>
                     </tr>
@@ -260,11 +286,14 @@ function Sustainability() {
 
           <Panel
             title="Fleet Electrification & Transition Economics"
-            action={<span className="text-caption text-teal font-semibold">RECOMMENDED UPGRADE</span>}
+            action={
+              <span className="text-caption text-teal font-semibold">RECOMMENDED UPGRADE</span>
+            }
           >
             <div className="space-y-3">
               <p className="text-body-sm text-secondary">
-                By replacing 4 legacy AC4400 diesel units with zero-emission FLXdrive battery locomotives:
+                By replacing 4 legacy AC4400 diesel units with zero-emission FLXdrive battery
+                locomotives:
               </p>
               <div className="font-mono-data space-y-2 rounded-lg border border-muted bg-container p-3 text-body-sm">
                 <div className="flex justify-between">
@@ -285,7 +314,8 @@ function Sustainability() {
                 </div>
               </div>
               <p className="text-caption text-quaternary">
-                Payback period: 4.8 years against battery capital premium with 10-year overhaul offsets.
+                Payback period: 4.8 years against battery capital premium with 10-year overhaul
+                offsets.
               </p>
             </div>
           </Panel>

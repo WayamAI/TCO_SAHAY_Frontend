@@ -229,7 +229,12 @@ function FleetExplorer() {
                         }
                       }}
                     >
-                      <circle cx={pos.x} cy={pos.y} r={Math.max(rNode + 7, 13)} fill="transparent" />
+                      <circle
+                        cx={pos.x}
+                        cy={pos.y}
+                        r={Math.max(rNode + 7, 13)}
+                        fill="transparent"
+                      />
                       {isSel && (
                         <circle
                           cx={pos.x}
@@ -368,7 +373,9 @@ function GroupDetail({ node, onSelect }: { node: RadialNode; onSelect: (id: stri
                 style={{ background: healthColor(c.healthScore) }}
               />
               <span className="flex-1 truncate text-primary">{c.name}</span>
-              <span className="font-mono-data text-caption text-secondary tabular">{c.healthScore}%</span>
+              <span className="font-mono-data text-caption text-secondary tabular">
+                {c.healthScore}%
+              </span>
               <span className="font-mono-data text-right text-caption text-quaternary tabular">
                 {fmtCompact(c.replacementCost)}
               </span>
@@ -391,7 +398,10 @@ function GroupDetail({ node, onSelect }: { node: RadialNode; onSelect: (id: stri
                 <div key={c.id}>
                   <div className="flex justify-between text-caption">
                     <span className="text-secondary">{c.name}</span>
-                    <span className="font-mono-data tabular" style={{ color: healthColor(c.healthScore) }}>
+                    <span
+                      className="font-mono-data tabular"
+                      style={{ color: healthColor(c.healthScore) }}
+                    >
                       {c.healthScore}%
                     </span>
                   </div>
@@ -463,7 +473,8 @@ function ComponentDetail({ comp }: { comp: Component }) {
       >
         <div className="mb-3">
           <p className="text-body-sm text-secondary">
-            {comp.category} · Failure Impact Severity: <strong className="text-primary">{comp.failureImpact}</strong>
+            {comp.category} · Failure Impact Severity:{" "}
+            <strong className="text-primary">{comp.failureImpact}</strong>
           </p>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -523,8 +534,12 @@ function ComponentDetail({ comp }: { comp: Component }) {
 
           <div className="mt-4 border-t border-muted pt-3">
             <div className="flex justify-between text-caption mb-1">
-              <span className="text-quaternary uppercase tracking-[0.08em]">Remaining Useful Life</span>
-              <span className="font-mono-data text-secondary tabular">{comp.rulYears} yrs ({rulPct.toFixed(0)}%)</span>
+              <span className="text-quaternary uppercase tracking-[0.08em]">
+                Remaining Useful Life
+              </span>
+              <span className="font-mono-data text-secondary tabular">
+                {comp.rulYears} yrs ({rulPct.toFixed(0)}%)
+              </span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-raised-2">
               <div
@@ -577,7 +592,8 @@ function ComponentDetail({ comp }: { comp: Component }) {
             )}
             {affected.length > 0 ? (
               <p className="text-body-sm text-secondary">
-                Failure cascades to: <span className="text-warning font-medium">{affected.join(", ")}</span>
+                Failure cascades to:{" "}
+                <span className="text-warning font-medium">{affected.join(", ")}</span>
               </p>
             ) : (
               <p className="text-caption text-quaternary">No downstream cascade on failure</p>

@@ -68,10 +68,7 @@ function Dashboard() {
 
   const roll = useMemo(() => fleetTCO(parts, horizon, laborPct), [parts, horizon, laborPct]);
 
-  const partRows = useMemo(
-    () => [...roll.rows].sort((a, b) => b.totalCost - a.totalCost),
-    [roll],
-  );
+  const partRows = useMemo(() => [...roll.rows].sort((a, b) => b.totalCost - a.totalCost), [roll]);
 
   const timeline = useMemo(() => {
     const all = [
@@ -111,11 +108,15 @@ function Dashboard() {
       value: (r) => r.part.name,
       render: (r) => (
         <div className="min-w-0">
-          <span className="text-primary block truncate font-medium text-body-sm" title={r.part.name}>
+          <span
+            className="text-primary block truncate font-medium text-body-sm"
+            title={r.part.name}
+          >
             {r.part.name}
           </span>
           <span className="font-mono-data text-caption text-quaternary block">
-            every {r.part.maintIntervalValue.toLocaleString()} {r.part.maintIntervalUnit} · ×{r.part.maintQty} {r.part.uom}
+            every {r.part.maintIntervalValue.toLocaleString()} {r.part.maintIntervalUnit} · ×
+            {r.part.maintQty} {r.part.uom}
           </span>
         </div>
       ),
@@ -270,7 +271,10 @@ function Dashboard() {
           >
             <div className="h-[300px] w-full min-h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={timeline} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <ComposedChart
+                  data={timeline}
+                  margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
                   <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={11} />
                   <YAxis
@@ -307,9 +311,19 @@ function Dashboard() {
                     fill={CHART_COLORS.page}
                     fillOpacity={0.4}
                   />
-                  <Bar dataKey="maintenance" name="Maintenance" stackId="a" fill={CHART_COLORS.teal} />
+                  <Bar
+                    dataKey="maintenance"
+                    name="Maintenance"
+                    stackId="a"
+                    fill={CHART_COLORS.teal}
+                  />
                   <Bar dataKey="labor" name="Labor" stackId="a" fill={CHART_COLORS.purple} />
-                  <Bar dataKey="consumables" name="Consumables" stackId="a" fill={CHART_COLORS.yellow} />
+                  <Bar
+                    dataKey="consumables"
+                    name="Consumables"
+                    stackId="a"
+                    fill={CHART_COLORS.yellow}
+                  />
                   <Bar dataKey="failures" name="Failures" stackId="a" fill={CHART_COLORS.red} />
                   <Bar dataKey="downtime" name="Downtime" stackId="a" fill={CHART_COLORS.orange} />
                 </ComposedChart>
@@ -332,7 +346,10 @@ function Dashboard() {
           >
             <div className="flex flex-col divide-y divide-muted overflow-y-auto">
               {LOCOMOTIVES.map((l) => (
-                <div key={l.id} className="flex items-center gap-3.5 p-3.5 transition-colors hover:bg-raised">
+                <div
+                  key={l.id}
+                  className="flex items-center gap-3.5 p-3.5 transition-colors hover:bg-raised"
+                >
                   <HealthRing score={l.currentHealthScore} size={54} stroke={5} />
                   <div className="min-w-0 flex-1">
                     <p className="font-display text-body-md text-primary truncate">{l.model}</p>
@@ -367,8 +384,12 @@ function Dashboard() {
           action={
             <div className="flex items-center gap-3">
               <span className="font-mono-data text-caption text-quaternary tabular flex gap-3">
-                <span>Customer: <strong className="text-warning">{fmtCompact(roll.customerTCO)}</strong></span>
-                <span>Company: <strong className="text-info">{fmtCompact(roll.organizationTCO)}</strong></span>
+                <span>
+                  Customer: <strong className="text-warning">{fmtCompact(roll.customerTCO)}</strong>
+                </span>
+                <span>
+                  Company: <strong className="text-info">{fmtCompact(roll.organizationTCO)}</strong>
+                </span>
               </span>
               <Link
                 to="/bom"

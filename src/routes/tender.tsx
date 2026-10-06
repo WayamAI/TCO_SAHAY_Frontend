@@ -167,9 +167,7 @@ function TenderMode() {
           <Panel
             title={`Lifecycle Allocation — ${customer}`}
             action={
-              <span className="text-caption text-quaternary">
-                Aggregated for {qty} units
-              </span>
+              <span className="text-caption text-quaternary">Aggregated for {qty} units</span>
             }
           >
             <div className="space-y-4">
@@ -179,7 +177,10 @@ function TenderMode() {
                   { l: "Fleet 20yr TCO", v: fmtCompact(fleetTco) },
                   { l: "Service $/km", v: `$${result.financials.costPerKm.toFixed(2)}` },
                 ].map((k) => (
-                  <div key={k.l} className="rounded-md border border-muted bg-container p-2.5 text-center">
+                  <div
+                    key={k.l}
+                    className="rounded-md border border-muted bg-container p-2.5 text-center"
+                  >
                     <p className="text-caption text-quaternary uppercase">{k.l}</p>
                     <p className="font-mono-data mt-1 text-body-sm font-bold text-primary">{k.v}</p>
                   </div>

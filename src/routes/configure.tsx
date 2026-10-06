@@ -147,11 +147,7 @@ function ConfigurePage() {
             {/* Right Component Editor */}
             <Panel
               title={`Component Specification — ${selected?.name ?? "Select Component"}`}
-              action={
-                selected && (
-                  <StatusBadge tone="success">Active Spec</StatusBadge>
-                )
-              }
+              action={selected && <StatusBadge tone="success">Active Spec</StatusBadge>}
             >
               {selected ? (
                 <div className="space-y-4">
@@ -192,9 +188,7 @@ function ConfigurePage() {
                       ["Downtime Lost Revenue / Day", fmtUSD(selected.downtimeCostPerDay)],
                     ].map(([l, v]) => (
                       <div key={l} className="space-y-1">
-                        <label className="text-caption font-medium text-tertiary block">
-                          {l}
-                        </label>
+                        <label className="text-caption font-medium text-tertiary block">{l}</label>
                         <input
                           readOnly
                           value={v as string}
@@ -204,7 +198,8 @@ function ConfigurePage() {
                     ))}
                   </div>
                   <p className="text-caption text-quaternary pt-2 border-t border-muted">
-                    Session configuration parameters — changes hot-recalculate across simulation and asset health engines.
+                    Session configuration parameters — changes hot-recalculate across simulation and
+                    asset health engines.
                   </p>
                 </div>
               ) : (
@@ -225,18 +220,24 @@ function ConfigurePage() {
                   <div className="font-mono-data space-y-2 text-body-sm">
                     <div className="flex justify-between">
                       <span className="font-sans text-secondary">Rule 1 · Calendar</span>
-                      <span className="text-primary font-medium">every {c.pmTrigger.intervalMonths} mo</span>
+                      <span className="text-primary font-medium">
+                        every {c.pmTrigger.intervalMonths} mo
+                      </span>
                     </div>
                     {c.pmTrigger.intervalKm && (
                       <div className="flex justify-between">
                         <span className="font-sans text-secondary">Rule 2 · Distance</span>
-                        <span className="text-primary font-medium">every {c.pmTrigger.intervalKm.toLocaleString()} km</span>
+                        <span className="text-primary font-medium">
+                          every {c.pmTrigger.intervalKm.toLocaleString()} km
+                        </span>
                       </div>
                     )}
                     {c.pmTrigger.intervalHours && (
                       <div className="flex justify-between">
                         <span className="font-sans text-secondary">Rule 3 · Service Hours</span>
-                        <span className="text-primary font-medium">every {c.pmTrigger.intervalHours.toLocaleString()} hrs</span>
+                        <span className="text-primary font-medium">
+                          every {c.pmTrigger.intervalHours.toLocaleString()} hrs
+                        </span>
                       </div>
                     )}
                     <div className="flex justify-between border-t border-muted pt-2">
@@ -252,14 +253,24 @@ function ConfigurePage() {
         {tab === "Standards Compliance" && (
           <Panel
             title="Railway Standards & Regulatory Compliance Matrix"
-            action={<span className="text-caption text-quaternary">RAMS (EN 50126), LCC (IEC 60300), Asset Mgmt (ISO 55000)</span>}
+            action={
+              <span className="text-caption text-quaternary">
+                RAMS (EN 50126), LCC (IEC 60300), Asset Mgmt (ISO 55000)
+              </span>
+            }
             padded={false}
           >
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left">
                 <thead className="bg-container border-b border-muted">
                   <tr>
-                    {["Standard Code", "Regulatory Framework", "Compliance Status", "Coverage Progress", "Score"].map((h, i) => (
+                    {[
+                      "Standard Code",
+                      "Regulatory Framework",
+                      "Compliance Status",
+                      "Coverage Progress",
+                      "Score",
+                    ].map((h, i) => (
                       <th
                         key={h}
                         className={cn(
@@ -274,15 +285,18 @@ function ConfigurePage() {
                 </thead>
                 <tbody className="divide-y divide-muted font-mono-data text-body-sm">
                   {STANDARDS_COMPLIANCE.map((s) => {
-                    const tone = s.status === "Aligned" ? "success" : s.status === "Partial" ? "warning" : "neutral";
+                    const tone =
+                      s.status === "Aligned"
+                        ? "success"
+                        : s.status === "Partial"
+                          ? "warning"
+                          : "neutral";
                     return (
                       <tr key={s.standard} className="transition-colors hover:bg-hover">
                         <td className="px-3 py-2.5 font-bold text-teal font-mono-data">
                           {s.standard}
                         </td>
-                        <td className="px-3 py-2.5 font-sans font-medium text-primary">
-                          {s.name}
-                        </td>
+                        <td className="px-3 py-2.5 font-sans font-medium text-primary">{s.name}</td>
                         <td className="px-3 py-2.5">
                           <StatusBadge tone={tone}>{s.status}</StatusBadge>
                         </td>
@@ -304,7 +318,8 @@ function ConfigurePage() {
               </table>
             </div>
             <p className="p-3 text-caption text-quaternary border-t border-muted">
-              Audited in accordance with EN 50126 reliability apportionment, IEC 60300 life cycle costing, and ISO 55000 asset management governance.
+              Audited in accordance with EN 50126 reliability apportionment, IEC 60300 life cycle
+              costing, and ISO 55000 asset management governance.
             </p>
           </Panel>
         )}
