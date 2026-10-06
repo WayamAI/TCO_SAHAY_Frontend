@@ -157,7 +157,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="h-7 w-auto object-contain"
           />
         </div>
-        <span className="text-caption tracking-[0.08em] text-quaternary uppercase">TCO SAHAY</span>
+        <span className="text-caption tracking-[0.08em] text-quaternary uppercase">SAHAY</span>
       </div>
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-3">
         {NAV.map((item) => (
@@ -232,13 +232,13 @@ export function AppShell({ children }: { children: ReactNode }) {
               /
             </span>
             <span className="hidden text-caption tracking-[0.08em] text-quaternary uppercase md:inline">
-              {CRUMB[pathname] ?? "TCO Intelligence"}
+              {CRUMB[pathname] ?? "SAHAY"}
             </span>
             <h1
               className="truncate font-display text-display-lg text-primary"
-              title={ROUTE_TITLES[pathname] ?? "Lifecycle Intelligence"}
+              title={ROUTE_TITLES[pathname] ?? "SAHAY"}
             >
-              {ROUTE_TITLES[pathname] ?? "Lifecycle Intelligence"}
+              {ROUTE_TITLES[pathname] ?? "SAHAY"}
             </h1>
           </div>
 
