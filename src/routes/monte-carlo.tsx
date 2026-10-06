@@ -11,12 +11,13 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { KPICard } from "@/components/shared/KPICard";
-import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
+import { PageHeader, PageBody } from "@/components/layout/page-header";
+import { Panel, SplitRow, KpiTile, StatusBadge } from "@/components/ui/primitives";
 import { ChartTooltip } from "@/components/shared/ChartTooltip";
 import { MONTE_CARLO_RESULTS, CHART_COLORS } from "@/data/syntheticData";
 import { fmtCompact } from "@/utils/formatters";
 import { AppIcon } from "@/components/icons/AppIcon";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/monte-carlo")({
   head: () => ({
@@ -61,233 +62,279 @@ function MonteCarloPage() {
   };
 
   const percentiles = [
-    { p: "P5 (Best)", v: MC.p5 },
-    { p: "P10", v: MC.p10 },
-    { p: "P25", v: MC.p25 },
-    { p: "P50 (Median)", v: MC.p50 },
-    { p: "P75", v: MC.p75 },
-    { p: "P90", v: MC.p90 },
-    { p: "P95 (Worst)", v: MC.p95 },
+    { p: "P5 (Best Case)", v: MC.p5, tone: "success" as const },
+    { p: "P10", v: MC.p10, tone: "success" as const },
+    { p: "P25", v: MC.p25, tone: "info" as const },
+    { p: "P50 (Median Baseline)", v: MC.p50, tone: "neutral" as const },
+    { p: "P75", v: MC.p75, tone: "warning" as const },
+    { p: "P90", v: MC.p90, tone: "error" as const },
+    { p: "P95 (Worst Case)", v: MC.p95, tone: "error" as const },
   ];
 
   const inputRanges = [
-    { input: "Fuel Price", dist: "Log-normal", min: "$1.10", max: "$2.80", sd: "$0.35" },
-    { input: "Failure Rate", dist: "Gamma", min: "0.5×", max: "3.0×", sd: "0.4×" },
-    { input: "Labor Rate", dist: "Normal", min: "$75", max: "$145", sd: "$18" },
-    { input: "Inflation (Labor)", dist: "Normal", min: "1.5%", max: "6.5%", sd: "1.0%" },
+    { input: "Fuel & Power Cost", dist: "Log-normal", min: "$1.10", max: "$2.80", sd: "$0.35" },
+    { input: "BOM Failure Rate", dist: "Gamma", min: "0.5×", max: "3.0×", sd: "0.4×" },
+    { input: "Maintenance Labor Rate", dist: "Normal", min: "$75", max: "$145", sd: "$18" },
+    { input: "Labor Escalation Inflation", dist: "Normal", min: "1.5%", max: "6.5%", sd: "1.0%" },
   ];
 
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        <KPICard
-          label="P50 Median TCO"
-          value={3.82}
-          prefix="$"
-          suffix="M"
-          decimals={2}
-          glow="blue"
-          sub="Most likely outcome"
-        />
-        <KPICard
-          label="P90 (Worst 10%)"
-          value={4.35}
-          prefix="$"
-          suffix="M"
-          decimals={2}
-          glow="red"
-          sub="+$530k vs baseline"
-          delay={100}
-        />
-        <KPICard
-          label="P10 (Best 10%)"
-          value={3.42}
-          prefix="$"
-          suffix="M"
-          decimals={2}
-          glow="teal"
-          sub="−$400k vs baseline"
-          delay={200}
-        />
-        <KPICard
-          label="Risk Range P10→P90"
-          value={930}
-          prefix="$"
-          suffix="K"
-          glow="purple"
-          sub={`σ = ${fmtCompact(MC.stdDev)} · n=${MC.n}`}
-          delay={300}
-        />
-      </div>
-
-      <div className="grid gap-5 xl:grid-cols-5">
-        {/* Histogram */}
-        <GlassCard className="dot-grid xl:col-span-3" scanline>
-          <div className="mb-3 flex items-center justify-between">
-            <SectionTitle>TCO Outcome Distribution</SectionTitle>
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <PageHeader
+        title="Monte Carlo Risk Simulation"
+        description="1,000-iteration stochastic lifecycle cost analysis with probability distributions, percentile confidence intervals, and sensitivity variance drivers."
+        actions={
+          <div className="flex items-center gap-2">
             <button
               onClick={rerun}
               disabled={running}
-              className="flex items-center gap-1.5 rounded-md bg-primary/15 px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/25 disabled:opacity-50"
+              className="inline-flex h-8 items-center gap-2 rounded-full bg-action-primary px-3 text-label-sm font-medium text-on-color transition-opacity hover:opacity-90 disabled:opacity-50"
             >
-              <AppIcon name="power" size="xs" /> {running ? "Running…" : "Re-run Monte Carlo"}
+              <AppIcon name="power" size="xs" />
+              <span>{running ? "Simulating…" : "Re-run 1,000 Draws"}</span>
             </button>
           </div>
-          {running && (
-            <div className="mb-3">
-              <div className="h-1.5 overflow-hidden rounded-full bg-surface-3">
-                <div
-                  className="h-full rounded-full bg-primary transition-all"
-                  style={{ width: `${progress}%` }}
-                />
+        }
+      />
+
+      <PageBody className="flex flex-col gap-4">
+        {/* KPI Tiles */}
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4 shrink-0">
+          <KpiTile
+            label="P50 Median TCO"
+            value="$3.82M"
+            delta="Most probable outcome"
+            tone="neutral"
+            hint="50th percentile expectation"
+          />
+          <KpiTile
+            label="P90 (Worst 10%)"
+            value="$4.35M"
+            delta="+$530k exposure vs P50"
+            tone="error"
+            hint="Extreme adverse risk limit"
+          />
+          <KpiTile
+            label="P10 (Best 10%)"
+            value="$3.42M"
+            delta="-$400k savings vs P50"
+            tone="success"
+            hint="High-reliability outcome"
+          />
+          <KpiTile
+            label="Risk Range (P10→P90)"
+            value="$930k"
+            delta={`σ = ${fmtCompact(MC.stdDev)} · n=1,000`}
+            tone="info"
+            hint="80% confidence interval width"
+          />
+        </div>
+
+        {/* Top Split: Histogram & Variance Drivers */}
+        <SplitRow from="xl" ratio="1.6/1" className="shrink-0">
+          <Panel
+            title="TCO Outcome Distribution (1,000 Runs)"
+            action={
+              <span className="text-caption text-quaternary">
+                20-Year Lifecycle · Frequency Distribution
+              </span>
+            }
+          >
+            <div className="space-y-3">
+              {running && (
+                <div className="rounded-md border border-muted bg-container p-2">
+                  <div className="flex justify-between text-caption text-tertiary mb-1">
+                    <span>Sampling stochastic draws...</span>
+                    <span className="font-mono-data">{Math.round((progress / 100) * 1000)} / 1,000</span>
+                  </div>
+                  <div className="h-1.5 overflow-hidden rounded-full bg-hover">
+                    <div
+                      className="h-full rounded-full bg-primary transition-all duration-100"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+              <div className="h-[310px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={MC.histogram}
+                    style={{ opacity: running ? 0.35 : 1, transition: "opacity 0.3s" }}
+                    margin={{ top: 10, right: 10, left: -20, bottom: 20 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
+                    <XAxis
+                      dataKey="bin"
+                      stroke={CHART_COLORS.textMuted}
+                      fontSize={9}
+                      angle={-20}
+                      textAnchor="end"
+                      height={40}
+                    />
+                    <YAxis
+                      stroke={CHART_COLORS.textMuted}
+                      fontSize={10}
+                    />
+                    <Tooltip content={<ChartTooltip formatter={(v) => `${v} runs`} />} />
+                    <ReferenceLine
+                      x="$3.8M – $4.0M"
+                      stroke="var(--ref-gray-300)"
+                      strokeDasharray="3 3"
+                      label={{ value: "P50 MEDIAN", fill: "var(--ref-gray-300)", fontSize: 9, position: "top" }}
+                    />
+                    <Bar dataKey="count" name="Simulation runs" radius={[3, 3, 0, 0]}>
+                      {MC.histogram.map((_, i) => (
+                        <Cell key={i} fill={barColor(i)} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
-              <p className="font-mono-data mt-1 text-mini text-text-secondary">
-                {Math.round((progress / 100) * 1000)} / 1,000 simulations
+              <p className="text-center text-caption text-quaternary">
+                Bins reflect full fleet replacement, fuel volatility, and Weibull random failure draws.
               </p>
             </div>
-          )}
-          <ResponsiveContainer width="100%" height={330}>
-            <BarChart
-              data={MC.histogram}
-              style={{ opacity: running ? 0.3 : 1, transition: "opacity 0.3s" }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
-              <XAxis
-                dataKey="bin"
-                stroke={CHART_COLORS.textMuted}
-                fontSize={9}
-                angle={-20}
-                textAnchor="end"
-                height={50}
-              />
-              <YAxis
-                stroke={CHART_COLORS.textMuted}
-                fontSize={10}
-                label={{
-                  value: "Runs",
-                  angle: -90,
-                  fontSize: 10,
-                  fill: CHART_COLORS.textMuted,
-                  position: "insideLeft",
-                }}
-              />
-              <Tooltip content={<ChartTooltip formatter={(v) => `${v} runs`} />} />
-              <ReferenceLine
-                x="$3.8M – $4.0M"
-                stroke="var(--ref-gray-300)"
-                strokeDasharray="3 3"
-                label={{ value: "P50", fill: "var(--ref-gray-300)", fontSize: 10 }}
-              />
-              <Bar dataKey="count" name="Simulation runs" radius={[4, 4, 0, 0]}>
-                {MC.histogram.map((_, i) => (
-                  <Cell key={i} fill={barColor(i)} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-          <p className="text-center text-mini text-text-muted">
-            Based on 1,000 Monte Carlo simulations · 20yr horizon
-          </p>
-        </GlassCard>
+          </Panel>
 
-        {/* Variance drivers */}
-        <GlassCard className="xl:col-span-2">
-          <SectionTitle className="mb-3">Risk Contribution to TCO Variance</SectionTitle>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={MC.varianceDrivers} layout="vertical" margin={{ left: 30 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} horizontal={false} />
-              <XAxis type="number" stroke={CHART_COLORS.textMuted} fontSize={10} unit="%" />
-              <YAxis
-                type="category"
-                dataKey="param"
-                stroke={CHART_COLORS.textMuted}
-                fontSize={10}
-                width={100}
-              />
-              <Tooltip content={<ChartTooltip formatter={(v) => `${v}%`} />} />
-              <Bar dataKey="contribution" name="Variance share" radius={[0, 4, 4, 0]}>
-                {MC.varianceDrivers.map((_, i) => (
-                  <Cell
-                    key={i}
-                    fill={
-                      i === 0 ? CHART_COLORS.red : i < 3 ? CHART_COLORS.orange : CHART_COLORS.blue
-                    }
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-          <p className="mt-2 text-mini leading-relaxed text-text-secondary">
-            Failure-rate uncertainty is now the largest driver (22%). Condition-based maintenance
-            and reman parts tighten this distribution the most.
-          </p>
-        </GlassCard>
-      </div>
+          <Panel
+            title="Risk Contribution to TCO Variance"
+            action={<span className="text-caption text-quaternary">Sobol sensitivity index</span>}
+          >
+            <div className="space-y-3">
+              <div className="h-[260px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={MC.varianceDrivers} layout="vertical" margin={{ left: 10, right: 10, top: 10, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} horizontal={false} />
+                    <XAxis type="number" stroke={CHART_COLORS.textMuted} fontSize={10} unit="%" />
+                    <YAxis
+                      type="category"
+                      dataKey="param"
+                      stroke={CHART_COLORS.textMuted}
+                      fontSize={10}
+                      width={95}
+                    />
+                    <Tooltip content={<ChartTooltip formatter={(v) => `${v}%`} />} />
+                    <Bar dataKey="contribution" name="Variance share" radius={[0, 4, 4, 0]}>
+                      {MC.varianceDrivers.map((_, i) => (
+                        <Cell
+                          key={i}
+                          fill={
+                            i === 0 ? CHART_COLORS.red : i < 3 ? CHART_COLORS.orange : CHART_COLORS.blue
+                          }
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <p className="text-caption leading-relaxed text-tertiary">
+                Failure-rate uncertainty accounts for <span className="text-primary font-medium">22%</span> of total lifecycle spread. Predictive condition-based maintenance and reman programs compress this risk interval by up to 40%.
+              </p>
+            </div>
+          </Panel>
+        </SplitRow>
 
-      <div className="grid gap-5 xl:grid-cols-2">
-        {/* Percentile table */}
-        <GlassCard>
-          <SectionTitle className="mb-3">Percentile Outcomes</SectionTitle>
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-border text-mini uppercase text-text-muted">
-                <th className="py-2">Percentile</th>
-                <th className="py-2">TCO</th>
-                <th className="py-2">vs Baseline</th>
-              </tr>
-            </thead>
-            <tbody className="font-mono-data">
-              {percentiles.map((row) => {
-                const d = row.v - MC.p50;
-                return (
-                  <tr key={row.p} className="border-b border-border/40">
-                    <td className="py-2 font-sans text-text-secondary">{row.p}</td>
-                    <td className="py-2">{fmtCompact(row.v)}</td>
-                    <td
-                      className={`py-2 ${d < 0 ? "text-teal" : d > 0 ? "text-red" : "text-text-muted"}`}
-                    >
-                      {d === 0
-                        ? "—"
-                        : `${d > 0 ? "+" : "−"}${fmtCompact(Math.abs(d))} (${d > 0 ? "+" : "−"}${Math.abs((d / MC.p50) * 100).toFixed(0)}%)`}
-                    </td>
+        {/* Bottom Split: Percentile Table & Input Distributions */}
+        <SplitRow from="xl" ratio="1/1" className="shrink-0">
+          <Panel
+            title="Confidence Percentile Bands"
+            action={<span className="text-caption text-quaternary">Deterministic baseline: $3.82M</span>}
+            padded={false}
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-left">
+                <thead className="bg-container border-b border-muted">
+                  <tr>
+                    <th className="px-3 py-2 text-caption font-medium tracking-[0.08em] text-quaternary uppercase">
+                      Percentile Band
+                    </th>
+                    <th className="px-3 py-2 text-right text-caption font-medium tracking-[0.08em] text-quaternary uppercase">
+                      Simulated TCO
+                    </th>
+                    <th className="px-3 py-2 text-right text-caption font-medium tracking-[0.08em] text-quaternary uppercase">
+                      Delta vs Median
+                    </th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </GlassCard>
+                </thead>
+                <tbody className="divide-y divide-muted font-mono-data text-body-sm">
+                  {percentiles.map((row) => {
+                    const d = row.v - MC.p50;
+                    return (
+                      <tr key={row.p} className="transition-colors hover:bg-hover">
+                        <td className="px-3 py-2 font-sans font-medium text-secondary">
+                          {row.p}
+                        </td>
+                        <td className="px-3 py-2 text-right font-semibold text-primary">
+                          {fmtCompact(row.v)}
+                        </td>
+                        <td className="px-3 py-2 text-right">
+                          {d === 0 ? (
+                            <span className="text-tertiary">Baseline</span>
+                          ) : (
+                            <StatusBadge tone={row.tone}>
+                              {d > 0 ? "+" : "−"}{fmtCompact(Math.abs(d))} ({d > 0 ? "+" : "−"}{Math.abs((d / MC.p50) * 100).toFixed(0)}%)
+                            </StatusBadge>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </Panel>
 
-        {/* Input ranges */}
-        <GlassCard>
-          <SectionTitle className="mb-3">Randomized Input Distributions</SectionTitle>
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-border text-mini uppercase text-text-muted">
-                <th className="py-2">Input</th>
-                <th className="py-2">Distribution</th>
-                <th className="py-2">Min</th>
-                <th className="py-2">Max</th>
-                <th className="py-2">Std Dev</th>
-              </tr>
-            </thead>
-            <tbody className="font-mono-data">
-              {inputRanges.map((r) => (
-                <tr key={r.input} className="border-b border-border/40">
-                  <td className="py-2.5 font-sans text-text-secondary">{r.input}</td>
-                  <td className="py-2.5">{r.dist}</td>
-                  <td className="py-2.5">{r.min}</td>
-                  <td className="py-2.5">{r.max}</td>
-                  <td className="py-2.5">{r.sd}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="mt-3 text-mini text-text-secondary">
-            Each run samples all four inputs and re-computes the full 20-year TCO with Weibull
-            failure draws.
-          </p>
-        </GlassCard>
-      </div>
+          <Panel
+            title="Stochastic Input Parameters & Distributions"
+            action={<span className="text-caption text-quaternary">Monte Carlo parameter distributions</span>}
+            padded={false}
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-left">
+                <thead className="bg-container border-b border-muted">
+                  <tr>
+                    {["Input Parameter", "Distribution", "Min", "Max", "Std Dev"].map((h, i) => (
+                      <th
+                        key={h}
+                        className={cn(
+                          "px-3 py-2 text-caption font-medium tracking-[0.08em] text-quaternary uppercase whitespace-nowrap",
+                          i >= 2 && "text-right",
+                        )}
+                      >
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-muted font-mono-data text-body-sm">
+                  {inputRanges.map((r) => (
+                    <tr key={r.input} className="transition-colors hover:bg-hover">
+                      <td className="px-3 py-2.5 font-sans font-medium text-secondary">
+                        {r.input}
+                      </td>
+                      <td className="px-3 py-2.5 text-tertiary">
+                        {r.dist}
+                      </td>
+                      <td className="px-3 py-2.5 text-right text-primary">
+                        {r.min}
+                      </td>
+                      <td className="px-3 py-2.5 text-right text-primary">
+                        {r.max}
+                      </td>
+                      <td className="px-3 py-2.5 text-right text-secondary">
+                        {r.sd}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="p-3 text-caption text-quaternary border-t border-muted">
+              Each iteration draws independently from the assigned continuous probability density functions.
+            </p>
+          </Panel>
+        </SplitRow>
+      </PageBody>
     </div>
   );
 }
