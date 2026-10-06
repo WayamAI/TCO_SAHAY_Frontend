@@ -33,7 +33,7 @@ export function AppShell({
   return (
     <div
       className={cn(
-        "flex h-screen w-screen overflow-hidden bg-[#080a0b] text-white font-sans antialiased",
+        "flex h-screen w-screen overflow-hidden bg-page text-primary font-sans antialiased",
         className,
       )}
     >
@@ -43,13 +43,13 @@ export function AppShell({
       {/* Main Content Area */}
       <main
         className={cn(
-          "flex-1 min-w-0 h-full overflow-hidden flex flex-col bg-[#080a0b] relative",
+          "flex-1 min-w-0 h-full overflow-hidden flex flex-col bg-page relative",
           mainClassName,
         )}
       >
         {children ?? (
           <div className="p-8">
-            <h1 className="text-xl font-semibold tracking-tight text-white/90">Dashboard</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-primary">Dashboard</h1>
           </div>
         )}
       </main>
