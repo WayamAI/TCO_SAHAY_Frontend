@@ -19,7 +19,7 @@ import { AppIcon } from "@/components/icons/AppIcon";
 export const Route = createFileRoute("/fleet-explorer")({
   head: () => ({
     meta: [
-      { title: "Fleet Explorer | TCO Intelligence" },
+      { title: "Fleet Explorer | SAHAY" },
       {
         name: "description",
         content:

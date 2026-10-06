@@ -27,7 +27,7 @@ import { AppIcon } from "@/components/icons/AppIcon";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Command Center | TCO Intelligence" },
+      { title: "Command Center | SAHAY" },
       {
         name: "description",
         content: "Fleet-wide TCO, forecast accuracy and availability at a glance.",

@@ -13,7 +13,7 @@ import { AppIcon } from "@/components/icons/AppIcon";
 export const Route = createFileRoute("/library")({
   head: () => ({
     meta: [
-      { title: "Maintenance Library | TCO Intelligence" },
+      { title: "Maintenance Library | SAHAY" },
       {
         name: "description",
         content:

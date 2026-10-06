@@ -49,7 +49,7 @@ import { AppIcon } from "@/components/icons/AppIcon";
 export const Route = createFileRoute("/bom")({
   head: () => ({
     meta: [
-      { title: "BOM Explorer | TCO Intelligence" },
+      { title: "BOM Explorer | SAHAY" },
       {
         name: "description",
         content:
