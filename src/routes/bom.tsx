@@ -13,6 +13,9 @@ import {
   Cell,
 } from "recharts";
 import { Link } from "@tanstack/react-router";
+import { PageHeader, PageBody } from "@/components/layout/page-header";
+import { Panel, SplitRow, KpiTile, EmptyState } from "@/components/ui/primitives";
+import { DataTable, FilterChips, type Column } from "@/components/ui/data-table";
 import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
 import { KPICard } from "@/components/shared/KPICard";
 import { ChartTooltip } from "@/components/shared/ChartTooltip";
@@ -132,126 +135,109 @@ function BomExplorer() {
   const systems = SYSTEMS.filter((s) => s.locomotiveId === LOCO_ID);
 
   return (
-    <div className="space-y-5">
-      {/* KPI row */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KPICard
-          label="BOM Value / Loco"
-          value={totals.bomValuePerLoco}
-          prefix="$"
-          glow="blue"
-          sub={
-            <span>
-              {parts.length} tracked parts · {COMPONENTS.length} components
-            </span>
-          }
-        />
-        <KPICard
-          label="Fleet Parts Capital"
-          value={totals.bomValueFleet / 1e6}
-          prefix="$"
-          suffix="M"
-          decimals={2}
-          glow="purple"
-          sub={<span>Across {BOM_CONVENTIONS.fleetCount} ES44AC units</span>}
-        />
-        <KPICard
-          label="Annual Parts Maint."
-          value={totals.annualMaint / 1e6}
-          prefix="$"
-          suffix="M"
-          decimals={2}
-          glow="orange"
-          sub={<span>Labour derived @ {laborPct}% of parts</span>}
-        />
-        <KPICard
-          label="Company Buffer"
-          value={totals.buffer / 1e3}
-          prefix="$"
-          suffix="k"
-          decimals={1}
-          glow="teal"
-          sub={<span>Warranty reserve across all parts</span>}
-        />
-      </div>
-
-      {/* View switch */}
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="flex overflow-hidden rounded-md border border-border text-mini">
-          {(
-            [
-              ["tree", "5-Level BOM Tree"],
-              ["inventory", "Inventory & Criticality"],
-              ["depreciation", "Depreciation & Lifecycle"],
-            ] as const
-          ).map(([k, label]) => (
-            <button
-              key={k}
-              onClick={() => setView(k)}
-              className={cn(
-                "px-3 py-1.5",
-                view === k
-                  ? "bg-raised-2 font-medium text-fg-primary"
-                  : "transition-ui bg-action text-fg-tertiary hover:bg-raised-2 hover:text-fg-secondary",
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <Link
-          to="/library"
-          className="flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-3 py-1.5 text-mini font-semibold text-primary transition-colors hover:bg-primary/20"
-        >
-          <AppIcon name="add" size="sm" /> Add Part
-        </Link>
-        <span className="ml-auto text-mini text-text-muted">
-          Locomotive → System → Assembly → Component → <span className="text-primary">Part</span>
-        </span>
-      </div>
-
-      {view === "tree" && (
-        <div className="grid gap-5 xl:grid-cols-5">
-          <GlassCard className="xl:col-span-3 overflow-hidden">
-            <SectionTitle className="mb-3">Indented Bill of Materials — ES44AC</SectionTitle>
-            <BomTree
-              parts={parts}
-              systems={systems}
-              expanded={expanded}
-              toggle={toggle}
-              selectedId={selectedPart?.id ?? null}
-              onSelectPart={setSelectedPart}
-              abc={abc}
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <PageHeader
+        title="Bill of Materials — Part-Level Explorer"
+        description="Part-level Bill of Materials mapping locomotive → system → assembly → component → part with extended costs, lifecycle depreciation, inventory positioning and TCO."
+        actions={
+          <div className="flex items-center gap-2">
+            <FilterChips
+              value={view}
+              onChange={(k) => setView(k as any)}
+              options={[
+                { id: "tree", label: "5-Level Hierarchy Tree" },
+                { id: "inventory", label: "Inventory & Criticality" },
+                { id: "depreciation", label: "Depreciation & Capital" },
+              ]}
             />
-          </GlassCard>
-          <div className="space-y-5 xl:col-span-2">
-            {selectedPart ? (
-              <PartDetail part={selectedPart} abc={abc.get(selectedPart.id)!} />
-            ) : (
-              <GlassCard className="flex min-h-[300px] items-center justify-center">
-                <p className="text-sm text-text-secondary">
-                  Select a part in the tree to inspect it
-                </p>
-              </GlassCard>
-            )}
+            <Link
+              to="/library"
+              className="inline-flex h-8 items-center gap-1.5 rounded-full border border-muted bg-action px-3 text-label-sm text-secondary transition-colors hover:border-default hover:bg-raised-2 hover:text-primary"
+            >
+              <AppIcon name="add" size="xs" />
+              <span>Library</span>
+            </Link>
           </div>
-        </div>
-      )}
-
-      {view === "inventory" && (
-        <InventoryView parts={parts} abc={abc} onSelect={setSelectedPart} selected={selectedPart} />
-      )}
-      {view === "depreciation" && (
-        <DepreciationView parts={parts} selected={selectedPart} onSelect={setSelectedPart} />
-      )}
-
-      {/* Part-level TCO — maintenance, warranty, risk and who pays, per part */}
-      <PartTCOTable
-        parts={parts}
-        laborPct={laborPct}
-        onSelect={setSelectedPart}
-        selected={selectedPart}
+        }
       />
+
+      <PageBody className="flex flex-col gap-4">
+        {/* KPI Summary Tiles */}
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4 shrink-0">
+          <KpiTile
+            label="BOM Value / Loco"
+            value={fmtUSD(totals.bomValuePerLoco)}
+            delta={`${parts.length} parts`}
+            tone="neutral"
+            hint="ES44AC fully indented roll-up"
+          />
+          <KpiTile
+            label="Fleet Parts Capital"
+            value={`$${(totals.bomValueFleet / 1e6).toFixed(2)}M`}
+            delta={`Across ${BOM_CONVENTIONS.fleetCount} units`}
+            tone="info"
+            hint="Total active capital asset"
+          />
+          <KpiTile
+            label="Annual Maintenance"
+            value={`$${(totals.annualMaint / 1e6).toFixed(2)}M`}
+            delta={`Labour @ ${laborPct}%`}
+            tone="warning"
+            hint="Cycle execution cost"
+          />
+          <KpiTile
+            label="Company Buffer"
+            value={`$${(totals.buffer / 1e3).toFixed(1)}k`}
+            delta="Warranty reserve"
+            tone="neutral"
+            hint="Failure variance coverage"
+          />
+        </div>
+
+        {/* Dynamic Views */}
+        {view === "tree" && (
+          <SplitRow from="xl" ratio="1.6/1" className="min-h-[460px] shrink-0">
+            <Panel title="Indented Bill of Materials — ES44AC" padded={false}>
+              <BomTree
+                parts={parts}
+                systems={systems}
+                expanded={expanded}
+                toggle={toggle}
+                selectedId={selectedPart?.id ?? null}
+                onSelectPart={setSelectedPart}
+                abc={abc}
+              />
+            </Panel>
+            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
+              {selectedPart ? (
+                <PartDetail part={selectedPart} abc={abc.get(selectedPart.id)!} />
+              ) : (
+                <Panel title="Part Inspector">
+                  <EmptyState
+                    title="Select a part in the tree"
+                    detail="Inspect component hierarchy, inventory turns, VED criticality and maintenance parameters."
+                  />
+                </Panel>
+              )}
+            </div>
+          </SplitRow>
+        )}
+
+        {view === "inventory" && (
+          <InventoryView parts={parts} abc={abc} onSelect={setSelectedPart} selected={selectedPart} />
+        )}
+        {view === "depreciation" && (
+          <DepreciationView parts={parts} selected={selectedPart} onSelect={setSelectedPart} />
+        )}
+
+        {/* Part-level TCO table */}
+        <PartTCOTable
+          parts={parts}
+          laborPct={laborPct}
+          onSelect={setSelectedPart}
+          selected={selectedPart}
+        />
+      </PageBody>
     </div>
   );
 }
@@ -1222,152 +1208,143 @@ function PartTCOTable({
   onSelect: (p: Part) => void;
   selected: Part | null;
 }) {
-  const [sort, setSort] = useState<"cost" | "risk" | "buffer">("cost");
-  const [limit, setLimit] = useState(15);
-
   const rows = useMemo(() => {
-    const all = parts.map((p) => partTCO(p, TCO_HORIZON, laborPct));
-    return all.sort((a, b) => {
-      if (sort === "risk") return b.part.failureProbabilityPct - a.part.failureProbabilityPct;
-      if (sort === "buffer") return b.buffer - a.buffer;
-      return b.totalCost - a.totalCost;
-    });
-  }, [parts, laborPct, sort]);
+    return parts.map((p) => partTCO(p, TCO_HORIZON, laborPct));
+  }, [parts, laborPct]);
 
-  const totals = rows.reduce(
-    (a, r) => ({
-      maintenance: a.maintenance + r.totalCost,
-      buffer: a.buffer + r.buffer,
-      customer: a.customer + r.customerCost,
-      company: a.company + r.companyCost,
-    }),
-    { maintenance: 0, buffer: 0, customer: 0, company: 0 },
-  );
+  const totals = useMemo(() => {
+    return rows.reduce(
+      (a, r) => ({
+        maintenance: a.maintenance + r.totalCost,
+        buffer: a.buffer + r.buffer,
+        customer: a.customer + r.customerCost,
+        company: a.company + r.companyCost,
+      }),
+      { maintenance: 0, buffer: 0, customer: 0, company: 0 },
+    );
+  }, [rows]);
+
+  const columns: Column<ReturnType<typeof partTCO>>[] = [
+    {
+      key: "name",
+      header: "Part Specification",
+      card: "title",
+      value: (r) => r.part.name,
+      render: (r) => (
+        <div className="min-w-0">
+          <span className="text-primary block truncate font-medium text-body-sm" title={r.part.name}>
+            {r.part.name}
+          </span>
+          <span className="font-mono-data text-caption text-quaternary block">
+            every {r.part.maintIntervalValue.toLocaleString()} {r.part.maintIntervalUnit} · ×{r.part.maintQty} {r.part.uom}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: "totalCost",
+      header: "Maintenance Cost",
+      align: "right",
+      card: "metric",
+      value: (r) => r.totalCost,
+      render: (r) => (
+        <span className="font-mono-data tabular text-primary">
+          {fmtCompact(r.totalCost)}
+          <span className="text-quaternary ml-1 text-caption">({r.eventCount}×)</span>
+        </span>
+      ),
+    },
+    {
+      key: "warranty",
+      header: "Warranty Coverage",
+      hide: "md",
+      value: (r) => r.part.warrantyYears,
+      render: (r) => (
+        <span className="font-mono-data text-secondary text-body-sm">
+          {r.part.warrantyYears}yr / {(r.part.warrantyKm / 1000).toFixed(0)}k km
+        </span>
+      ),
+    },
+    {
+      key: "failureProbability",
+      header: "Failure Risk",
+      value: (r) => r.part.failureProbabilityPct,
+      render: (r) => (
+        <div className="flex items-center gap-2">
+          <span className="bg-raised-2 h-1.5 w-12 overflow-hidden rounded-full">
+            <span
+              className="bg-error block h-full rounded-full"
+              style={{ width: `${Math.min(100, r.part.failureProbabilityPct * 2)}%` }}
+            />
+          </span>
+          <span className="font-mono-data tabular text-secondary text-body-sm">
+            {r.part.failureProbabilityPct}%
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: "buffer",
+      header: "Company Buffer",
+      align: "right",
+      hide: "lg",
+      value: (r) => r.buffer,
+      render: (r) => (
+        <span className="font-mono-data tabular text-secondary text-body-sm">
+          {fmtCompact(r.buffer)}
+        </span>
+      ),
+    },
+    {
+      key: "customerCost",
+      header: "Customer Cost",
+      align: "right",
+      value: (r) => r.customerCost,
+      render: (r) => (
+        <span className="font-mono-data tabular text-warning text-body-sm font-medium">
+          {fmtCompact(r.customerCost)}
+        </span>
+      ),
+    },
+    {
+      key: "companyCost",
+      header: "Company Cost",
+      align: "right",
+      value: (r) => r.companyCost,
+      render: (r) => (
+        <span className="font-mono-data tabular text-info text-body-sm font-medium">
+          {fmtCompact(r.companyCost)}
+        </span>
+      ),
+    },
+  ];
 
   return (
-    <GlassCard>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <SectionTitle>Part-Level TCO ({TCO_HORIZON}yr)</SectionTitle>
-        <div className="flex overflow-hidden rounded-md border border-border text-mini">
-          {(
-            [
-              ["cost", "By Cost"],
-              ["risk", "By Failure Risk"],
-              ["buffer", "By Buffer"],
-            ] as const
-          ).map(([k, l]) => (
-            <button
-              key={k}
-              onClick={() => setSort(k)}
-              className={cn(
-                "px-2 py-1",
-                sort === k
-                  ? "bg-raised-2 font-medium text-fg-primary"
-                  : "transition-ui bg-action text-fg-tertiary hover:text-fg-secondary",
-              )}
-            >
-              {l}
-            </button>
-          ))}
+    <Panel
+      title={`Part-Level TCO Breakdown (${TCO_HORIZON}yr)`}
+      action={
+        <div className="flex items-center gap-3">
+          <span className="font-mono-data text-caption text-quaternary tabular flex gap-3">
+            <span>Customer: <strong className="text-warning">{fmtCompact(totals.customer)}</strong></span>
+            <span>Company: <strong className="text-info">{fmtCompact(totals.company)}</strong></span>
+            <span>Buffer: <strong className="text-secondary">{fmtCompact(totals.buffer)}</strong></span>
+          </span>
         </div>
-        <span className="ml-auto flex gap-3 text-mini text-text-secondary">
-          <span>
-            Customer{" "}
-            <span className="font-mono-data text-orange">{fmtCompact(totals.customer)}</span>
-          </span>
-          <span>
-            Company <span className="font-mono-data text-blue">{fmtCompact(totals.company)}</span>
-          </span>
-          <span>
-            Buffer <span className="font-mono-data text-purple">{fmtCompact(totals.buffer)}</span>
-          </span>
-        </span>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs">
-          <thead>
-            <tr className="border-b border-border text-micro uppercase tracking-wider text-text-muted">
-              {[
-                "Part",
-                "Maintenance Cost",
-                "Warranty",
-                "Failure Prob.",
-                "Company Buffer",
-                "Customer Cost",
-                "Company Cost",
-              ].map((h) => (
-                <th key={h} className="px-2.5 py-2 font-medium">
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.slice(0, limit).map((r) => (
-              <tr
-                key={r.part.id}
-                onClick={() => onSelect(r.part)}
-                className={cn(
-                  "cursor-pointer border-b border-border/40 transition-colors hover:bg-surface-2/60",
-                  selected?.id === r.part.id && "bg-primary/10",
-                )}
-              >
-                <td className="px-2.5 py-2">
-                  <span className="flex items-center gap-1.5">
-                    <span style={{ color: CRIT_COLOR[r.part.criticality] }}>◆</span>
-                    <span className="max-w-[200px] truncate" title={r.part.name}>
-                      {r.part.name}
-                    </span>
-                  </span>
-                  <span className="ml-3.5 text-micro text-text-muted">
-                    {r.part.maintIntervalValue.toLocaleString()} {r.part.maintIntervalUnit} · ×
-                    {r.part.maintQty} {r.part.uom}
-                  </span>
-                </td>
-                <td className="font-mono-data px-2.5 py-2 tabular-nums">
-                  {fmtCompact(r.totalCost)}
-                  <span className="ml-1 text-micro text-text-muted">{r.eventCount}×</span>
-                </td>
-                <td className="font-mono-data px-2.5 py-2 text-mini text-text-secondary">
-                  {r.part.warrantyYears}yr / {(r.part.warrantyKm / 1000).toFixed(0)}k km
-                </td>
-                <td className="px-2.5 py-2">
-                  <span className="flex items-center gap-1.5">
-                    <span className="h-1.5 w-10 overflow-hidden rounded-full bg-surface-3">
-                      <span
-                        className="block h-full rounded-full bg-red"
-                        style={{ width: `${Math.min(100, r.part.failureProbabilityPct * 2)}%` }}
-                      />
-                    </span>
-                    <span className="font-mono-data tabular-nums">
-                      {r.part.failureProbabilityPct}%
-                    </span>
-                  </span>
-                </td>
-                <td className="font-mono-data px-2.5 py-2 tabular-nums text-purple">
-                  {fmtCompact(r.buffer)}
-                </td>
-                <td className="font-mono-data px-2.5 py-2 tabular-nums text-orange">
-                  {fmtCompact(r.customerCost)}
-                </td>
-                <td className="font-mono-data px-2.5 py-2 tabular-nums text-blue">
-                  {fmtCompact(r.companyCost)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {limit < rows.length && (
-        <button
-          onClick={() => setLimit((l) => l + 20)}
-          className="mt-2 w-full rounded-md border border-border py-1.5 text-mini text-text-secondary transition-colors hover:text-foreground"
-        >
-          Show more — {rows.length - limit} parts hidden
-        </button>
-      )}
-    </GlassCard>
+      }
+      padded={false}
+      className="min-h-[420px]"
+    >
+      <DataTable
+        rows={rows}
+        columns={columns}
+        rowKey={(r) => r.part.id}
+        onRowClick={(r) => onSelect(r.part)}
+        isRowSelected={(r) => selected?.id === r.part.id}
+        searchPlaceholder="Filter parts by name, interval or specification..."
+        exportName="bom-parts-tco"
+        pageSize={12}
+        defaultSort={{ key: "totalCost", dir: "desc" }}
+      />
+    </Panel>
   );
 }
