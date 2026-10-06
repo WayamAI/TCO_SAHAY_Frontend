@@ -14,7 +14,7 @@ export function BrandLogo({ className, size = 32 }: BrandLogoProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center rounded-xl bg-surface-secondary border border-stroke-subtle p-1.5 transition-colors hover:border-stroke-default",
+        "flex items-center justify-center rounded-xl bg-raised border border-muted p-1.5 transition-colors hover:border-default",
         className,
       )}
       style={{ width: size, height: size }}
