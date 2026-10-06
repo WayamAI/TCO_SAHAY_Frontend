@@ -25,12 +25,12 @@ export function IconButton({
   }[size];
 
   const variantStyles = active
-    ? "bg-white text-black shadow-sm"
+    ? "bg-action-primary text-on-light shadow-sm"
     : variant === "surface"
-      ? "bg-[#181a1b] text-white/70 border border-white/[0.08] hover:bg-[#222527] hover:text-white"
+      ? "bg-surface-secondary text-text-secondary border border-stroke-subtle hover:bg-surface-elevated hover:text-text-primary"
       : variant === "primary"
-        ? "bg-white text-black hover:bg-white/90"
-        : "text-white/55 hover:text-white hover:bg-white/[0.07]";
+        ? "bg-action-primary text-on-light hover:bg-action-primary-hover"
+        : "text-text-muted hover:text-text-primary hover:bg-surface-elevated";
 
   return (
     <button
