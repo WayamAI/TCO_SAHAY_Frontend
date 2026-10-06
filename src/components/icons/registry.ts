@@ -2,11 +2,10 @@
  * Icon registry — the single icon language for this app.
  *
  * Rules:
- *  - Font Awesome (free solid) is the only icon library. Nothing else may be
- *    imported for iconography.
+ *  - Font Awesome (free solid) is the primary icon library.
  *  - One semantic concept maps to exactly one glyph. "maintenance" must look
  *    identical in the sidebar, in a table cell and on a card.
- *  - Only the icons listed here are imported, so the bundle stays scoped.
+ *  - Only the icons listed here are imported, so the bundle stays scoped and tree-shakeable.
  *
  * Add a concept here rather than importing a Font Awesome icon directly at a
  * call site — the registry is what keeps the language consistent.
@@ -32,6 +31,8 @@ import {
   faBookOpen,
   faSliders,
   faHouse,
+  faCarSide,
+  faUser,
   // actions
   faPlay,
   faRightFromBracket,
@@ -48,10 +49,15 @@ import {
   faEyeSlash,
   faStar,
   faEllipsis,
+  faEllipsisVertical,
   faGripVertical,
   faDownload,
   faUpload,
   faArrowUpRightFromSquare,
+  faBoxArchive,
+  faPenToSquare,
+  faLink,
+  faSort,
   // direction
   faChevronDown,
   faChevronUp,
@@ -59,6 +65,8 @@ import {
   faChevronRight,
   faArrowLeft,
   faArrowRight,
+  faArrowDown,
+  faArrowUp,
   faCircle,
   faCircleDot,
   // system / status
@@ -70,6 +78,7 @@ import {
   faCircleInfo,
   faCircleCheck,
   faCircleExclamation,
+  faCircleQuestion,
   faClock,
   faUsers,
   faBuilding,
@@ -83,6 +92,13 @@ import {
   faBolt,
   faBell,
   faCalendarDays,
+  faExpand,
+  faCrosshairs,
+  faMagnifyingGlassPlus,
+  faMagnifyingGlassMinus,
+  faPalette,
+  faWandMagicSparkles,
+  faCloud,
   // automotive / fleet
   faWrench,
   faGasPump,
@@ -91,6 +107,7 @@ import {
   faRecycle,
   faTrain,
   faRoute,
+  faRoad,
   faMapLocationDot,
   faScrewdriverWrench,
   // data
@@ -107,6 +124,8 @@ import {
 export const icons = {
   /* ---- navigation / app sections ---- */
   dashboard: faTableColumns,
+  vehicle: faCarSide,
+  vehicles: faCarSide,
   hierarchy: faSitemap,
   bom: faCubes,
   library: faBookBookmark,
@@ -119,19 +138,24 @@ export const icons = {
   assetHealth: faHeartPulse,
   benchmark: faTrophy,
   document: faFileLines,
+  documents: faFileLines,
   sustainability: faLeaf,
   integrations: faPlug,
   glossary: faBookOpen,
   settings: faSliders,
   home: faHouse,
+  user: faUser,
 
   /* ---- actions ---- */
   play: faPlay,
   logout: faRightFromBracket,
   menu: faBars,
   add: faPlus,
+  minus: faMinus,
   subtract: faMinus,
   delete: faTrashCan,
+  archive: faBoxArchive,
+  edit: faPenToSquare,
   check: faCheck,
   close: faXmark,
   search: faMagnifyingGlass,
@@ -141,9 +165,11 @@ export const icons = {
   hide: faEyeSlash,
   star: faStar,
   more: faEllipsis,
+  moreVertical: faEllipsisVertical,
   drag: faGripVertical,
   download: faDownload,
   upload: faUpload,
+  link: faLink,
   externalLink: faArrowUpRightFromSquare,
   panelLeft: faTableColumns,
 
@@ -154,6 +180,8 @@ export const icons = {
   chevronRight: faChevronRight,
   arrowLeft: faArrowLeft,
   arrowRight: faArrowRight,
+  arrowDown: faArrowDown,
+  arrowUp: faArrowUp,
   circle: faCircle,
   circleDot: faCircleDot,
 
@@ -163,9 +191,11 @@ export const icons = {
   warrantyActive: faShieldHalved,
   warrantyExpired: faBan,
   warning: faTriangleExclamation,
+  alerts: faTriangleExclamation,
   info: faCircleInfo,
   success: faCircleCheck,
   error: faCircleExclamation,
+  help: faCircleQuestion,
   clock: faClock,
   users: faUsers,
   organization: faBuilding,
@@ -179,9 +209,17 @@ export const icons = {
   power: faBolt,
   notification: faBell,
   calendar: faCalendarDays,
+  fullscreen: faExpand,
+  target: faCrosshairs,
+  zoomIn: faMagnifyingGlassPlus,
+  zoomOut: faMagnifyingGlassMinus,
+  palette: faPalette,
+  sparkle: faWandMagicSparkles,
+  cloud: faCloud,
 
   /* ---- automotive / fleet ---- */
   maintenance: faWrench,
+  tools: faScrewdriverWrench,
   repair: faScrewdriverWrench,
   fuel: faGasPump,
   gauge: faGaugeHigh,
@@ -189,7 +227,9 @@ export const icons = {
   recycle: faRecycle,
   locomotive: faTrain,
   route: faRoute,
+  road: faRoad,
   map: faMapLocationDot,
+  location: faMapLocationDot,
 
   /* ---- data ---- */
   chart: faChartLine,
@@ -200,6 +240,8 @@ export const icons = {
   savings: faPiggyBank,
   table: faTableList,
   cost: faMoneyBillTrendUp,
+  sort: faSort,
+  trend: faArrowTrendUp,
   trendUp: faArrowTrendUp,
   trendDown: faArrowTrendDown,
 } as const;
