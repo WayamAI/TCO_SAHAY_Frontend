@@ -47,7 +47,8 @@ export const INITIAL_QUEUE_DATA: QueueItem[] = [
     id: "SIM-0341",
     priority: "info",
     asset: "SIM-0341",
-    description: "Over-The-Air ECU firmware package 4.2.1 downloaded; telemetry verification pending",
+    description:
+      "Over-The-Air ECU firmware package 4.2.1 downloaded; telemetry verification pending",
     time: "3h ago",
     driver: "Jessica Pearson",
   },
