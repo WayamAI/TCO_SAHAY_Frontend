@@ -201,141 +201,184 @@
    Semantic tokens describe WHAT the color does.
    ------------------------------------------------------------------------ */
 :root {
-  /* page -------------------------------------------------------------- */
-  --page-background: var(--ref-gray-1000);
-  --page-background-subtle: var(--ref-gray-975);
-
-  /* surface ----------------------------------------------------------- */
-  --surface-primary: var(--ref-gray-950);
-  --surface-secondary: var(--ref-gray-925);
-  --surface-tertiary: var(--ref-gray-900);
-  --surface-elevated: var(--ref-gray-850);
-  --surface-hover: var(--ref-gray-850);
-  --surface-active: var(--ref-gray-800);
-  --surface-disabled: var(--ref-gray-950);
-
-  /* text -------------------------------------------------------------- */
+  /* 1. TEXT ----------------------------------------------------------- */
   --text-primary: var(--ref-gray-50);
   --text-secondary: var(--ref-gray-300);
-  --text-tertiary: var(--ref-gray-400);
+  --text-tertiary: var(--ref-gray-500);
+  --text-quaternary: var(--ref-gray-600);
+  --text-on-color: var(--ref-black);
+  --text-on-light: var(--ref-black);
   --text-muted: var(--ref-gray-500);
   --text-disabled: var(--ref-gray-600);
-  --text-on-color: var(--ref-gray-0);
-  --text-on-light: var(--ref-gray-950);
 
-  /* icon -------------------------------------------------------------- */
-  --icon-primary: var(--text-primary);
-  --icon-secondary: var(--text-secondary);
-  --icon-tertiary: var(--text-tertiary);
-  --icon-muted: var(--text-muted);
-  --icon-disabled: var(--text-disabled);
-  --icon-on-light: var(--text-on-light);
+  /* 2. ICON ----------------------------------------------------------- */
+  --icon-primary: var(--ref-gray-50);
+  --icon-secondary: var(--ref-gray-300);
+  --icon-tertiary: var(--ref-gray-500);
+  --icon-quaternary: var(--ref-gray-600);
+  --icon-on-color: var(--ref-black);
+  --icon-on-light: var(--ref-black);
+  --icon-muted: var(--ref-gray-500);
+  --icon-disabled: var(--ref-gray-600);
 
-  /* stroke / border --------------------------------------------------- */
-  --stroke-subtle: rgba(255, 255, 255, 0.06);
-  --stroke-default: rgba(255, 255, 255, 0.10);
-  --stroke-strong: rgba(255, 255, 255, 0.16);
-  --stroke-hover: rgba(255, 255, 255, 0.22);
+  /* 3. STROKE --------------------------------------------------------- */
+  --stroke-default: rgba(255, 255, 255, 0.14);
+  --stroke-active: rgba(255, 255, 255, 0.24);
+  --stroke-muted: rgba(255, 255, 255, 0.08);
+  --stroke-disabled: rgba(255, 255, 255, 0.04);
+  --stroke-on-color: rgba(0, 0, 0, 0.18);
+  --stroke-subtle: var(--stroke-muted);
+  --stroke-strong: var(--stroke-active);
+  --stroke-hover: var(--stroke-active);
   --stroke-focus: rgba(255, 255, 255, 0.30);
 
-  /* action ------------------------------------------------------------ */
-  --action-primary: var(--ref-gray-50);
-  --action-primary-hover: var(--ref-gray-100);
-  --action-primary-active: var(--ref-gray-200);
-  --action-primary-text: var(--ref-gray-950);
+  /* 4. SURFACE -------------------------------------------------------- */
+  --surface-page-background: var(--ref-black);
+  --surface-container: var(--ref-gray-950);
+  --surface-raised: var(--ref-gray-900);
+  --surface-raised-x2: var(--ref-gray-850);
+  --surface-action: var(--ref-gray-900);
+  --surface-scroll-bar: var(--ref-gray-750);
 
-  --action-secondary: var(--surface-tertiary);
-  --action-secondary-hover: var(--surface-elevated);
-  --action-secondary-text: var(--text-primary);
+  /* Canonical Aliases */
+  --page-background: var(--surface-page-background);
+  --page-background-subtle: var(--ref-gray-975);
+  --surface-primary: var(--surface-container);
+  --surface-secondary: var(--surface-raised);
+  --surface-tertiary: var(--surface-raised-x2);
+  --surface-elevated: var(--surface-raised-x2);
+  --surface-hover: var(--surface-raised);
+  --surface-active: var(--ref-gray-800);
+  --surface-disabled: var(--surface-container);
 
-  --action-disabled: var(--surface-disabled);
+  /* 5. ACTION SURFACE ------------------------------------------------- */
+  --action-primary-default: var(--ref-gray-50);
+  --action-primary-hover: var(--ref-gray-200);
+  --action-primary-focused: var(--ref-white);
+  --action-primary-disabled: var(--ref-gray-700);
+  --action-primary-content: var(--ref-black);
 
-  /* feedback ---------------------------------------------------------- */
-  --feedback-success: var(--ref-green-400);
-  --feedback-success-subtle: rgba(79, 193, 110, 0.12);
+  --action-secondary-default: var(--ref-gray-850);
+  --action-secondary-hover: var(--ref-gray-800);
+  --action-secondary-focused: var(--ref-gray-750);
+  --action-secondary-disabled: var(--ref-gray-950);
+  --action-secondary-content: var(--text-primary);
 
-  --feedback-info: var(--ref-blue-400);
-  --feedback-info-subtle: rgba(76, 154, 255, 0.12);
+  --action-tertiary-default: transparent;
+  --action-tertiary-hover: rgba(255, 255, 255, 0.06);
+  --action-tertiary-focused: rgba(255, 255, 255, 0.10);
+  --action-tertiary-disabled: transparent;
+  --action-tertiary-content: var(--text-secondary);
 
-  --feedback-warning: var(--ref-orange-400);
-  --feedback-warning-subtle: rgba(255, 159, 67, 0.12);
+  --action-primary: var(--action-primary-default);
+  --action-primary-text: var(--action-primary-content);
+  --action-secondary: var(--action-secondary-default);
+  --action-secondary-text: var(--action-secondary-content);
 
-  --feedback-critical: var(--ref-red-400);
-  --feedback-critical-subtle: rgba(255, 90, 82, 0.12);
+  /* 6. FEEDBACK ------------------------------------------------------- */
+  --feedback-success-content: var(--ref-green-300);
+  --feedback-success-icon: var(--ref-green-400);
+  --feedback-success-stroke: var(--ref-green-700);
+  --feedback-success-background: rgba(63, 174, 105, 0.12);
 
+  --feedback-info-content: var(--ref-blue-300);
+  --feedback-info-icon: var(--ref-blue-400);
+  --feedback-info-stroke: var(--ref-blue-700);
+  --feedback-info-background: rgba(44, 150, 219, 0.12);
+
+  --feedback-neutral-content: var(--ref-gray-300);
+  --feedback-neutral-icon: var(--ref-gray-400);
+  --feedback-neutral-stroke: var(--ref-gray-650);
+  --feedback-neutral-background: rgba(255, 255, 255, 0.06);
+
+  --feedback-warning-content: var(--ref-orange-300);
+  --feedback-warning-icon: var(--ref-orange-400);
+  --feedback-warning-stroke: var(--ref-orange-700);
+  --feedback-warning-background: rgba(255, 123, 28, 0.12);
+
+  --feedback-error-content: var(--ref-red-300);
+  --feedback-error-icon: var(--ref-red-400);
+  --feedback-error-stroke: var(--ref-red-700);
+  --feedback-error-background: rgba(255, 65, 73, 0.12);
+
+  --feedback-success: var(--feedback-success-content);
+  --feedback-success-subtle: var(--feedback-success-background);
+  --feedback-info: var(--feedback-info-content);
+  --feedback-info-subtle: var(--feedback-info-background);
+  --feedback-warning: var(--feedback-warning-content);
+  --feedback-warning-subtle: var(--feedback-warning-background);
+  --feedback-critical: var(--feedback-error-content);
+  --feedback-critical-subtle: var(--feedback-error-background);
   --feedback-highlight: var(--ref-yellow-400);
 
-  /* Legacy sem-* aliases preserved for backward compatibility */
+  /* Backward compatibility aliases */
   --sem-text-primary: var(--text-primary);
   --sem-text-secondary: var(--text-secondary);
   --sem-text-tertiary: var(--text-tertiary);
-  --sem-text-quaternary: var(--text-muted);
-  --sem-text-on-color: var(--text-on-light);
+  --sem-text-quaternary: var(--text-quaternary);
+  --sem-text-on-color: var(--text-on-color);
 
   --sem-icon-primary: var(--icon-primary);
   --sem-icon-secondary: var(--icon-secondary);
   --sem-icon-tertiary: var(--icon-tertiary);
-  --sem-icon-quaternary: var(--icon-muted);
-  --sem-icon-on-color: var(--icon-on-light);
+  --sem-icon-quaternary: var(--icon-quaternary);
+  --sem-icon-on-color: var(--icon-on-color);
 
   --sem-stroke-default: var(--stroke-default);
-  --sem-stroke-active: var(--stroke-hover);
-  --sem-stroke-muted: var(--stroke-subtle);
-  --sem-stroke-disabled: var(--stroke-subtle);
-  --sem-stroke-on-color: var(--text-on-light);
+  --sem-stroke-active: var(--stroke-active);
+  --sem-stroke-muted: var(--stroke-muted);
+  --sem-stroke-disabled: var(--stroke-disabled);
+  --sem-stroke-on-color: var(--stroke-on-color);
 
-  --sem-surface-page-background: var(--page-background);
-  --sem-surface-container: var(--surface-primary);
-  --sem-surface-raised: var(--surface-secondary);
-  --sem-surface-raised-x2: var(--surface-tertiary);
-  --sem-surface-action: var(--surface-elevated);
-  --sem-surface-scroll-bar: var(--ref-gray-750);
+  --sem-surface-page-background: var(--surface-page-background);
+  --sem-surface-container: var(--surface-container);
+  --sem-surface-raised: var(--surface-raised);
+  --sem-surface-raised-x2: var(--surface-raised-x2);
+  --sem-surface-action: var(--surface-action);
+  --sem-surface-scroll-bar: var(--surface-scroll-bar);
 
-  --sem-action-primary-default: var(--action-primary);
+  --sem-action-primary-default: var(--action-primary-default);
   --sem-action-primary-hover: var(--action-primary-hover);
-  --sem-action-primary-focused: var(--action-primary-active);
-  --sem-action-primary-disabled: var(--action-disabled);
-  --sem-action-primary-content: var(--action-primary-text);
-  --sem-action-primary-content-disabled: var(--text-disabled);
+  --sem-action-primary-focused: var(--action-primary-focused);
+  --sem-action-primary-disabled: var(--action-primary-disabled);
+  --sem-action-primary-content: var(--action-primary-content);
 
-  --sem-action-secondary-default: var(--action-secondary);
+  --sem-action-secondary-default: var(--action-secondary-default);
   --sem-action-secondary-hover: var(--action-secondary-hover);
-  --sem-action-secondary-focused: var(--surface-active);
-  --sem-action-secondary-disabled: var(--action-disabled);
-  --sem-action-secondary-content: var(--action-secondary-text);
-  --sem-action-secondary-content-disabled: var(--text-disabled);
+  --sem-action-secondary-focused: var(--action-secondary-focused);
+  --sem-action-secondary-disabled: var(--action-secondary-disabled);
+  --sem-action-secondary-content: var(--action-secondary-content);
 
-  --sem-action-tertiary-default: transparent;
-  --sem-action-tertiary-hover: var(--surface-secondary);
-  --sem-action-tertiary-focused: var(--surface-elevated);
-  --sem-action-tertiary-disabled: transparent;
-  --sem-action-tertiary-content: var(--text-secondary);
-  --sem-action-tertiary-content-disabled: var(--text-disabled);
+  --sem-action-tertiary-default: var(--action-tertiary-default);
+  --sem-action-tertiary-hover: var(--action-tertiary-hover);
+  --sem-action-tertiary-focused: var(--action-tertiary-focused);
+  --sem-action-tertiary-disabled: var(--action-tertiary-disabled);
+  --sem-action-tertiary-content: var(--action-tertiary-content);
 
-  --sem-feedback-success-content: var(--feedback-success);
-  --sem-feedback-success-icon: var(--feedback-success);
-  --sem-feedback-success-stroke: var(--ref-green-600);
-  --sem-feedback-success-background: var(--feedback-success-subtle);
+  --sem-feedback-success-content: var(--feedback-success-content);
+  --sem-feedback-success-icon: var(--feedback-success-icon);
+  --sem-feedback-success-stroke: var(--feedback-success-stroke);
+  --sem-feedback-success-background: var(--feedback-success-background);
 
-  --sem-feedback-info-content: var(--feedback-info);
-  --sem-feedback-info-icon: var(--feedback-info);
-  --sem-feedback-info-stroke: var(--ref-blue-600);
-  --sem-feedback-info-background: var(--feedback-info-subtle);
+  --sem-feedback-info-content: var(--feedback-info-content);
+  --sem-feedback-info-icon: var(--feedback-info-icon);
+  --sem-feedback-info-stroke: var(--feedback-info-stroke);
+  --sem-feedback-info-background: var(--feedback-info-background);
 
-  --sem-feedback-neutral-content: var(--text-secondary);
-  --sem-feedback-neutral-icon: var(--icon-secondary);
-  --sem-feedback-neutral-stroke: var(--stroke-default);
-  --sem-feedback-neutral-background: var(--surface-tertiary);
+  --sem-feedback-neutral-content: var(--feedback-neutral-content);
+  --sem-feedback-neutral-icon: var(--feedback-neutral-icon);
+  --sem-feedback-neutral-stroke: var(--feedback-neutral-stroke);
+  --sem-feedback-neutral-background: var(--feedback-neutral-background);
 
-  --sem-feedback-warning-content: var(--feedback-warning);
-  --sem-feedback-warning-icon: var(--feedback-warning);
-  --sem-feedback-warning-stroke: var(--ref-orange-600);
-  --sem-feedback-warning-background: var(--feedback-warning-subtle);
+  --sem-feedback-warning-content: var(--feedback-warning-content);
+  --sem-feedback-warning-icon: var(--feedback-warning-icon);
+  --sem-feedback-warning-stroke: var(--feedback-warning-stroke);
+  --sem-feedback-warning-background: var(--feedback-warning-background);
 
-  --sem-feedback-error-content: var(--feedback-critical);
-  --sem-feedback-error-icon: var(--feedback-critical);
-  --sem-feedback-error-stroke: var(--ref-red-600);
-  --sem-feedback-error-background: var(--feedback-critical-subtle);
+  --sem-feedback-error-content: var(--feedback-error-content);
+  --sem-feedback-error-icon: var(--feedback-error-icon);
+  --sem-feedback-error-stroke: var(--feedback-error-stroke);
+  --sem-feedback-error-background: var(--feedback-error-background);
 
   /* icon sizing scale — consumed by <AppIcon> -------------------------- */
   --icon-size-xs: 12px;
