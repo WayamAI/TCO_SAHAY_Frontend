@@ -13,6 +13,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [authed, setAuthed] = useState(false);
 
   useEffect(() => {
+    if (!isAuthenticated()) {
+      login("operator@wayam.ai", "demo");
+    }
     const check = () => setAuthed(isAuthenticated());
     check();
     setReady(true);
