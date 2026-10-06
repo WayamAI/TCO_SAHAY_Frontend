@@ -49,12 +49,8 @@ function LoginPage() {
             alt="Wayam AI"
             className="h-12 w-auto object-contain"
           />
-          <h1 className="mt-4 font-display text-lg font-bold tracking-tight text-primary">
-            SAHAY
-          </h1>
-          <p className="mt-1 text-caption text-secondary">
-            Fleet Lifecycle Intelligence Platform
-          </p>
+          <h1 className="mt-4 font-display text-lg font-bold tracking-tight text-primary">SAHAY</h1>
+          <p className="mt-1 text-caption text-secondary">Fleet Lifecycle Intelligence Platform</p>
         </div>
 
         <form className="mt-7 space-y-4" onSubmit={handleSubmit}>
