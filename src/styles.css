@@ -274,34 +274,65 @@
 :root {
   --radius: 0.875rem; /* 14px */
 
-  --background: var(--sem-surface-page-background);
-  --foreground: var(--sem-text-primary);
-  --surface-1: var(--sem-surface-container);
-  --surface-2: var(--sem-surface-raised);
-  --surface-3: var(--sem-surface-raised-x2);
-  --card: var(--sem-surface-raised);
-  --card-foreground: var(--sem-text-primary);
-  --popover: var(--sem-surface-raised-x2);
-  --popover-foreground: var(--sem-text-primary);
+  /* Command Center & Telemetry Design Tokens */
+  --background: #090b0c;
+  --foreground: rgba(255, 255, 255, 0.95);
+  --surface-1: #111314;
+  --surface-2: #17191a;
+  --surface-3: #1d1f20;
+  --surface-card: #131516;
+  --surface-card-hover: #191b1d;
+  --surface-active: #222527;
+
+  --border: rgba(255, 255, 255, 0.07);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-strong: rgba(255, 255, 255, 0.11);
+  --border-active: rgba(255, 255, 255, 0.20);
+
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.58);
+  --text-muted: rgba(255, 255, 255, 0.35);
+  --text-tertiary: rgba(255, 255, 255, 0.22);
+
+  --status-critical: #ef4444;
+  --status-critical-bg: rgba(239, 68, 68, 0.12);
+  --status-critical-border: rgba(239, 68, 68, 0.26);
+
+  --status-warning: #f97316;
+  --status-warning-bg: rgba(249, 115, 22, 0.12);
+  --status-warning-border: rgba(249, 115, 22, 0.26);
+
+  --status-info: #38bdf8;
+  --status-info-bg: rgba(56, 189, 248, 0.12);
+  --status-info-border: rgba(56, 189, 248, 0.26);
+
+  --status-success: #22c55e;
+  --status-success-bg: rgba(34, 197, 94, 0.12);
+  --status-success-border: rgba(34, 197, 94, 0.26);
+
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  --shadow-floating: 0 12px 32px -4px rgba(0, 0, 0, 0.65);
+
+  --card: var(--surface-card);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface-2);
+  --popover-foreground: var(--text-primary);
 
   /* Brand accent — deliberately preserved from the existing Wayam identity. */
   --primary: var(--ref-deep-orange-500);
   --primary-foreground: var(--ref-gray-950);
 
-  --secondary: var(--sem-surface-raised-x2);
-  --secondary-foreground: var(--sem-text-primary);
-  --muted: var(--sem-surface-raised);
-  --muted-foreground: var(--sem-text-tertiary);
-  --accent: var(--sem-surface-raised-x2);
-  --accent-foreground: var(--sem-text-primary);
-  --destructive: var(--sem-feedback-error-icon);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--surface-1);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--surface-3);
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--status-critical);
   --destructive-foreground: var(--ref-gray-950);
-  --border: var(--sem-stroke-default);
-  --input: var(--sem-stroke-default);
-  --ring: var(--sem-stroke-active);
-
-  --text-secondary: var(--sem-text-secondary);
-  --text-muted: var(--sem-text-tertiary);
+  --input: var(--border);
+  --ring: var(--border-active);
 
   /* Named accents used by charts and status text across the app */
   --teal: var(--ref-teal-400);
@@ -439,6 +470,20 @@
   --color-blue: var(--blue);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-border-active: var(--border-active);
+  --color-surface-card: var(--surface-card);
+  --color-surface-card-hover: var(--surface-card-hover);
+  --color-surface-active: var(--surface-active);
+  --color-status-critical: var(--status-critical);
+  --color-status-critical-bg: var(--status-critical-bg);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-bg: var(--status-warning-bg);
+  --color-status-info: var(--status-info);
+  --color-status-info-bg: var(--status-info-bg);
+  --color-status-success: var(--status-success);
+  --color-status-success-bg: var(--status-success-bg);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
