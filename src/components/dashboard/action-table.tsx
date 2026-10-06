@@ -13,66 +13,7 @@ export interface QueueItem {
   statusLabel?: string;
 }
 
-export const INITIAL_QUEUE_DATA: QueueItem[] = [
-  {
-    id: "SIM-0001",
-    priority: "critical",
-    asset: "SIM-0001",
-    description:
-      "Critical telemetry from SIM-0001 — Engine temperature exceeded 104°C on M7 Highway KM 45",
-    time: "2m ago",
-    driver: "Mike Ross",
-  },
-  {
-    id: "SIM-0014",
-    priority: "critical",
-    asset: "SIM-0014",
-    description: "Main brake pipe differential pressure drop — 3.2 bar threshold crossed",
-    time: "14m ago",
-    driver: "Rachel Zane",
-  },
-  {
-    id: "SIM-0082",
-    priority: "warning",
-    asset: "SIM-0082",
-    description: "Coolant reserve tank level degraded below 15% safety limit",
-    time: "32m ago",
-    driver: "Harvey Specter",
-  },
-  {
-    id: "SIM-0105",
-    priority: "warning",
-    asset: "SIM-0105",
-    description: "Traction motor inverter #2 thermal delta rising abnormally (+18°C/hr)",
-    time: "1h ago",
-    driver: "Donna Paulsen",
-  },
-  {
-    id: "SIM-0219",
-    priority: "warning",
-    asset: "SIM-0219",
-    description: "High particulate matter in fuel recirculation circuit — scheduled check pending",
-    time: "2h ago",
-    driver: "Louis Litt",
-  },
-  {
-    id: "SIM-0341",
-    priority: "info",
-    asset: "SIM-0341",
-    description:
-      "Over-The-Air ECU firmware package 4.2.1 downloaded; telemetry verification pending",
-    time: "3h ago",
-    driver: "Jessica Pearson",
-  },
-  {
-    id: "SIM-0402",
-    priority: "info",
-    asset: "SIM-0402",
-    description: "Routine diagnostic telemetry handshake completed successfully",
-    time: "4h ago",
-    driver: "Robert Zane",
-  },
-];
+import { INITIAL_QUEUE_DATA } from "./mock-data";
 
 export interface ActionTableProps {
   items?: QueueItem[];
