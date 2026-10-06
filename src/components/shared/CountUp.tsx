@@ -12,7 +12,9 @@ type CountUpComponent = ComponentType<{
   preserveValue?: boolean;
 }>;
 
-const raw = CountUpModule as unknown as { default?: CountUpComponent | { default?: CountUpComponent } };
+const raw = CountUpModule as unknown as {
+  default?: CountUpComponent | { default?: CountUpComponent };
+};
 const resolved =
   (typeof raw.default === "function"
     ? raw.default

@@ -29,7 +29,9 @@ export function PageHeader({
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-2.5">
             {mark}
-            <h2 className="min-w-0 font-display text-display-lg text-primary sm:text-display-xl">{title}</h2>
+            <h2 className="min-w-0 font-display text-display-lg text-primary sm:text-display-xl">
+              {title}
+            </h2>
             {info}
           </div>
           {description ? (
@@ -51,9 +53,5 @@ export function PageBody({
   children: ReactNode;
   className?: string;
 }) {
-  return (
-    <div className={`min-h-0 flex-1 overflow-y-auto p-4 sm:p-5 ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`min-h-0 flex-1 overflow-y-auto p-4 sm:p-5 ${className}`}>{children}</div>;
 }

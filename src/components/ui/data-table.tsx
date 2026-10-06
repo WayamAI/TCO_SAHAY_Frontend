@@ -78,11 +78,7 @@ const PRIORITY_RANK: Record<string, number> = {
   low: 3,
 };
 
-function activateRow<T>(
-  event: KeyboardEvent<HTMLElement>,
-  row: T,
-  onRowClick?: (row: T) => void,
-) {
+function activateRow<T>(event: KeyboardEvent<HTMLElement>, row: T, onRowClick?: (row: T) => void) {
   if (event.key === "ArrowDown") {
     event.preventDefault();
     (event.currentTarget.nextElementSibling as HTMLElement | null)?.focus();
@@ -108,9 +104,7 @@ function cardRoles<T>(columns: Column<T>[]) {
   const metric =
     columns.find((c) => c.card === "metric") ??
     columns.find((c) => c !== title && c.card !== false && c.align === "right");
-  const fields = columns.filter(
-    (c) => c !== title && c !== metric && c.card !== false,
-  );
+  const fields = columns.filter((c) => c !== title && c !== metric && c.card !== false);
   return { title, metric, fields: fields.slice(0, 6) };
 }
 
@@ -310,9 +304,7 @@ export function DataTable<T>({
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortState | undefined>(defaultSort);
   const [page, setPage] = useState(0);
-  const [uncontrolledSelected, setUncontrolledSelected] = useState<Set<string>>(
-    () => new Set(),
-  );
+  const [uncontrolledSelected, setUncontrolledSelected] = useState<Set<string>>(() => new Set());
   const [order, setOrder] = useState(() => columns.map((column) => column.key));
   const [dragKey, setDragKey] = useState<string | null>(null);
   const [overKey, setOverKey] = useState<string | null>(null);
@@ -619,7 +611,9 @@ export function DataTable<T>({
                         key={col.key}
                         className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-raised"
                       >
-                        <span className="w-4 text-caption tabular text-quaternary">{index + 1}</span>
+                        <span className="w-4 text-caption tabular text-quaternary">
+                          {index + 1}
+                        </span>
                         <span className="min-w-0 flex-1 truncate text-label-sm text-secondary">
                           {col.header}
                         </span>
@@ -782,7 +776,9 @@ export function DataTable<T>({
                         aria-sort={
                           active ? (sort.dir === "asc" ? "ascending" : "descending") : "none"
                         }
-                        onDragOver={canReorder ? (event) => onHeaderDragOver(event, col.key) : undefined}
+                        onDragOver={
+                          canReorder ? (event) => onHeaderDragOver(event, col.key) : undefined
+                        }
                         onDrop={canReorder ? (event) => onHeaderDrop(event, col.key) : undefined}
                         onDragLeave={() => {
                           if (overKey === col.key) setOverKey(null);
@@ -881,9 +877,10 @@ export function DataTable<T>({
                       ) : null}
                       {serial ? (
                         <td
-                          className={["sticky z-10 w-12 px-3 py-2 text-body-sm tabular text-quaternary", stickyBg].join(
-                            " ",
-                          )}
+                          className={[
+                            "sticky z-10 w-12 px-3 py-2 text-body-sm tabular text-quaternary",
+                            stickyBg,
+                          ].join(" ")}
                           style={{ left: serialLeft }}
                         >
                           {serialNo}

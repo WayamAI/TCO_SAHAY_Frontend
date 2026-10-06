@@ -21,18 +21,11 @@ export function InlineArrow({ className = "" }: { className?: string }) {
 }
 
 /** Native select with room between the chevron and the pill edge. */
-export function Select({
-  className = "",
-  children,
-  ...props
-}: ComponentPropsWithoutRef<"select">) {
+export function Select({ className = "", children, ...props }: ComponentPropsWithoutRef<"select">) {
   const wide = className.includes("w-full");
   return (
     <span className={`relative inline-flex min-w-0 ${wide ? "w-full" : ""}`}>
-      <select
-        {...props}
-        className={`appearance-none pr-8 pl-3 ${className}`.trim()}
-      >
+      <select {...props} className={`appearance-none pr-8 pl-3 ${className}`.trim()}>
         {children}
       </select>
       <ChevronDown
@@ -107,7 +100,9 @@ export function SplitRow({
   return (
     <div className={`flex flex-col items-stretch gap-4 isolate ${SPLIT_DIR[from]} ${className}`}>
       {Children.map(children, (child, index) => (
-        <div className={`flex min-h-0 min-w-0 flex-col overflow-hidden ${grow[index] ?? "lg:flex-1"}`}>
+        <div
+          className={`flex min-h-0 min-w-0 flex-col overflow-hidden ${grow[index] ?? "lg:flex-1"}`}
+        >
           {child}
         </div>
       ))}
@@ -146,7 +141,9 @@ export function Panel({
           {action ? <div className="min-w-0 shrink-0">{action}</div> : null}
         </header>
       ) : null}
-      <div className={`flex min-h-0 min-w-0 flex-1 flex-col ${padded ? "overflow-auto p-4" : "overflow-hidden"}`}>
+      <div
+        className={`flex min-h-0 min-w-0 flex-1 flex-col ${padded ? "overflow-auto p-4" : "overflow-hidden"}`}
+      >
         {children}
       </div>
     </section>
