@@ -110,7 +110,8 @@ export interface SimResult {
 
 export function runTCOSimulation(params: SimParams): SimResult {
   const { N, inflationEnabled, includeDowntime } = params;
-  const profile = OPERATING_PROFILES.find((p) => p.id === params.operatingProfile) ?? OPERATING_PROFILES[0];
+  const profile =
+    OPERATING_PROFILES.find((p) => p.id === params.operatingProfile) ?? OPERATING_PROFILES[0];
   const loco = LOCOMOTIVES.find((l) => l.id === params.locomotiveId) ?? LOCOMOTIVES[0];
   const annualKm = (params.annualKmOverride ?? loco.annualKm) * profile.wearMultiplier;
   const annualHours = (params.annualHoursOverride ?? loco.annualHours) * profile.wearMultiplier;
@@ -144,7 +145,11 @@ export function runTCOSimulation(params: SimParams): SimResult {
         ) * params.maintenanceIntervalMultiplier;
       const eventsThisYear = t % triggerYears < 1 && t >= triggerYears ? 1 : 0;
       if (eventsThisYear) {
-        const partsCost = inflatedCost(sched.partsEstimate, t, inflationEnabled ? params.inflationParts : 0);
+        const partsCost = inflatedCost(
+          sched.partsEstimate,
+          t,
+          inflationEnabled ? params.inflationParts : 0,
+        );
         const laborCost = partsCost * (params.maintenanceLaborPct / 100);
         yearMaint += laborCost + partsCost;
       }
@@ -157,7 +162,11 @@ export function runTCOSimulation(params: SimParams): SimResult {
       const effectiveLifeYears = comp.lifeYears / profileWear;
       if (t % effectiveLifeYears < 1 && t >= effectiveLifeYears) {
         const isWarranty = t <= comp.warrantyYears + params.warrantyExtendedYears;
-        const partsCost = inflatedCost(comp.replacementCost, t, inflationEnabled ? params.inflationParts : 0);
+        const partsCost = inflatedCost(
+          comp.replacementCost,
+          t,
+          inflationEnabled ? params.inflationParts : 0,
+        );
         const laborCost = (partsCost * comp.laborCostPct) / 100;
         const totalRepl = partsCost + laborCost;
         if (isWarranty) yearWarranty -= totalRepl;
@@ -165,10 +174,19 @@ export function runTCOSimulation(params: SimParams): SimResult {
       }
 
       if (comp.consumable && comp.pmTrigger.intervalMonths) {
-        const pmIntervalYrs = (comp.pmTrigger.intervalMonths / 12) * params.maintenanceIntervalMultiplier;
+        const pmIntervalYrs =
+          (comp.pmTrigger.intervalMonths / 12) * params.maintenanceIntervalMultiplier;
         const eventsThisYear = Math.floor(1 / pmIntervalYrs);
-        const unitCost = inflatedCost(comp.consumable.unitCost, t, inflationEnabled ? params.inflationConsumables : 0);
-        yearConsumable += eventsThisYear * comp.consumable.qtyPerService * params.consumableQtyMultiplier * unitCost;
+        const unitCost = inflatedCost(
+          comp.consumable.unitCost,
+          t,
+          inflationEnabled ? params.inflationConsumables : 0,
+        );
+        yearConsumable +=
+          eventsThisYear *
+          comp.consumable.qtyPerService *
+          params.consumableQtyMultiplier *
+          unitCost;
       }
 
       const hoursStart = (t - 1) * annualHours;
@@ -192,7 +210,11 @@ export function runTCOSimulation(params: SimParams): SimResult {
       if (includeDowntime) {
         const mttrYears = (comp.mttrHours * params.mttrMultiplier) / annualHours;
         yearDowntime +=
-          pFailThisYear * mttrYears * 365 * DOWNTIME_DATA.revenuePerDayActive * (isWarrantyNow ? 0.5 : 1.0);
+          pFailThisYear *
+          mttrYears *
+          365 *
+          DOWNTIME_DATA.revenuePerDayActive *
+          (isWarrantyNow ? 0.5 : 1.0);
       }
     }
 
@@ -223,7 +245,13 @@ export function runTCOSimulation(params: SimParams): SimResult {
   });
 
   const totalTCO =
-    capitalCost + pmCost + replaceCost + consumableCost + failureCost + downtimeCost + warrantySavings;
+    capitalCost +
+    pmCost +
+    replaceCost +
+    consumableCost +
+    failureCost +
+    downtimeCost +
+    warrantySavings;
 
   const mttrAvg =
     (COMPONENTS.reduce((s, c) => s + c.mttrHours, 0) / COMPONENTS.length) * params.mttrMultiplier;

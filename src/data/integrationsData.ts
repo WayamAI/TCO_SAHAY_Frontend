@@ -73,7 +73,14 @@ export const CONNECTORS: Connector[] = [
     syncFrequency: "Nightly batch + event",
     freshnessSlaMins: 1440,
     recordsPerDay: 128000,
-    entities: ["Cost Center", "GL Account", "Asset Master (ANLA)", "Internal Order", "WBS Element", "Vendor Invoice"],
+    entities: [
+      "Cost Center",
+      "GL Account",
+      "Asset Master (ANLA)",
+      "Internal Order",
+      "WBS Element",
+      "Vendor Invoice",
+    ],
     standards: ["ISO 55000"],
     status: "connected",
     lastSyncMinsAgo: 42,
@@ -101,7 +108,14 @@ export const CONNECTORS: Connector[] = [
     syncFrequency: "Hourly + real-time on status",
     freshnessSlaMins: 60,
     recordsPerDay: 24500,
-    entities: ["Work Order (PM01/02/03)", "Notification", "Functional Location", "Equipment (EQUI)", "Maintenance Plan", "Measurement Doc"],
+    entities: [
+      "Work Order (PM01/02/03)",
+      "Notification",
+      "Functional Location",
+      "Equipment (EQUI)",
+      "Maintenance Plan",
+      "Measurement Doc",
+    ],
     standards: ["ISO 55000", "MIMOSA CCOM"],
     status: "connected",
     lastSyncMinsAgo: 8,
@@ -157,7 +171,14 @@ export const CONNECTORS: Connector[] = [
     syncFrequency: "Real-time (JMS/REST)",
     freshnessSlaMins: 15,
     recordsPerDay: 41000,
-    entities: ["Asset (ASSETNUM)", "Work Order", "Job Plan", "PM Schedule", "Meter Reading", "Inventory Item"],
+    entities: [
+      "Asset (ASSETNUM)",
+      "Work Order",
+      "Job Plan",
+      "PM Schedule",
+      "Meter Reading",
+      "Inventory Item",
+    ],
     standards: ["ISO 55000", "MIMOSA CCOM"],
     status: "degraded",
     lastSyncMinsAgo: 3,
@@ -511,16 +532,76 @@ export interface DataStandard {
 }
 
 export const DATA_STANDARDS: DataStandard[] = [
-  { code: "ISO 55000", name: "Asset Management", body: "ISO", scope: "Whole-life asset management governance", adoptionPct: 88 },
-  { code: "AAR MSRP", name: "Manual of Standards & Recommended Practices", body: "AAR", scope: "Mechanical interchange standards", adoptionPct: 95 },
-  { code: "Umler", name: "Equipment Registry", body: "Railinc", scope: "Master equipment identity & characteristics", adoptionPct: 99 },
-  { code: "EHMS", name: "Equipment Health Management System", body: "Railinc", scope: "Wayside detector alert aggregation", adoptionPct: 82 },
-  { code: "IEC 61375", name: "Train Communication Network (TCN)", body: "IEC", scope: "Onboard WTB/MVB/ETB data bus", adoptionPct: 76 },
-  { code: "MIMOSA CCOM", name: "Common Conceptual Object Model", body: "MIMOSA", scope: "OT ⇄ EAM condition-data interchange", adoptionPct: 54 },
-  { code: "EN 15380", name: "Rail Vehicle Classification", body: "CEN", scope: "Component taxonomy & designation", adoptionPct: 61 },
-  { code: "S2000M", name: "Material / Spare-Parts Management", body: "ASD/AIA", scope: "Provisioning & codification of spares", adoptionPct: 47 },
-  { code: "S1000D", name: "Technical Publications", body: "ASD/AIA", scope: "Modular IETP data modules", adoptionPct: 52 },
-  { code: "railML", name: "Railway Markup Language", body: "railML.org", scope: "XML exchange — infra, rollingstock, timetable", adoptionPct: 44 },
+  {
+    code: "ISO 55000",
+    name: "Asset Management",
+    body: "ISO",
+    scope: "Whole-life asset management governance",
+    adoptionPct: 88,
+  },
+  {
+    code: "AAR MSRP",
+    name: "Manual of Standards & Recommended Practices",
+    body: "AAR",
+    scope: "Mechanical interchange standards",
+    adoptionPct: 95,
+  },
+  {
+    code: "Umler",
+    name: "Equipment Registry",
+    body: "Railinc",
+    scope: "Master equipment identity & characteristics",
+    adoptionPct: 99,
+  },
+  {
+    code: "EHMS",
+    name: "Equipment Health Management System",
+    body: "Railinc",
+    scope: "Wayside detector alert aggregation",
+    adoptionPct: 82,
+  },
+  {
+    code: "IEC 61375",
+    name: "Train Communication Network (TCN)",
+    body: "IEC",
+    scope: "Onboard WTB/MVB/ETB data bus",
+    adoptionPct: 76,
+  },
+  {
+    code: "MIMOSA CCOM",
+    name: "Common Conceptual Object Model",
+    body: "MIMOSA",
+    scope: "OT ⇄ EAM condition-data interchange",
+    adoptionPct: 54,
+  },
+  {
+    code: "EN 15380",
+    name: "Rail Vehicle Classification",
+    body: "CEN",
+    scope: "Component taxonomy & designation",
+    adoptionPct: 61,
+  },
+  {
+    code: "S2000M",
+    name: "Material / Spare-Parts Management",
+    body: "ASD/AIA",
+    scope: "Provisioning & codification of spares",
+    adoptionPct: 47,
+  },
+  {
+    code: "S1000D",
+    name: "Technical Publications",
+    body: "ASD/AIA",
+    scope: "Modular IETP data modules",
+    adoptionPct: 52,
+  },
+  {
+    code: "railML",
+    name: "Railway Markup Language",
+    body: "railML.org",
+    scope: "XML exchange — infra, rollingstock, timetable",
+    adoptionPct: 44,
+  },
 ];
 
 // ── Pipeline stages for the data-flow / lineage view ──
@@ -533,11 +614,41 @@ export interface PipelineStage {
 }
 
 export const PIPELINE_STAGES: PipelineStage[] = [
-  { id: "ingest", name: "Ingest", description: "Connectors land raw events (CDC, batch, stream)", recordsPerDay: 10600000, healthPct: 99.4 },
-  { id: "validate", name: "Validate", description: "Schema & data-contract checks; DLQ on failure", recordsPerDay: 10580000, healthPct: 98.1 },
-  { id: "map", name: "Map & Normalize", description: "Field mapping to canonical model", recordsPerDay: 10420000, healthPct: 99.0 },
-  { id: "mdm", name: "MDM Resolve", description: "Reconcile asset IDs → golden record", recordsPerDay: 10420000, healthPct: 99.6 },
-  { id: "load", name: "Load", description: "Publish to TCO warehouse & analytics marts", recordsPerDay: 10390000, healthPct: 99.8 },
+  {
+    id: "ingest",
+    name: "Ingest",
+    description: "Connectors land raw events (CDC, batch, stream)",
+    recordsPerDay: 10600000,
+    healthPct: 99.4,
+  },
+  {
+    id: "validate",
+    name: "Validate",
+    description: "Schema & data-contract checks; DLQ on failure",
+    recordsPerDay: 10580000,
+    healthPct: 98.1,
+  },
+  {
+    id: "map",
+    name: "Map & Normalize",
+    description: "Field mapping to canonical model",
+    recordsPerDay: 10420000,
+    healthPct: 99.0,
+  },
+  {
+    id: "mdm",
+    name: "MDM Resolve",
+    description: "Reconcile asset IDs → golden record",
+    recordsPerDay: 10420000,
+    healthPct: 99.6,
+  },
+  {
+    id: "load",
+    name: "Load",
+    description: "Publish to TCO warehouse & analytics marts",
+    recordsPerDay: 10390000,
+    healthPct: 99.8,
+  },
 ];
 
 // Master-data cross-reference: one locomotive identity across every source system.
@@ -552,13 +663,37 @@ export interface GoldenRecordXref {
 }
 
 export const GOLDEN_RECORDS: GoldenRecordXref[] = [
-  { assetId: "loco-001", model: "ES44AC Evolution Series", sapEqunr: "10004411", maximoAssetnum: "LOCO-ES44-4411", umlerMark: "JTWX 4411", oemSerial: "WT-GEVO-88214", uicEvn: "92 80 1247 411-3" },
-  { assetId: "loco-002", model: "FLXdrive Battery-Electric", sapEqunr: "10005027", maximoAssetnum: "LOCO-FLX-5027", umlerMark: "JTWX 5027", oemSerial: "WT-FLX-10027", uicEvn: "92 80 1288 027-9" },
-  { assetId: "loco-003", model: "AC4400CW Legacy", sapEqunr: "10002215", maximoAssetnum: "LOCO-AC44-2215", umlerMark: "JTWX 2215", oemSerial: "GE-AC44-77215", uicEvn: "92 80 1244 215-6" },
+  {
+    assetId: "loco-001",
+    model: "ES44AC Evolution Series",
+    sapEqunr: "10004411",
+    maximoAssetnum: "LOCO-ES44-4411",
+    umlerMark: "JTWX 4411",
+    oemSerial: "WT-GEVO-88214",
+    uicEvn: "92 80 1247 411-3",
+  },
+  {
+    assetId: "loco-002",
+    model: "FLXdrive Battery-Electric",
+    sapEqunr: "10005027",
+    maximoAssetnum: "LOCO-FLX-5027",
+    umlerMark: "JTWX 5027",
+    oemSerial: "WT-FLX-10027",
+    uicEvn: "92 80 1288 027-9",
+  },
+  {
+    assetId: "loco-003",
+    model: "AC4400CW Legacy",
+    sapEqunr: "10002215",
+    maximoAssetnum: "LOCO-AC44-2215",
+    umlerMark: "JTWX 2215",
+    oemSerial: "GE-AC44-77215",
+    uicEvn: "92 80 1244 215-6",
+  },
 ];
 
 // 24h ingest volume trend for the pipeline throughput sparkline (records/hr, ×1000).
 export const INGEST_TREND = [
-  388, 356, 342, 331, 349, 402, 511, 642, 720, 758, 741, 769, 780, 772, 758,
-  766, 781, 802, 774, 690, 601, 528, 466, 410,
+  388, 356, 342, 331, 349, 402, 511, 642, 720, 758, 741, 769, 780, 772, 758, 766, 781, 802, 774,
+  690, 601, 528, 466, 410,
 ].map((v, i) => ({ hour: i, kRecords: v }));
