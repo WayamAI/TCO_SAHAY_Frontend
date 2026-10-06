@@ -124,7 +124,7 @@ export function Panel({
   className = "",
   padded = true,
 }: {
-  title?: string;
+  title?: ReactNode;
   action?: ReactNode;
   children: ReactNode;
   className?: string;
