@@ -301,6 +301,13 @@
   --feedback-error-stroke: var(--ref-red-700);
   --feedback-error-background: rgba(255, 65, 73, 0.12);
 
+  --feedback-success-badge: var(--ref-green-800);
+  --feedback-info-badge: var(--ref-blue-800);
+  --feedback-neutral-badge: var(--ref-gray-750);
+  --feedback-warning-badge: var(--ref-orange-800);
+  --feedback-error-badge: var(--ref-red-800);
+  --feedback-badge-content: var(--ref-white);
+
   --feedback-success: var(--feedback-success-content);
   --feedback-success-subtle: var(--feedback-success-background);
   --feedback-info: var(--feedback-info-content);
@@ -456,7 +463,8 @@
    use the semantic Tailwind utilities (bg-raised, text-fg-secondary, ...).
    ------------------------------------------------------------------------ */
 :root {
-  --radius: 0.875rem; /* 14px */
+  --radius: 0.875rem;
+  /* 14px */
 
   /* Command Center & Telemetry Design Tokens */
   --app-bg: var(--page-background);
@@ -653,6 +661,13 @@
   --color-error-icon: var(--feedback-critical);
   --color-error-stroke: var(--ref-red-600);
   --color-error-bg: var(--feedback-critical-subtle);
+
+  --color-badge: var(--feedback-badge-content);
+  --color-success-badge: var(--feedback-success-badge);
+  --color-info-badge: var(--feedback-info-badge);
+  --color-neutral-badge: var(--feedback-neutral-badge);
+  --color-warning-badge: var(--feedback-warning-badge);
+  --color-error-badge: var(--feedback-error-badge);
 
   /* --- reference escape hatch, charts only ----------------------------- */
   --color-ref-gray-850: var(--ref-gray-850);
@@ -876,21 +891,27 @@
 @utility text-primary {
   color: var(--text-primary);
 }
+
 @utility text-secondary {
   color: var(--text-secondary);
 }
+
 @utility text-tertiary {
   color: var(--text-tertiary);
 }
+
 @utility text-muted {
   color: var(--text-muted);
 }
+
 @utility text-disabled {
   color: var(--text-disabled);
 }
+
 @utility text-on-color {
   color: var(--text-on-color);
 }
+
 @utility text-on-light {
   color: var(--text-on-light);
 }
@@ -898,9 +919,11 @@
 @utility border-subtle {
   border-color: var(--stroke-subtle);
 }
+
 @utility border-default {
   border-color: var(--stroke-default);
 }
+
 @utility border-strong {
   border-color: var(--stroke-strong);
 }
@@ -908,9 +931,11 @@
 @utility border-stroke-subtle {
   border-color: var(--stroke-subtle);
 }
+
 @utility border-stroke-default {
   border-color: var(--stroke-default);
 }
+
 @utility border-stroke-strong {
   border-color: var(--stroke-strong);
 }
@@ -918,15 +943,19 @@
 @utility text-critical {
   color: var(--feedback-critical);
 }
+
 @utility text-error {
   color: var(--feedback-error-content);
 }
+
 @utility text-warning {
   color: var(--feedback-warning);
 }
+
 @utility text-success {
   color: var(--feedback-success);
 }
+
 @utility text-info {
   color: var(--feedback-info);
 }
@@ -934,15 +963,19 @@
 @utility bg-page {
   background-color: var(--surface-page-background);
 }
+
 @utility bg-container {
   background-color: var(--surface-container);
 }
+
 @utility bg-raised {
   background-color: var(--surface-raised);
 }
+
 @utility bg-raised-2 {
   background-color: var(--surface-raised-x2);
 }
+
 @utility bg-action {
   background-color: var(--surface-action);
 }
@@ -954,9 +987,11 @@
 @utility border-active {
   border-color: var(--stroke-active);
 }
+
 @utility border-muted {
   border-color: var(--stroke-muted);
 }
+
 @utility border-disabled {
   border-color: var(--stroke-disabled);
 }
@@ -964,17 +999,45 @@
 @utility icon-primary {
   color: var(--icon-primary);
 }
+
 @utility icon-secondary {
   color: var(--icon-secondary);
 }
+
 @utility icon-tertiary {
   color: var(--icon-tertiary);
 }
+
 @utility icon-quaternary {
   color: var(--icon-quaternary);
 }
+
 @utility icon-on-color {
   color: var(--icon-on-color);
+}
+
+@utility bg-success-badge {
+  background-color: var(--feedback-success-badge);
+}
+
+@utility bg-info-badge {
+  background-color: var(--feedback-info-badge);
+}
+
+@utility bg-neutral-badge {
+  background-color: var(--feedback-neutral-badge);
+}
+
+@utility bg-warning-badge {
+  background-color: var(--feedback-warning-badge);
+}
+
+@utility bg-error-badge {
+  background-color: var(--feedback-error-badge);
+}
+
+@utility text-badge {
+  color: var(--feedback-badge-content);
 }
 
 /* --- Semantic Typography Utilities (Prompt 4) --- */
@@ -1077,12 +1140,15 @@
 @utility bg-critical-subtle {
   background-color: var(--feedback-critical-subtle);
 }
+
 @utility bg-warning-subtle {
   background-color: var(--feedback-warning-subtle);
 }
+
 @utility bg-success-subtle {
   background-color: var(--feedback-success-subtle);
 }
+
 @utility bg-info-subtle {
   background-color: var(--feedback-info-subtle);
 }
@@ -1140,15 +1206,18 @@
     width: 10px;
     height: 10px;
   }
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
+
   ::-webkit-scrollbar-thumb {
     background: var(--sem-surface-scroll-bar);
     border-radius: 9999px;
     border: 3px solid transparent;
     background-clip: content-box;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: var(--ref-gray-700);
     background-clip: content-box;
@@ -1190,6 +1259,7 @@
 @utility scanline-overlay {
   position: relative;
   overflow: hidden;
+
   &::after {
     content: "";
     position: absolute;
@@ -1203,10 +1273,12 @@
 }
 
 @keyframes pulse-soft {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.4;
   }
@@ -1221,6 +1293,7 @@
     opacity: 0;
     transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1247,6 +1320,7 @@
     background: var(--sem-surface-action);
     outline: none;
   }
+
   input[type="range"]::-webkit-slider-thumb {
     appearance: none;
     width: 14px;
@@ -1256,6 +1330,7 @@
     border: 2px solid var(--sem-surface-raised);
     cursor: pointer;
   }
+
   input[type="range"]::-moz-range-thumb {
     width: 14px;
     height: 14px;
