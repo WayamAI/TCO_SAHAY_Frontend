@@ -1,5 +1,5 @@
 // Data integration catalog — real rail/enterprise systems that feed a locomotive
-// TCO platform. Product names, vendors, protocols and standards are industry-real;
+// SAHAY platform. Product names, vendors, protocols and standards are industry-real;
 // per-connector sync/volume/error figures are demo-grade illustrative defaults.
 
 export type ConnectorCategory =
