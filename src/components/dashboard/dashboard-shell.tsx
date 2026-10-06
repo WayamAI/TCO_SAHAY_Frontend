@@ -4,8 +4,9 @@ import { DashboardHeader } from "./dashboard-header";
 import { MapStage } from "./map-stage";
 import { HealthScoreCard } from "./health-score-card";
 import { ActionQueueHeader, type FilterCategory } from "./action-queue";
-import { ActionTable, INITIAL_QUEUE_DATA, type QueueItem } from "./action-table";
-import { IncidentPanel, DEFAULT_INCIDENT, type IncidentData } from "./incident-panel";
+import { ActionTable, type QueueItem } from "./action-table";
+import { IncidentPanel, type IncidentData } from "./incident-panel";
+import { INITIAL_QUEUE_DATA, DEFAULT_INCIDENT } from "./mock-data";
 import { Activity, AlertCircle, Menu, X, Radio, Clock, ArrowUpRight, Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
 
