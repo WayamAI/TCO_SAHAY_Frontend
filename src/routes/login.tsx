@@ -36,20 +36,20 @@ function LoginPage() {
   }
 
   return (
-    <div className="bg-page relative flex min-h-screen items-center justify-center overflow-hidden px-4">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-canvas px-4">
       <div className="dot-grid pointer-events-none absolute inset-0 opacity-40" />
 
-      <div className="glass-card relative w-full max-w-sm p-8">
+      <div className="relative w-full max-w-sm rounded-xl border border-muted bg-container p-8 shadow-2xl backdrop-blur-md">
         <div className="flex flex-col items-center text-center">
           <img
             src={`${import.meta.env.BASE_URL}wayam-logo.svg`}
             alt="Wayam AI"
             className="h-12 w-auto object-contain"
           />
-          <h1 className="font-display mt-4 text-lg font-bold tracking-tight text-foreground">
+          <h1 className="mt-4 font-display text-lg font-bold tracking-tight text-primary">
             TCO Intelligence Platform
           </h1>
-          <p className="mt-1 text-xs text-text-secondary">
+          <p className="mt-1 text-caption text-secondary">
             Sign in to continue to the fleet dashboard
           </p>
         </div>
@@ -118,9 +118,9 @@ function LoginPage() {
           </Button>
         </form>
 
-        <div className="mt-6 flex items-start gap-2 rounded-md border border-border bg-surface-2 p-3">
-          <AppIcon name="warrantyActive" size="md" className="mt-0.5 shrink-0 text-primary" />
-          <p className="text-mini leading-relaxed text-text-secondary">
+        <div className="mt-6 flex items-start gap-2.5 rounded-lg border border-muted bg-action p-3">
+          <AppIcon name="warrantyActive" size="sm" className="mt-0.5 shrink-0 text-teal" />
+          <p className="text-caption leading-relaxed text-secondary">
             Demo mode — enter any email and password to explore the platform. No real account is
             required.
           </p>
