@@ -45,5 +45,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
     return <div className="min-h-screen bg-background" />;
   }
 
+  // The Command Center root ("/") route renders its own integrated 3-column shell
+  // (Left Nav, Main telemetry, Right incident panel) as defined in the visual design system.
+  if (pathname === "/" || pathname === "") {
+    return <>{children}</>;
+  }
+
   return <AppShell>{children}</AppShell>;
 }

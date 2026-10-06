@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import {
   ComposedChart,
   Bar,
@@ -12,7 +13,6 @@ import {
   ReferenceLine,
   Legend,
 } from "recharts";
-import { useState } from "react";
 import { KPICard } from "@/components/shared/KPICard";
 import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
 import { HealthRing } from "@/components/shared/HealthRing";
@@ -32,16 +32,55 @@ export const Route = createFileRoute("/")({
       { title: "Command Center | TCO Intelligence" },
       {
         name: "description",
-        content: "Fleet-wide TCO, forecast accuracy and availability at a glance.",
+        content: "Fleet-wide telemetry command center, incident queue, and asset health at a glance.",
       },
     ],
   }),
-  component: Dashboard,
+  component: DashboardPage,
 });
+
+function DashboardPage() {
+  const [viewMode, setViewMode] = useState<"command" | "financial">("command");
+
+  if (viewMode === "command") {
+    return (
+      <div className="relative">
+        <DashboardShell />
+        {/* Floating toggle for switching to financial TCO view */}
+        <div className="fixed bottom-4 right-4 z-40 hidden xl:flex items-center gap-2 bg-[#141617]/90 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full shadow-xl">
+          <span className="text-[11px] text-white/50 font-medium">View Mode:</span>
+          <button
+            type="button"
+            onClick={() => setViewMode("financial")}
+            className="text-[11px] font-mono text-white/70 hover:text-white px-2 py-0.5 rounded bg-white/10 hover:bg-white/15 transition-colors"
+          >
+            Financial Analytics →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 lg:p-6 bg-[#090b0c] min-h-screen text-white">
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-xl font-semibold">Financial TCO Breakdown</h1>
+        <button
+          type="button"
+          onClick={() => setViewMode("command")}
+          className="text-xs font-medium text-white/80 hover:text-white px-3 py-1.5 rounded-lg bg-[#181a1b] border border-white/10 transition-colors"
+        >
+          ← Return to Telemetry Command Center
+        </button>
+      </div>
+      <FinancialDashboard />
+    </div>
+  );
+}
 
 const INFLATION_FACTOR = 1.032;
 
-function Dashboard() {
+function FinancialDashboard() {
   const [withInflation, setWithInflation] = useState(true);
   // Horizon and its display unit are driven by the header controls.
   const { params, horizonUnit } = useSimulationStore();
