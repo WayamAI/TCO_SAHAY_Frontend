@@ -23,7 +23,7 @@ import { AppIcon } from "@/components/icons/AppIcon";
 export const Route = createFileRoute("/scenarios")({
   head: () => ({
     meta: [
-      { title: "Scenario Comparator | TCO Intelligence" },
+      { title: "Scenario Comparator | SAHAY" },
       {
         name: "description",
         content: "Compare up to three TCO scenarios side by side with synchronized charts.",

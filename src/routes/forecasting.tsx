@@ -26,7 +26,7 @@ import type { IconName } from "@/components/icons/registry";
 export const Route = createFileRoute("/forecasting")({
   head: () => ({
     meta: [
-      { title: "Forecasting Engine | TCO Intelligence" },
+      { title: "Forecasting Engine | SAHAY" },
       {
         name: "description",
         content:

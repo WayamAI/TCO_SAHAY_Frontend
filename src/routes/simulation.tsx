@@ -48,7 +48,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/simulation")({
   head: () => ({
     meta: [
-      { title: "TCO Simulation Playground | TCO Intelligence" },
+      { title: "TCO Simulation Playground | SAHAY" },
       {
         name: "description",
         content:

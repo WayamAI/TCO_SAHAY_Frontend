@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/monte-carlo")({
   head: () => ({
     meta: [
-      { title: "Monte Carlo Risk Simulation | TCO Intelligence" },
+      { title: "Monte Carlo Risk Simulation | SAHAY" },
       {
         name: "description",
         content:
