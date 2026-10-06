@@ -1,0 +1,16 @@
+{
+  "name": "SAHAY — Fleet Lifecycle Intelligence",
+  "short_name": "SAHAY",
+  "description": "Lifecycle cost intelligence, forecasting, and risk simulation platform for locomotive fleets.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090a0b",
+  "theme_color": "#090a0b",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
