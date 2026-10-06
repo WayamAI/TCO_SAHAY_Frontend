@@ -13,20 +13,28 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import { Link } from "@tanstack/react-router";
-
 export interface SidebarItemProps {
   icon: React.ReactNode;
   label: string;
   active?: boolean;
   badge?: string | number;
-  to?: string;
   onClick?: () => void;
 }
 
-export function SidebarItem({ icon, label, active = false, badge, to, onClick }: SidebarItemProps) {
-  const content = (
-    <>
+export function SidebarItem({ icon, label, active = false, badge, onClick }: SidebarItemProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={label}
+      aria-label={label}
+      className={cn(
+        "relative group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-150 outline-none select-none",
+        active
+          ? "bg-white text-black shadow-md shadow-white/5"
+          : "text-white/45 hover:text-white/90 hover:bg-white/[0.06]",
+      )}
+    >
       <div className="w-5 h-5 flex items-center justify-center">{icon}</div>
 
       {badge !== undefined && (
@@ -39,27 +47,6 @@ export function SidebarItem({ icon, label, active = false, badge, to, onClick }:
       <div className="pointer-events-none absolute left-full ml-3 hidden group-hover:flex items-center px-2.5 py-1 rounded-md bg-[#1d1f21] text-xs text-white/90 font-medium whitespace-nowrap border border-white/10 shadow-lg z-50">
         {label}
       </div>
-    </>
-  );
-
-  const className = cn(
-    "relative group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-150 outline-none select-none",
-    active
-      ? "bg-white text-black shadow-md shadow-white/5"
-      : "text-white/45 hover:text-white/90 hover:bg-white/[0.06]",
-  );
-
-  if (to) {
-    return (
-      <Link to={to} title={label} aria-label={label} className={className} onClick={onClick}>
-        {content}
-      </Link>
-    );
-  }
-
-  return (
-    <button type="button" onClick={onClick} title={label} aria-label={label} className={className}>
-      {content}
     </button>
   );
 }
@@ -72,34 +59,18 @@ export interface SidebarProps {
 
 export function Sidebar({ currentTab = "dashboard", onTabChange, className }: SidebarProps) {
   const navItems = [
-    { id: "dashboard", label: "Dashboard", to: "/", icon: <LayoutDashboard size={19} /> },
-    { id: "map", label: "Fleet Map", to: "/fleet-explorer", icon: <MapPin size={19} /> },
-    { id: "telemetry", label: "Live Telemetry", to: "/asset-health", icon: <Activity size={19} /> },
-    {
-      id: "incidents",
-      label: "Incidents",
-      to: "/maintenance",
-      icon: <AlertTriangle size={19} />,
-      badge: 1,
-    },
-    {
-      id: "maintenance",
-      label: "Maintenance & Sim",
-      to: "/simulation",
-      icon: <Wrench size={19} />,
-    },
-    { id: "assets", label: "Assets & BOM", to: "/bom", icon: <Layers size={19} /> },
+    { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={19} /> },
+    { id: "map", label: "Fleet Map", icon: <MapPin size={19} /> },
+    { id: "telemetry", label: "Live Telemetry", icon: <Activity size={19} /> },
+    { id: "incidents", label: "Incidents", icon: <AlertTriangle size={19} />, badge: 1 },
+    { id: "maintenance", label: "Maintenance", icon: <Wrench size={19} /> },
+    { id: "assets", label: "Assets & Inventory", icon: <Layers size={19} /> },
   ];
 
   const bottomItems = [
-    {
-      id: "notifications",
-      label: "Benchmark & Alerts",
-      to: "/benchmark",
-      icon: <Bell size={18} />,
-    },
-    { id: "help", label: "Help & Glossary", to: "/glossary", icon: <HelpCircle size={18} /> },
-    { id: "settings", label: "Settings", to: "/configure", icon: <Settings size={18} /> },
+    { id: "notifications", label: "Notifications", icon: <Bell size={18} /> },
+    { id: "help", label: "Help & Docs", icon: <HelpCircle size={18} /> },
+    { id: "settings", label: "Settings", icon: <Settings size={18} /> },
   ];
 
   return (
@@ -122,7 +93,6 @@ export function Sidebar({ currentTab = "dashboard", onTabChange, className }: Si
               key={item.id}
               icon={item.icon}
               label={item.label}
-              to={item.to}
               badge={item.badge}
               active={currentTab === item.id}
               onClick={() => onTabChange?.(item.id)}
@@ -138,7 +108,6 @@ export function Sidebar({ currentTab = "dashboard", onTabChange, className }: Si
             key={item.id}
             icon={item.icon}
             label={item.label}
-            to={item.to}
             active={currentTab === item.id}
             onClick={() => onTabChange?.(item.id)}
           />
