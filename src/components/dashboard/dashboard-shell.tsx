@@ -210,17 +210,7 @@ export function DashboardShell({ className }: DashboardShellProps) {
 
       {/* 3. Right Incident Details Panel (Desktop persistent 320-340px) */}
       <div className="hidden xl:block">
-        <IncidentPanel
-          onConfirmEvacuation={() => {
-            alert("Evacuation sequence triggered for SIM-0001 at M7 Highway KM 45.");
-          }}
-          onViewProfile={() => {
-            alert("Opening Driver Profile: Mike Ross.");
-          }}
-          onInsuranceClaim={() => {
-            alert("Initiating automated telemetry incident claim filing.");
-          }}
-        />
+        <IncidentPanel />
       </div>
 
       {/* Mobile/Tablet Incident Panel Overlay Drawer */}
@@ -237,10 +227,7 @@ export function DashboardShell({ className }: DashboardShellProps) {
             </button>
             <IncidentPanel
               className="border-l-0 w-full flex-1"
-              onConfirmEvacuation={() => {
-                alert("Evacuation sequence triggered for SIM-0001.");
-                setIsMobilePanelOpen(false);
-              }}
+              onConfirmEvacuation={() => setIsMobilePanelOpen(false)}
             />
           </div>
         </div>
