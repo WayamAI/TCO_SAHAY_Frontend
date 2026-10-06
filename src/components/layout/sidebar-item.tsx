@@ -38,10 +38,10 @@ export function SidebarItem({
       aria-current={active ? "page" : undefined}
       title={label}
       className={cn(
-        "group relative flex items-center justify-center w-[38px] h-[38px] rounded-full transition-all duration-150 ease-out outline-none select-none focus-visible:ring-2 focus-visible:ring-white/30",
+        "group relative flex items-center justify-center w-[38px] h-[38px] rounded-full transition-all duration-150 ease-out outline-none select-none focus-visible:ring-2 focus-visible:ring-stroke-focus",
         active
-          ? "bg-[#f1f1f1] text-[#151515] hover:bg-white hover:text-black cursor-default"
-          : "bg-white/[0.06] text-white/50 hover:bg-white/[0.12] hover:text-white/80 active:scale-95",
+          ? "bg-action-primary text-on-light hover:bg-action-primary-hover cursor-default"
+          : "bg-surface-secondary text-icon-secondary hover:bg-surface-elevated hover:text-primary active:scale-95",
         className,
       )}
     >
@@ -49,12 +49,12 @@ export function SidebarItem({
         size={18}
         className={cn(
           "transition-colors duration-150 shrink-0",
-          active ? "text-[#151515]" : "text-white/50 group-hover:text-white/80",
+          active ? "text-on-light" : "text-icon-secondary group-hover:text-primary",
         )}
       />
 
       {badge !== undefined && (
-        <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white shadow-xs">
+        <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-feedback-critical px-1 text-[9px] font-bold text-on-color shadow-xs">
           {badge}
         </span>
       )}
