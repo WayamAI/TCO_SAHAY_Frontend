@@ -55,7 +55,7 @@ export function Sidebar({ activeId: controlledActiveId, onSelect, className }: S
   return (
     <aside
       className={cn(
-        "flex flex-col items-center w-[68px] h-screen min-h-screen shrink-0 bg-[#0c0e0f] border-r border-white/[0.07] py-4 select-none z-30 transition-all",
+        "flex flex-col items-center w-[68px] h-screen min-h-screen shrink-0 bg-surface-primary border-r border-stroke-subtle py-4 select-none z-30 transition-all",
         className,
       )}
       aria-label="Application Sidebar"
