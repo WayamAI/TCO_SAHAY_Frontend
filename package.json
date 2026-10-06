@@ -1,5 +1,6 @@
 {
-  "name": "tanstack_start_ts",
+  "name": "sahay",
+  "description": "SAHAY — Locomotive fleet lifecycle cost simulation, forecasting, and risk intelligence platform.",
   "private": true,
   "sideEffects": false,
   "type": "module",
