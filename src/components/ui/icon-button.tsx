@@ -27,10 +27,10 @@ export function IconButton({
   const variantStyles = active
     ? "bg-white text-black shadow-sm"
     : variant === "surface"
-    ? "bg-[#181a1b] text-white/70 border border-white/[0.08] hover:bg-[#222527] hover:text-white"
-    : variant === "primary"
-    ? "bg-white text-black hover:bg-white/90"
-    : "text-white/55 hover:text-white hover:bg-white/[0.07]";
+      ? "bg-[#181a1b] text-white/70 border border-white/[0.08] hover:bg-[#222527] hover:text-white"
+      : variant === "primary"
+        ? "bg-white text-black hover:bg-white/90"
+        : "text-white/55 hover:text-white hover:bg-white/[0.07]";
 
   return (
     <button
@@ -40,7 +40,7 @@ export function IconButton({
         "inline-flex items-center justify-center rounded-full transition-all duration-150 select-none outline-none focus-visible:ring-1 focus-visible:ring-white/30 disabled:opacity-40 disabled:cursor-not-allowed",
         sizeStyles,
         variantStyles,
-        className
+        className,
       )}
       {...props}
     >

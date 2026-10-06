@@ -1,7 +1,14 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-export type StatusType = "critical" | "warning" | "info" | "success" | "healthy" | "open" | "in-progress";
+export type StatusType =
+  | "critical"
+  | "warning"
+  | "info"
+  | "success"
+  | "healthy"
+  | "open"
+  | "in-progress";
 
 export interface StatusBadgeProps {
   status: StatusType;
@@ -76,7 +83,7 @@ export function StatusBadge({ status, label, className, pulse }: StatusBadgeProp
         cfg.bg,
         cfg.border,
         cfg.text,
-        className
+        className,
       )}
     >
       <span className="relative flex h-1.5 w-1.5">
@@ -84,7 +91,7 @@ export function StatusBadge({ status, label, className, pulse }: StatusBadgeProp
           <span
             className={cn(
               "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75",
-              cfg.dot
+              cfg.dot,
             )}
           />
         )}

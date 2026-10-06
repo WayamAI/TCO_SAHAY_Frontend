@@ -14,7 +14,7 @@ export function MapStage({ children, onSelectIncidentAsset, className }: MapStag
     <div
       className={cn(
         "relative w-full min-h-[360px] lg:h-[400px] rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0a0c0d] flex flex-col justify-between shadow-inner select-none",
-        className
+        className,
       )}
     >
       {/* Visual Telemetry Map Placeholder Canvas */}

@@ -32,7 +32,8 @@ export const Route = createFileRoute("/")({
       { title: "Command Center | TCO Intelligence" },
       {
         name: "description",
-        content: "Fleet-wide telemetry command center, incident queue, and asset health at a glance.",
+        content:
+          "Fleet-wide telemetry command center, incident queue, and asset health at a glance.",
       },
     ],
   }),

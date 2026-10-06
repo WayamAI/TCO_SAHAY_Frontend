@@ -46,7 +46,7 @@ export function SidebarItem({ icon, label, active = false, badge, to, onClick }:
     "relative group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-150 outline-none select-none",
     active
       ? "bg-white text-black shadow-md shadow-white/5"
-      : "text-white/45 hover:text-white/90 hover:bg-white/[0.06]"
+      : "text-white/45 hover:text-white/90 hover:bg-white/[0.06]",
   );
 
   if (to) {
@@ -58,13 +58,7 @@ export function SidebarItem({ icon, label, active = false, badge, to, onClick }:
   }
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={label}
-      aria-label={label}
-      className={className}
-    >
+    <button type="button" onClick={onClick} title={label} aria-label={label} className={className}>
       {content}
     </button>
   );
@@ -81,13 +75,29 @@ export function Sidebar({ currentTab = "dashboard", onTabChange, className }: Si
     { id: "dashboard", label: "Dashboard", to: "/", icon: <LayoutDashboard size={19} /> },
     { id: "map", label: "Fleet Map", to: "/fleet-explorer", icon: <MapPin size={19} /> },
     { id: "telemetry", label: "Live Telemetry", to: "/asset-health", icon: <Activity size={19} /> },
-    { id: "incidents", label: "Incidents", to: "/maintenance", icon: <AlertTriangle size={19} />, badge: 1 },
-    { id: "maintenance", label: "Maintenance & Sim", to: "/simulation", icon: <Wrench size={19} /> },
+    {
+      id: "incidents",
+      label: "Incidents",
+      to: "/maintenance",
+      icon: <AlertTriangle size={19} />,
+      badge: 1,
+    },
+    {
+      id: "maintenance",
+      label: "Maintenance & Sim",
+      to: "/simulation",
+      icon: <Wrench size={19} />,
+    },
     { id: "assets", label: "Assets & BOM", to: "/bom", icon: <Layers size={19} /> },
   ];
 
   const bottomItems = [
-    { id: "notifications", label: "Benchmark & Alerts", to: "/benchmark", icon: <Bell size={18} /> },
+    {
+      id: "notifications",
+      label: "Benchmark & Alerts",
+      to: "/benchmark",
+      icon: <Bell size={18} />,
+    },
     { id: "help", label: "Help & Glossary", to: "/glossary", icon: <HelpCircle size={18} /> },
     { id: "settings", label: "Settings", to: "/configure", icon: <Settings size={18} /> },
   ];
@@ -96,7 +106,7 @@ export function Sidebar({ currentTab = "dashboard", onTabChange, className }: Si
     <aside
       className={cn(
         "w-[68px] flex-shrink-0 h-screen sticky top-0 flex flex-col items-center justify-between py-4 bg-[#090b0c] border-r border-white/[0.07] z-30 select-none",
-        className
+        className,
       )}
     >
       {/* Top brand / logo */}

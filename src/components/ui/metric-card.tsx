@@ -47,7 +47,7 @@ export function MetricCard({
         "p-3 rounded-lg border transition-all duration-150 flex flex-col justify-between",
         statusStyles.bg,
         statusStyles.border,
-        className
+        className,
       )}
     >
       <div className="flex items-center justify-between text-xs text-white/50 mb-1.5">
@@ -61,7 +61,11 @@ export function MetricCard({
         <span
           className={cn(
             "text-lg font-semibold tracking-tight font-mono tabular-nums",
-            status === "critical" ? "text-red-300" : status === "warning" ? "text-orange-300" : "text-white/95"
+            status === "critical"
+              ? "text-red-300"
+              : status === "warning"
+                ? "text-orange-300"
+                : "text-white/95",
           )}
         >
           {value}
@@ -76,8 +80,8 @@ export function MetricCard({
             status === "critical"
               ? "text-red-400/80"
               : status === "warning"
-              ? "text-orange-400/80"
-              : "text-white/40"
+                ? "text-orange-400/80"
+                : "text-white/40",
           )}
         >
           {subtext}

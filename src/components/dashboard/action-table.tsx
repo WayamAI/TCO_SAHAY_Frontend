@@ -18,7 +18,8 @@ export const INITIAL_QUEUE_DATA: QueueItem[] = [
     id: "SIM-0001",
     priority: "critical",
     asset: "SIM-0001",
-    description: "Critical telemetry from SIM-0001 — Engine temperature exceeded 104°C on M7 Highway KM 45",
+    description:
+      "Critical telemetry from SIM-0001 — Engine temperature exceeded 104°C on M7 Highway KM 45",
     time: "2m ago",
     driver: "Mike Ross",
   },
@@ -58,7 +59,8 @@ export const INITIAL_QUEUE_DATA: QueueItem[] = [
     id: "SIM-0341",
     priority: "info",
     asset: "SIM-0341",
-    description: "Over-The-Air ECU firmware package 4.2.1 downloaded; telemetry verification pending",
+    description:
+      "Over-The-Air ECU firmware package 4.2.1 downloaded; telemetry verification pending",
     time: "3h ago",
     driver: "Jessica Pearson",
   },
@@ -110,7 +112,7 @@ export function ActionTable({
     <div
       className={cn(
         "w-full rounded-xl border border-white/[0.08] bg-[#0c0e0f] overflow-hidden shadow-sm select-none",
-        className
+        className,
       )}
     >
       <div className="overflow-x-auto">
@@ -150,14 +152,11 @@ export function ActionTable({
                     "group transition-colors duration-150 cursor-pointer",
                     isCurrentSelected
                       ? "bg-[#181a1c] text-white"
-                      : "bg-[#0c0e0f] hover:bg-[#141617] text-white/80"
+                      : "bg-[#0c0e0f] hover:bg-[#141617] text-white/80",
                   )}
                 >
                   {/* Checkbox */}
-                  <td
-                    className="py-2.5 px-3 text-center"
-                    onClick={(e) => toggleRow(row.id, e)}
-                  >
+                  <td className="py-2.5 px-3 text-center" onClick={(e) => toggleRow(row.id, e)}>
                     <input
                       type="checkbox"
                       checked={isChecked}
@@ -194,7 +193,10 @@ export function ActionTable({
 
                   {/* Chevron / Action */}
                   <td className="py-2.5 px-3 text-right text-white/25 group-hover:text-white/60">
-                    <ChevronRight size={14} className="inline transition-transform group-hover:translate-x-0.5" />
+                    <ChevronRight
+                      size={14}
+                      className="inline transition-transform group-hover:translate-x-0.5"
+                    />
                   </td>
                 </tr>
               );

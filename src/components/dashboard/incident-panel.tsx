@@ -58,7 +58,8 @@ export const DEFAULT_INCIDENT: IncidentData = {
     phone: "+1 (555) 019-2834",
   },
   primaryIssue: "Critical telemetry from SIM-0001",
-  primaryIssueDetail: "Primary engine cooling jacket breached thermal limit (104°C > 90°C allowable). Immediate shutdown protocol advised.",
+  primaryIssueDetail:
+    "Primary engine cooling jacket breached thermal limit (104°C > 90°C allowable). Immediate shutdown protocol advised.",
   telemetry: {
     temperature: { value: "104°C", status: "critical", subtext: "+14°C above max" },
     voltage: { value: "23.4 V", status: "warning", subtext: "-0.6V nominal" },
@@ -77,7 +78,7 @@ export function DriverCard({ driver, className }: DriverCardProps) {
     <div
       className={cn(
         "p-3 rounded-xl bg-[#141617] border border-white/[0.08] flex items-center justify-between",
-        className
+        className,
       )}
     >
       <div className="flex items-center gap-3">
@@ -85,9 +86,7 @@ export function DriverCard({ driver, className }: DriverCardProps) {
           {driver.initials || "MR"}
         </div>
         <div className="flex flex-col">
-          <span className="text-xs font-semibold text-white/95 leading-tight">
-            {driver.name}
-          </span>
+          <span className="text-xs font-semibold text-white/95 leading-tight">{driver.name}</span>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -130,7 +129,7 @@ export function IncidentPanel({
     <aside
       className={cn(
         "w-full lg:w-[320px] xl:w-[340px] flex-shrink-0 bg-[#0c0e0f] border-l border-white/[0.07] p-4 flex flex-col justify-between overflow-y-auto no-scrollbar select-none gap-4",
-        className
+        className,
       )}
     >
       <div className="flex flex-col gap-4">
@@ -157,7 +156,12 @@ export function IncidentPanel({
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <pattern id="diag-mesh" width="16" height="16" patternUnits="userSpaceOnUse">
-                  <path d="M 0 16 L 16 0 M 0 0 L 16 16" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+                  <path
+                    d="M 0 16 L 16 0 M 0 0 L 16 16"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.04)"
+                    strokeWidth="0.5"
+                  />
                 </pattern>
               </defs>
               <rect width="100%" height="100%" fill="url(#diag-mesh)" />
@@ -168,12 +172,48 @@ export function IncidentPanel({
                 stroke="rgba(255, 255, 255, 0.25)"
                 strokeWidth="1.5"
               />
-              <circle cx="70" cy="95" r="8" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
-              <circle cx="110" cy="95" r="8" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
-              <circle cx="190" cy="95" r="8" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
-              <circle cx="230" cy="95" r="8" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
+              <circle
+                cx="70"
+                cy="95"
+                r="8"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="1.5"
+              />
+              <circle
+                cx="110"
+                cy="95"
+                r="8"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="1.5"
+              />
+              <circle
+                cx="190"
+                cy="95"
+                r="8"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="1.5"
+              />
+              <circle
+                cx="230"
+                cy="95"
+                r="8"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="1.5"
+              />
               {/* Thermal hotspot indicator */}
-              <circle cx="150" cy="65" r="14" fill="rgba(239, 68, 68, 0.2)" stroke="#ef4444" strokeWidth="1" strokeDasharray="2 2" />
+              <circle
+                cx="150"
+                cy="65"
+                r="14"
+                fill="rgba(239, 68, 68, 0.2)"
+                stroke="#ef4444"
+                strokeWidth="1"
+                strokeDasharray="2 2"
+              />
               <circle cx="150" cy="65" r="3" fill="#ef4444" />
             </svg>
           </div>

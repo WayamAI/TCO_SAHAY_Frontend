@@ -33,7 +33,7 @@ export function FilterChip({
         variant === "critical" && active && "border-red-500/40 text-red-300 bg-red-950/30",
         variant === "warning" && active && "border-orange-500/40 text-orange-300 bg-orange-950/30",
         variant === "info" && active && "border-sky-500/40 text-sky-300 bg-sky-950/30",
-        className
+        className,
       )}
     >
       <span>{label}</span>
@@ -43,7 +43,7 @@ export function FilterChip({
             "tabular-nums text-[11px] px-1.5 py-0.2 rounded-full font-mono transition-colors",
             active
               ? "bg-white/15 text-white"
-              : "bg-white/[0.06] text-white/45 group-hover:bg-white/10 group-hover:text-white/70"
+              : "bg-white/[0.06] text-white/45 group-hover:bg-white/10 group-hover:text-white/70",
           )}
         >
           {count}

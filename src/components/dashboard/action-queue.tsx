@@ -31,7 +31,12 @@ export function ActionQueueHeader({
 }: ActionQueueHeaderProps) {
   const [showSearch, setShowSearch] = useState(false);
 
-  const filters: { id: FilterCategory; label: string; count: number; variant?: "critical" | "warning" | "info" }[] = [
+  const filters: {
+    id: FilterCategory;
+    label: string;
+    count: number;
+    variant?: "critical" | "warning" | "info";
+  }[] = [
     { id: "all", label: "All", count: 54 },
     { id: "critical", label: "Critical", count: 1, variant: "critical" },
     { id: "warning", label: "Warning", count: 25, variant: "warning" },

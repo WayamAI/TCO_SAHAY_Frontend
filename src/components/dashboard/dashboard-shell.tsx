@@ -1,23 +1,12 @@
 import React, { useState } from "react";
-import {
-  Sidebar,
-} from "./sidebar";
+import { Sidebar } from "./sidebar";
 import { DashboardHeader } from "./dashboard-header";
 import { MapStage } from "./map-stage";
 import { HealthScoreCard } from "./health-score-card";
 import { ActionQueueHeader, type FilterCategory } from "./action-queue";
 import { ActionTable, INITIAL_QUEUE_DATA, type QueueItem } from "./action-table";
 import { IncidentPanel, DEFAULT_INCIDENT, type IncidentData } from "./incident-panel";
-import {
-  Activity,
-  AlertCircle,
-  Menu,
-  X,
-  Radio,
-  Clock,
-  ArrowUpRight,
-  Filter,
-} from "lucide-react";
+import { Activity, AlertCircle, Menu, X, Radio, Clock, ArrowUpRight, Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface DashboardShellProps {
@@ -64,7 +53,7 @@ export function DashboardShell({ className }: DashboardShellProps) {
     <div
       className={cn(
         "flex w-full min-h-screen bg-[#090b0c] text-white overflow-x-hidden font-sans",
-        className
+        className,
       )}
     >
       {/* 1. Left Navigation Sidebar (Desktop sticky, 68px) */}
@@ -78,10 +67,7 @@ export function DashboardShell({ className }: DashboardShellProps) {
           className="fixed inset-0 z-50 bg-black/80 md:hidden flex"
           onClick={() => setIsMobileSidebarOpen(false)}
         >
-          <div
-            className="w-[72px] bg-[#090b0c] h-full"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="w-[72px] bg-[#090b0c] h-full" onClick={(e) => e.stopPropagation()}>
             <Sidebar
               currentTab={currentTab}
               onTabChange={(t) => {
@@ -168,34 +154,54 @@ export function DashboardShell({ className }: DashboardShellProps) {
               <div className="p-2.5 rounded-lg bg-[#121415] border border-white/[0.05] flex items-center justify-between text-xs">
                 <div className="flex flex-col gap-0.5 truncate pr-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-medium text-white/90 text-[11px]">SIM-0001</span>
+                    <span className="font-mono font-medium text-white/90 text-[11px]">
+                      SIM-0001
+                    </span>
                     <span className="text-[10px] text-red-400 font-medium">Critical Alarm</span>
                   </div>
-                  <span className="text-[11px] text-white/50 truncate">Coolant valve servo overload</span>
+                  <span className="text-[11px] text-white/50 truncate">
+                    Coolant valve servo overload
+                  </span>
                 </div>
-                <span className="text-[10px] font-mono text-white/35 whitespace-nowrap">2m ago</span>
+                <span className="text-[10px] font-mono text-white/35 whitespace-nowrap">
+                  2m ago
+                </span>
               </div>
 
               <div className="p-2.5 rounded-lg bg-[#121415] border border-white/[0.05] flex items-center justify-between text-xs">
                 <div className="flex flex-col gap-0.5 truncate pr-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-medium text-white/90 text-[11px]">SIM-0014</span>
-                    <span className="text-[10px] text-orange-400 font-medium">Pneumatic Warning</span>
+                    <span className="font-mono font-medium text-white/90 text-[11px]">
+                      SIM-0014
+                    </span>
+                    <span className="text-[10px] text-orange-400 font-medium">
+                      Pneumatic Warning
+                    </span>
                   </div>
-                  <span className="text-[11px] text-white/50 truncate">Differential pressure restored</span>
+                  <span className="text-[11px] text-white/50 truncate">
+                    Differential pressure restored
+                  </span>
                 </div>
-                <span className="text-[10px] font-mono text-white/35 whitespace-nowrap">14m ago</span>
+                <span className="text-[10px] font-mono text-white/35 whitespace-nowrap">
+                  14m ago
+                </span>
               </div>
 
               <div className="p-2.5 rounded-lg bg-[#121415] border border-white/[0.05] flex items-center justify-between text-xs">
                 <div className="flex flex-col gap-0.5 truncate pr-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-medium text-white/90 text-[11px]">SIM-0082</span>
+                    <span className="font-mono font-medium text-white/90 text-[11px]">
+                      SIM-0082
+                    </span>
                     <span className="text-[10px] text-sky-400 font-medium">Route Diagnostic</span>
                   </div>
-                  <span className="text-[11px] text-white/50 truncate">Waypoint M7 KM 30 cleared</span>
+                  <span className="text-[11px] text-white/50 truncate">
+                    Waypoint M7 KM 30 cleared
+                  </span>
                 </div>
-                <span className="text-[10px] font-mono text-white/35 whitespace-nowrap">32m ago</span>
+                <span className="text-[10px] font-mono text-white/35 whitespace-nowrap">
+                  32m ago
+                </span>
               </div>
             </div>
           </section>

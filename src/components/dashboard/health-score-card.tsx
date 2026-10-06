@@ -30,7 +30,7 @@ export function HealthScoreCard({
     <div
       className={cn(
         "w-full sm:w-[320px] lg:w-[340px] rounded-2xl bg-[#111314]/90 backdrop-blur-md border border-white/[0.08] p-4 flex flex-col gap-3 shadow-[0_12px_32px_-4px_rgba(0,0,0,0.65)] select-none",
-        className
+        className,
       )}
     >
       {/* Top Header Row */}
