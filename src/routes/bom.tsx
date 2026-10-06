@@ -143,7 +143,7 @@ function BomExplorer() {
           <div className="flex items-center gap-2">
             <FilterChips
               value={view}
-              onChange={(k) => setView(k as any)}
+              onChange={(k) => setView(k as "tree" | "inventory" | "depreciation")}
               options={[
                 { id: "tree", label: "5-Level Hierarchy Tree" },
                 { id: "inventory", label: "Inventory & Criticality" },
@@ -224,7 +224,12 @@ function BomExplorer() {
         )}
 
         {view === "inventory" && (
-          <InventoryView parts={parts} abc={abc} onSelect={setSelectedPart} selected={selectedPart} />
+          <InventoryView
+            parts={parts}
+            abc={abc}
+            onSelect={setSelectedPart}
+            selected={selectedPart}
+          />
         )}
         {view === "depreciation" && (
           <DepreciationView parts={parts} selected={selectedPart} onSelect={setSelectedPart} />
@@ -1232,11 +1237,15 @@ function PartTCOTable({
       value: (r) => r.part.name,
       render: (r) => (
         <div className="min-w-0">
-          <span className="text-primary block truncate font-medium text-body-sm" title={r.part.name}>
+          <span
+            className="text-primary block truncate font-medium text-body-sm"
+            title={r.part.name}
+          >
             {r.part.name}
           </span>
           <span className="font-mono-data text-caption text-quaternary block">
-            every {r.part.maintIntervalValue.toLocaleString()} {r.part.maintIntervalUnit} · ×{r.part.maintQty} {r.part.uom}
+            every {r.part.maintIntervalValue.toLocaleString()} {r.part.maintIntervalUnit} · ×
+            {r.part.maintQty} {r.part.uom}
           </span>
         </div>
       ),
@@ -1325,9 +1334,15 @@ function PartTCOTable({
       action={
         <div className="flex items-center gap-3">
           <span className="font-mono-data text-caption text-quaternary tabular flex gap-3">
-            <span>Customer: <strong className="text-warning">{fmtCompact(totals.customer)}</strong></span>
-            <span>Company: <strong className="text-info">{fmtCompact(totals.company)}</strong></span>
-            <span>Buffer: <strong className="text-secondary">{fmtCompact(totals.buffer)}</strong></span>
+            <span>
+              Customer: <strong className="text-warning">{fmtCompact(totals.customer)}</strong>
+            </span>
+            <span>
+              Company: <strong className="text-info">{fmtCompact(totals.company)}</strong>
+            </span>
+            <span>
+              Buffer: <strong className="text-secondary">{fmtCompact(totals.buffer)}</strong>
+            </span>
           </span>
         </div>
       }
