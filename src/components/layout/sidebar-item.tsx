@@ -40,8 +40,8 @@ export function SidebarItem({
       className={cn(
         "group relative flex items-center justify-center w-[38px] h-[38px] rounded-full transition-all duration-150 ease-out outline-none select-none focus-visible:ring-2 focus-visible:ring-stroke-focus",
         active
-          ? "bg-action-primary text-on-light hover:bg-action-primary-hover cursor-default"
-          : "bg-surface-secondary text-icon-secondary hover:bg-surface-elevated hover:text-primary active:scale-95",
+          ? "bg-action-primary text-on-color hover:bg-action-primary-hover cursor-default"
+          : "bg-action text-icon-tertiary hover:bg-raised hover:text-icon-secondary active:scale-95",
         className,
       )}
     >
@@ -49,12 +49,12 @@ export function SidebarItem({
         size={18}
         className={cn(
           "transition-colors duration-150 shrink-0",
-          active ? "text-on-light" : "text-icon-secondary group-hover:text-primary",
+          active ? "text-on-color" : "text-icon-tertiary group-hover:text-icon-secondary",
         )}
       />
 
       {badge !== undefined && (
-        <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-feedback-critical px-1 text-[9px] font-bold text-on-color shadow-xs">
+        <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[9px] font-bold text-on-color shadow-xs">
           {badge}
         </span>
       )}
