@@ -93,7 +93,7 @@ export function DashboardShell({ className }: DashboardShellProps) {
             <Menu size={18} />
           </button>
           <span className="text-xs font-semibold tracking-tight text-white/90">
-            TCO Intelligence
+            SAHAY
           </span>
           <button
             type="button"
