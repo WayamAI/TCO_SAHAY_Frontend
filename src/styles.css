@@ -17,153 +17,181 @@
    TIER 1 — REFERENCE TOKENS (raw palette, no meaning attached)
    ------------------------------------------------------------------------ */
 :root {
-  --ref-white: #ffffff;
+  --ref-white: #FFFFFF;
   --ref-black: #000000;
 
   /* ----------------------------------
      REFERENCE — GRAYSCALE
   ---------------------------------- */
-  --ref-gray-0: #ffffff;
-  --ref-gray-50: #f4f4f4;
-  --ref-gray-100: #e5e5e5;
-  --ref-gray-200: #d4d4d4;
-  --ref-gray-300: #b8b8b8;
-  --ref-gray-400: #969696;
-  --ref-gray-500: #737373;
-  --ref-gray-550: #626262;
-  --ref-gray-600: #525252;
-  --ref-gray-650: #444444;
-  --ref-gray-700: #383838;
-  --ref-gray-750: #2d2d2d;
-  --ref-gray-800: #252525;
-  --ref-gray-825: #202020;
-  --ref-gray-850: #1c1c1c;
-  --ref-gray-900: #151515;
-  --ref-gray-925: #111111;
-  --ref-gray-950: #0b0b0b;
-  --ref-gray-975: #070707;
+  --ref-gray-0: #FFFFFF;
+  --ref-gray-50: #FAFAFA;
+  --ref-gray-100: #F2F2F2;
+  --ref-gray-200: #E5E5E5;
+  --ref-gray-300: #D4D4D4;
+  --ref-gray-400: #AFAFAF;
+  --ref-gray-500: #8A8A8A;
+  --ref-gray-550: #737373;
+  --ref-gray-600: #626262;
+  --ref-gray-650: #525252;
+  --ref-gray-700: #464646;
+  --ref-gray-750: #3B3B3B;
+  --ref-gray-800: #323232;
+  --ref-gray-825: #2A2A2A;
+  --ref-gray-850: #232323;
+  --ref-gray-900: #191919;
+  --ref-gray-950: #101010;
+  --ref-gray-975: #080808;
   --ref-gray-1000: #000000;
 
-  --ref-red-50: #fef2f2;
-  --ref-red-100: #fee2e2;
-  --ref-red-200: #fecaca;
-  --ref-red-300: #fca5a5;
-  --ref-red-400: #ff5a52;
-  --ref-red-500: #e83b36;
-  --ref-red-600: #dc2626;
-  --ref-red-700: #b91c1c;
-  --ref-red-800: #991b1b;
-  --ref-red-900: #7f1d1d;
-  --ref-red-950: #450a0a;
+  /* ----------------------------------
+     REFERENCE — RED
+  ---------------------------------- */
+  --ref-red-50: #FFF1F2;
+  --ref-red-100: #FFE0E2;
+  --ref-red-200: #FFC2C5;
+  --ref-red-300: #FF969B;
+  --ref-red-400: #FF646B;
+  --ref-red-500: #FF4149;
+  --ref-red-600: #E9343C;
+  --ref-red-700: #C62830;
+  --ref-red-800: #A62329;
+  --ref-red-900: #891F24;
+  --ref-red-950: #4B0D10;
 
-  --ref-purple-50: #f5f3ff;
-  --ref-purple-100: #ede9fe;
-  --ref-purple-200: #ddd6fe;
-  --ref-purple-300: #c4b5fd;
-  --ref-purple-400: #a78bfa;
-  --ref-purple-500: #8b5cf6;
-  --ref-purple-600: #7c3aed;
-  --ref-purple-700: #6d28d9;
-  --ref-purple-800: #5b21b6;
-  --ref-purple-900: #4c1d95;
-  --ref-purple-950: #2e1065;
+  /* ----------------------------------
+     REFERENCE — PURPLE
+  ---------------------------------- */
+  --ref-purple-50: #F8F0FF;
+  --ref-purple-100: #EEDBFF;
+  --ref-purple-200: #DCB8F5;
+  --ref-purple-300: #CA8DEB;
+  --ref-purple-400: #B65BD8;
+  --ref-purple-500: #9F35BE;
+  --ref-purple-600: #862AA3;
+  --ref-purple-700: #6F2589;
+  --ref-purple-800: #5B2170;
+  --ref-purple-900: #481B59;
+  --ref-purple-950: #2B0E36;
 
-  --ref-blue-50: #eff6ff;
-  --ref-blue-100: #dbeafe;
-  --ref-blue-200: #bfdbfe;
-  --ref-blue-300: #93c5fd;
-  --ref-blue-400: #4c9aff;
-  --ref-blue-500: #2979ff;
-  --ref-blue-600: #2563eb;
-  --ref-blue-700: #1d4ed8;
-  --ref-blue-800: #1e40af;
-  --ref-blue-900: #1e3a8a;
-  --ref-blue-950: #172554;
+  /* ----------------------------------
+     REFERENCE — BLUE
+  ---------------------------------- */
+  --ref-blue-50: #EEF8FF;
+  --ref-blue-100: #D8EFFF;
+  --ref-blue-200: #B7E1FA;
+  --ref-blue-300: #88CEF4;
+  --ref-blue-400: #55B4EB;
+  --ref-blue-500: #2C96DB;
+  --ref-blue-600: #2179BE;
+  --ref-blue-700: #1E61A0;
+  --ref-blue-800: #1C5083;
+  --ref-blue-900: #19436D;
+  --ref-blue-950: #0E2948;
 
-  --ref-cyan-50: #ecfeff;
-  --ref-cyan-100: #cffafe;
-  --ref-cyan-200: #a5f3fc;
-  --ref-cyan-300: #67e8f9;
-  --ref-cyan-400: #22d3ee;
-  --ref-cyan-500: #06b6d4;
-  --ref-cyan-600: #0891b2;
-  --ref-cyan-700: #0e7490;
-  --ref-cyan-800: #155e75;
-  --ref-cyan-900: #164e63;
-  --ref-cyan-950: #083344;
+  /* ----------------------------------
+     REFERENCE — CYAN
+  ---------------------------------- */
+  --ref-cyan-50: #ECFCFF;
+  --ref-cyan-100: #D0F7FC;
+  --ref-cyan-200: #A7EEF6;
+  --ref-cyan-300: #70E0EC;
+  --ref-cyan-400: #39CADC;
+  --ref-cyan-500: #17AEC4;
+  --ref-cyan-600: #138DA3;
+  --ref-cyan-700: #157287;
+  --ref-cyan-800: #175C6D;
+  --ref-cyan-900: #164C5B;
+  --ref-cyan-950: #082F3A;
 
-  --ref-teal-50: #f0fdfa;
-  --ref-teal-100: #ccfbf1;
-  --ref-teal-200: #99f6e4;
-  --ref-teal-300: #5eead4;
-  --ref-teal-400: #2dd4bf;
-  --ref-teal-500: #14b8a6;
-  --ref-teal-600: #0d9488;
-  --ref-teal-700: #0f766e;
-  --ref-teal-800: #115e59;
-  --ref-teal-900: #134e4a;
-  --ref-teal-950: #042f2e;
+  /* ----------------------------------
+     REFERENCE — TEAL
+  ---------------------------------- */
+  --ref-teal-50: #ECFDFB;
+  --ref-teal-100: #D0F8F3;
+  --ref-teal-200: #A5EDE5;
+  --ref-teal-300: #71DDD2;
+  --ref-teal-400: #43C7BC;
+  --ref-teal-500: #25AAA0;
+  --ref-teal-600: #208A84;
+  --ref-teal-700: #1F706C;
+  --ref-teal-800: #205A58;
+  --ref-teal-900: #1E4A49;
+  --ref-teal-950: #0D2D2D;
 
-  --ref-green-50: #f0fdf4;
-  --ref-green-100: #dcfce7;
-  --ref-green-200: #bbf7d0;
-  --ref-green-300: #86efac;
-  --ref-green-400: #4fc16e;
-  --ref-green-500: #31a354;
-  --ref-green-600: #16a34a;
-  --ref-green-700: #15803d;
-  --ref-green-800: #166534;
-  --ref-green-900: #14532d;
-  --ref-green-950: #052e16;
+  /* ----------------------------------
+     REFERENCE — GREEN
+  ---------------------------------- */
+  --ref-green-50: #EFFBF3;
+  --ref-green-100: #DCF5E5;
+  --ref-green-200: #BCEACB;
+  --ref-green-300: #8ED8A9;
+  --ref-green-400: #62C487;
+  --ref-green-500: #3FAE69;
+  --ref-green-600: #318C54;
+  --ref-green-700: #2B7046;
+  --ref-green-800: #275A3B;
+  --ref-green-900: #224A32;
+  --ref-green-950: #10291B;
 
-  --ref-yellow-50: #fefce8;
-  --ref-yellow-100: #fef9c3;
-  --ref-yellow-200: #fef08a;
-  --ref-yellow-300: #fde047;
-  --ref-yellow-400: #f4c94c;
-  --ref-yellow-500: #d9a81e;
-  --ref-yellow-600: #ca8a04;
-  --ref-yellow-700: #a16207;
-  --ref-yellow-800: #854d0e;
-  --ref-yellow-900: #713f12;
-  --ref-yellow-950: #422006;
+  /* ----------------------------------
+     REFERENCE — YELLOW
+  ---------------------------------- */
+  --ref-yellow-50: #FFFCEB;
+  --ref-yellow-100: #FFF7C6;
+  --ref-yellow-200: #FFED88;
+  --ref-yellow-300: #FFDF4D;
+  --ref-yellow-400: #FFD22D;
+  --ref-yellow-500: #F7BC0B;
+  --ref-yellow-600: #D99506;
+  --ref-yellow-700: #AD6B08;
+  --ref-yellow-800: #8E530D;
+  --ref-yellow-900: #764411;
+  --ref-yellow-950: #442304;
 
-  --ref-amber-50: #fffbeb;
-  --ref-amber-100: #fef3c7;
-  --ref-amber-200: #fde68a;
-  --ref-amber-300: #fcd34d;
-  --ref-amber-400: #fbbf24;
-  --ref-amber-500: #f59e0b;
-  --ref-amber-600: #d97706;
-  --ref-amber-700: #b45309;
-  --ref-amber-800: #92400e;
-  --ref-amber-900: #78350f;
-  --ref-amber-950: #451a03;
+  /* ----------------------------------
+     REFERENCE — AMBER
+  ---------------------------------- */
+  --ref-amber-50: #FFF9EB;
+  --ref-amber-100: #FFEDBD;
+  --ref-amber-200: #FFDD82;
+  --ref-amber-300: #FFC94D;
+  --ref-amber-400: #FFB72A;
+  --ref-amber-500: #F59A0B;
+  --ref-amber-600: #D57806;
+  --ref-amber-700: #AC550A;
+  --ref-amber-800: #8A430F;
+  --ref-amber-900: #713810;
+  --ref-amber-950: #421C05;
 
-  --ref-orange-50: #fff7ed;
-  --ref-orange-100: #ffedd5;
-  --ref-orange-200: #fed7aa;
-  --ref-orange-300: #fdba74;
-  --ref-orange-400: #ff9f43;
-  --ref-orange-500: #f47b20;
-  --ref-orange-600: #ea580c;
-  --ref-orange-700: #c2410c;
-  --ref-orange-800: #9a3412;
-  --ref-orange-900: #7c2d12;
-  --ref-orange-950: #431407;
+  /* ----------------------------------
+     REFERENCE — ORANGE
+  ---------------------------------- */
+  --ref-orange-50: #FFF6ED;
+  --ref-orange-100: #FFE8CE;
+  --ref-orange-200: #FFD09E;
+  --ref-orange-300: #FFB365;
+  --ref-orange-400: #FF963D;
+  --ref-orange-500: #FF7B1C;
+  --ref-orange-600: #E95D0F;
+  --ref-orange-700: #C1460F;
+  --ref-orange-800: #9A3814;
+  --ref-orange-900: #7C3014;
+  --ref-orange-950: #431507;
 
-  /* deep-orange-500 is the Wayam brand accent — kept from the existing brand */
-  --ref-deep-orange-50: #fff3ef;
-  --ref-deep-orange-100: #ffe2d6;
-  --ref-deep-orange-200: #ffc4ad;
-  --ref-deep-orange-300: #ff9e7a;
-  --ref-deep-orange-400: #ff7a4d;
-  --ref-deep-orange-500: #ff6b2b;
-  --ref-deep-orange-600: #e8500f;
-  --ref-deep-orange-700: #bf3d08;
-  --ref-deep-orange-800: #96310a;
-  --ref-deep-orange-900: #78290c;
-  --ref-deep-orange-950: #401304;
+  /* ----------------------------------
+     REFERENCE — DEEP ORANGE
+  ---------------------------------- */
+  --ref-deep-orange-50: #FFF2EF;
+  --ref-deep-orange-100: #FFDDD5;
+  --ref-deep-orange-200: #FFB8A7;
+  --ref-deep-orange-300: #FF8F74;
+  --ref-deep-orange-400: #FF6948;
+  --ref-deep-orange-500: #FF4C28;
+  --ref-deep-orange-600: #ED3516;
+  --ref-deep-orange-700: #C72911;
+  --ref-deep-orange-800: #A12413;
+  --ref-deep-orange-900: #841F14;
+  --ref-deep-orange-950: #480D07;
 }
 
 /* ---------------------------------------------------------------------------
