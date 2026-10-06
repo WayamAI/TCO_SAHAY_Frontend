@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/sustainability")({
   head: () => ({
     meta: [
-      { title: "Sustainability Dashboard | TCO Intelligence" },
+      { title: "Sustainability Dashboard | SAHAY" },
       {
         name: "description",
         content: "Fleet CO₂ emissions, carbon cost and sustainability scoring.",

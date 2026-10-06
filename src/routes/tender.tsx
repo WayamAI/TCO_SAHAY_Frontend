@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/tender")({
   head: () => ({
     meta: [
-      { title: "Tender Optimization | TCO Intelligence" },
+      { title: "Tender Optimization | SAHAY" },
       {
         name: "description",
         content: "Build commercial locomotive tender proposals from live simulation output.",

@@ -17,7 +17,7 @@ import { AppIcon } from "@/components/icons/AppIcon";
 export const Route = createFileRoute("/configure")({
   head: () => ({
     meta: [
-      { title: "Configuration | TCO Intelligence" },
+      { title: "Configuration | SAHAY" },
       {
         name: "description",
         content:

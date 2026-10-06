@@ -23,7 +23,7 @@ import type { IconName } from "@/components/icons/registry";
 export const Route = createFileRoute("/integrations")({
   head: () => ({
     meta: [
-      { title: "Integrations | TCO Intelligence" },
+      { title: "Integrations | SAHAY" },
       {
         name: "description",
         content:

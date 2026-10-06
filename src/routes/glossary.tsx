@@ -10,7 +10,7 @@ import type { IconName } from "@/components/icons/registry";
 export const Route = createFileRoute("/glossary")({
   head: () => ({
     meta: [
-      { title: "Glossary & Definitions | TCO Intelligence" },
+      { title: "Glossary & Definitions | SAHAY" },
       {
         name: "description",
         content:
