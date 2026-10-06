@@ -13,9 +13,6 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [authed, setAuthed] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      login("operator@wayam.ai", "demo");
-    }
     const check = () => setAuthed(isAuthenticated());
     check();
     setReady(true);
@@ -46,12 +43,6 @@ export function AuthGate({ children }: { children: ReactNode }) {
   // Avoid flashing the dashboard before we've checked auth state on mount.
   if (!ready || !authed) {
     return <div className="min-h-screen bg-background" />;
-  }
-
-  // The Command Center root ("/") route renders its own integrated 3-column shell
-  // (Left Nav, Main telemetry, Right incident panel) as defined in the visual design system.
-  if (pathname === "/" || pathname === "") {
-    return <>{children}</>;
   }
 
   return <AppShell>{children}</AppShell>;
