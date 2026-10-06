@@ -10,8 +10,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { KPICard } from "@/components/shared/KPICard";
-import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
+import { PageHeader, PageBody } from "@/components/layout/page-header";
+import { Panel, KpiTile, StatusBadge, PriorityBadge } from "@/components/ui/primitives";
 import { ChartTooltip } from "@/components/shared/ChartTooltip";
 import {
   COMPONENTS,
@@ -29,7 +29,8 @@ export const Route = createFileRoute("/reliability")({
       { title: "Reliability & Warranty Analytics | TCO Intelligence" },
       {
         name: "description",
-        content: "RAMS dashboard, remaining useful life, warranty analytics and failure heatmap.",
+        content:
+          "RAMS dashboard, remaining useful life, warranty analytics and failure heatmap aligned with EN 50126 / ISO 55000 / IEC 60300.",
       },
     ],
   }),
@@ -47,229 +48,339 @@ function ReliabilityPage() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("RAMS Dashboard");
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap gap-2">
-        {TABS.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={cn(
-              "rounded-md px-3 py-1.5 text-xs transition-colors",
-              tab === t
-                ? "bg-raised-2 font-medium text-fg-primary"
-                : "transition-ui bg-action text-fg-tertiary hover:bg-raised-2 hover:text-fg-secondary",
-            )}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <PageHeader
+        title="Reliability & Warranty Analytics"
+        description="RAMS dashboard, remaining useful life, warranty analytics and failure heatmaps aligned with EN 50126, ISO 55000, and IEC 60300 frameworks."
+        actions={
+          <div className="flex items-center gap-1 rounded-full border border-muted bg-container p-1">
+            {TABS.map((t) => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={cn(
+                  "rounded-full px-3 py-1 text-label-sm font-medium transition-colors",
+                  tab === t
+                    ? "bg-action-selected text-primary shadow-sm"
+                    : "text-tertiary hover:bg-action hover:text-secondary",
+                )}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        }
+      />
 
-      {tab === "RAMS Dashboard" && <RamsTab />}
-      {tab === "Remaining Useful Life" && <RulTab />}
-      {tab === "Warranty Analytics" && <WarrantyTab />}
-      {tab === "Failure Heatmap" && <HeatmapTab />}
+      <PageBody className="flex flex-col gap-4">
+        {tab === "RAMS Dashboard" && <RamsTab />}
+        {tab === "Remaining Useful Life" && <RulTab />}
+        {tab === "Warranty Analytics" && <WarrantyTab />}
+        {tab === "Failure Heatmap" && <HeatmapTab />}
+      </PageBody>
     </div>
   );
 }
 
 function RamsTab() {
   return (
-    <>
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        <KPICard
+    <div className="flex flex-col gap-4">
+      {/* 4 Standard KPI Tiles */}
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4 shrink-0">
+        <KpiTile
           label="Reliability (R)"
-          value={87.4}
-          suffix="%"
-          decimals={1}
-          glow="blue"
-          sub="Fleet mean, current age"
+          value="87.4%"
+          delta="Fleet mean, current age"
+          tone="neutral"
+          hint="EN 50126 standard"
         />
-        <KPICard
+        <KpiTile
           label="Availability (A)"
-          value={94.2}
-          suffix="%"
-          decimals={1}
-          glow="teal"
-          sub="A = MTBF / (MTBF + MTTR)"
-          delay={100}
+          value="94.2%"
+          delta="MTBF / (MTBF + MTTR)"
+          tone="info"
+          hint="Operational availability"
         />
-        <KPICard
+        <KpiTile
           label="Maintainability (M)"
-          value={96.1}
-          suffix="%"
-          decimals={1}
-          glow="purple"
-          sub="% completed in planned window"
-          delay={200}
+          value="96.1%"
+          delta="Completed in planned window"
+          tone="success"
+          hint="Service efficiency"
         />
-        <KPICard
-          label="Safety Score"
-          value={99.2}
-          suffix="%"
-          decimals={1}
-          glow="teal"
-          sub="Critical failures avoided"
-          delay={300}
+        <KpiTile
+          label="Safety Integrity"
+          value="99.2%"
+          delta="Critical failures avoided"
+          tone="success"
+          hint="Zero catastrophic events"
         />
       </div>
-      <p className="text-mini text-text-secondary">
-        Aligned with EN 50126 / ISO 55000 / IEC 60300 framework
-      </p>
-      <GlassCard className="dot-grid">
-        <SectionTitle className="mb-3">
-          Weibull Reliability Curves — Fleet vs Competitors
-        </SectionTitle>
-        <ResponsiveContainer width="100%" height={320}>
-          <LineChart data={RELIABILITY_CURVE_DATA}>
-            <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
-            <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={11} />
-            <YAxis stroke={CHART_COLORS.textMuted} fontSize={11} unit="%" />
-            <Tooltip content={<ChartTooltip formatter={(v) => `${v}%`} />} />
-            <Legend wrapperStyle={{ fontSize: 11 }} />
-            <Line
-              type="monotone"
-              dataKey="es44ac"
-              name="ES44AC (β=2.2, η=88k)"
-              stroke={CHART_COLORS.blue}
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="flxdrive"
-              name="FLXdrive (β=1.8, η=90k)"
-              stroke={CHART_COLORS.teal}
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="ac4400"
-              name="AC4400 (β=2.0, η=70k)"
-              stroke={CHART_COLORS.orange}
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="ge_t4"
-              name="GE T4"
-              stroke={CHART_COLORS.red}
-              strokeDasharray="5 3"
-              dot={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="siemens"
-              name="Siemens"
-              stroke={CHART_COLORS.purple}
-              strokeDasharray="5 3"
-              dot={false}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </GlassCard>
-      <GlassCard>
-        <SectionTitle className="mb-3">Component MTBF Table</SectionTitle>
-        <div className="max-h-[360px] overflow-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="sticky top-0 bg-surface-1">
-              <tr className="border-b border-border text-mini uppercase text-text-muted">
+
+      {/* Chart Panel */}
+      <Panel
+        title="Weibull Reliability Curves — Fleet vs Competitors"
+        action={
+          <span className="text-caption text-quaternary">
+            Multi-platform comparison (β shape factor & η scale factor)
+          </span>
+        }
+      >
+        <div className="h-[320px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={RELIABILITY_CURVE_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
+              <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={11} />
+              <YAxis stroke={CHART_COLORS.textMuted} fontSize={11} unit="%" domain={[0, 100]} />
+              <Tooltip content={<ChartTooltip formatter={(v) => `${v}%`} />} />
+              <Legend wrapperStyle={{ fontSize: 11, paddingTop: 10 }} />
+              <Line
+                type="monotone"
+                dataKey="es44ac"
+                name="ES44AC (β=2.2, η=88k)"
+                stroke={CHART_COLORS.blue}
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="flxdrive"
+                name="FLXdrive (β=1.8, η=90k)"
+                stroke={CHART_COLORS.teal}
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="ac4400"
+                name="AC4400 (β=2.0, η=70k)"
+                stroke={CHART_COLORS.orange}
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="ge_t4"
+                name="GE T4"
+                stroke={CHART_COLORS.red}
+                strokeDasharray="5 3"
+                dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="siemens"
+                name="Siemens"
+                stroke={CHART_COLORS.purple}
+                strokeDasharray="5 3"
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </Panel>
+
+      {/* Component MTBF Table */}
+      <Panel
+        title="Component MTBF & Health Matrix"
+        action={
+          <span className="text-caption text-quaternary">
+            {COMPONENTS.length} subsystems tracked
+          </span>
+        }
+        padded={false}
+      >
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-left">
+            <thead className="sticky top-0 z-10 bg-container border-b border-muted">
+              <tr>
                 {[
                   "Component",
                   "MTBF (hrs)",
                   "MTTR (hrs)",
-                  "Hours",
+                  "Service Hours",
                   "RUL (yrs)",
                   "Confidence",
-                  "Health",
-                ].map((h) => (
-                  <th key={h} className="px-2 py-2">
+                  "Health Score",
+                  "Status",
+                ].map((h, i) => (
+                  <th
+                    key={h}
+                    className={cn(
+                      "px-3 py-2 text-caption font-medium tracking-[0.08em] text-quaternary uppercase whitespace-nowrap",
+                      i >= 1 && i <= 6 && "text-right",
+                    )}
+                  >
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="font-mono-data">
-              {COMPONENTS.map((c) => (
-                <tr key={c.id} className="border-b border-border/40">
-                  <td className="px-2 py-2 font-sans">{c.name}</td>
-                  <td className="px-2 py-2">{c.mtbfHours.toLocaleString()}</td>
-                  <td className="px-2 py-2">{c.mttrHours}</td>
-                  <td className="px-2 py-2">{c.currentHours.toLocaleString()}</td>
-                  <td className="px-2 py-2">{c.rulYears}</td>
-                  <td className="px-2 py-2">{c.rulConfidence}%</td>
-                  <td className="px-2 py-2" style={{ color: healthColor(c.healthScore) }}>
-                    {c.healthScore}%
-                  </td>
-                </tr>
-              ))}
+            <tbody className="divide-y divide-muted font-mono-data text-body-sm">
+              {COMPONENTS.map((c) => {
+                const status =
+                  c.healthScore >= 80
+                    ? { label: "Optimal", tone: "success" as const }
+                    : c.healthScore >= 60
+                      ? { label: "Fair", tone: "warning" as const }
+                      : { label: "Critical", tone: "error" as const };
+                return (
+                  <tr key={c.id} className="transition-colors hover:bg-hover">
+                    <td className="px-3 py-2 font-sans font-medium text-primary">
+                      {c.name}
+                    </td>
+                    <td className="px-3 py-2 text-right text-secondary">
+                      {c.mtbfHours.toLocaleString()}
+                    </td>
+                    <td className="px-3 py-2 text-right text-secondary">
+                      {c.mttrHours}h
+                    </td>
+                    <td className="px-3 py-2 text-right text-tertiary">
+                      {c.currentHours.toLocaleString()}
+                    </td>
+                    <td className="px-3 py-2 text-right font-medium text-primary">
+                      {c.rulYears} yrs
+                    </td>
+                    <td className="px-3 py-2 text-right text-secondary">
+                      {c.rulConfidence}%
+                    </td>
+                    <td className="px-3 py-2 text-right font-semibold" style={{ color: healthColor(c.healthScore) }}>
+                      {c.healthScore}%
+                    </td>
+                    <td className="px-3 py-2">
+                      <StatusBadge tone={status.tone}>{status.label}</StatusBadge>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
-      </GlassCard>
-    </>
+      </Panel>
+    </div>
   );
 }
 
 function RulTab() {
   const sorted = [...COMPONENTS].sort((a, b) => a.rulYears - b.rulYears);
   const maxRul = Math.max(...sorted.map((c) => c.rulYears));
+
   return (
-    <GlassCard scanline>
-      <SectionTitle className="mb-4">Remaining Useful Life — Ranked by Urgency</SectionTitle>
+    <Panel
+      title="Remaining Useful Life — Ranked by Urgency"
+      action={
+        <span className="text-caption text-quaternary">
+          Predictive maintenance horizon based on current operating wear
+        </span>
+      }
+    >
       <div className="space-y-3">
         {sorted.map((c) => {
           const pct = (c.rulYears / maxRul) * 100;
           const urgent = c.rulYears < 1;
           return (
-            <div key={c.id} className="flex items-center gap-3 text-xs">
-              <span className="w-52 shrink-0 truncate">
-                {urgent ? "⚠ " : ""}
-                {c.name}
-              </span>
-              <div className="h-3 flex-1 overflow-hidden rounded-full bg-surface-3">
+            <div
+              key={c.id}
+              className="flex items-center gap-3 rounded-lg border border-muted bg-container p-2.5 transition-colors hover:border-default"
+            >
+              <div className="w-56 shrink-0">
+                <span className="text-body-sm font-medium text-primary block truncate">
+                  {c.name}
+                </span>
+                <span className="text-caption text-quaternary font-mono-data">
+                  {c.currentHours.toLocaleString()} hrs logged
+                </span>
+              </div>
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-hover">
                 <div
-                  className="h-full rounded-full"
-                  style={{ width: `${Math.max(2, pct)}%`, background: healthColor(pct) }}
+                  className="h-full rounded-full transition-all"
+                  style={{ width: `${Math.max(4, pct)}%`, background: healthColor(pct) }}
                 />
               </div>
-              <span className="font-mono-data w-20 text-right">{c.rulYears} yrs</span>
-              <span className="font-mono-data w-16 text-right text-text-muted">
-                {c.rulConfidence}%
-              </span>
-              {urgent && (
-                <span className="rounded bg-red/15 px-1.5 py-0.5 text-micro font-bold text-red">
-                  URGENT
+              <div className="w-24 text-right font-mono-data">
+                <span className="text-body-sm font-semibold text-primary block">
+                  {c.rulYears} yrs
                 </span>
-              )}
+                <span className="text-caption text-quaternary">
+                  {c.rulConfidence}% conf
+                </span>
+              </div>
+              <div className="w-24 shrink-0 text-right">
+                {urgent ? (
+                  <PriorityBadge priority="critical" />
+                ) : c.rulYears < 3 ? (
+                  <PriorityBadge priority="high" />
+                ) : (
+                  <StatusBadge tone="success">HEALTHY</StatusBadge>
+                )}
+              </div>
             </div>
           );
         })}
       </div>
-    </GlassCard>
+    </Panel>
   );
 }
 
 function WarrantyTab() {
   const YEARS = 10;
   return (
-    <>
-      <GlassCard>
-        <SectionTitle className="mb-3">Warranty Coverage Map (Years 0–10)</SectionTitle>
-        <div className="space-y-1.5">
+    <div className="flex flex-col gap-4">
+      {/* 3 Summary KPI Tiles */}
+      <div className="grid gap-3 md:grid-cols-3 shrink-0">
+        <KpiTile
+          label="Standard Warranty (3yr)"
+          value="$420,000"
+          delta="Base manufacturer cover"
+          tone="neutral"
+          hint="Total parts saved"
+        />
+        <KpiTile
+          label="Extended Warranty (5yr)"
+          value="$680,000"
+          delta="Option premium: $85k"
+          tone="info"
+          hint="Gross savings potential"
+        />
+        <KpiTile
+          label="Net Financial Benefit"
+          value="$595,000"
+          delta="+700% ROI on warranty spend"
+          tone="success"
+          hint="Recommended package"
+        />
+      </div>
+
+      <Panel
+        title="Warranty Coverage Timeline (Years 0–10)"
+        action={
+          <div className="flex items-center gap-3 text-caption text-tertiary">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-2 w-3 rounded-sm bg-primary" />
+              Full Warranty
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-2 w-3 rounded-sm bg-primary/40" />
+              Extended Option
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-2 w-3 rounded-sm bg-muted" />
+              Owner Cost
+            </span>
+          </div>
+        }
+      >
+        <div className="space-y-2">
           {COMPONENTS.map((c) => (
-            <div key={c.id} className="flex items-center gap-2 text-mini">
-              <span className="w-48 shrink-0 truncate text-text-secondary">{c.name}</span>
-              <div className="flex h-4 flex-1 overflow-hidden rounded">
+            <div key={c.id} className="flex items-center gap-3 text-caption">
+              <span className="w-52 shrink-0 truncate font-medium text-secondary">{c.name}</span>
+              <div className="flex h-5 flex-1 overflow-hidden rounded border border-muted bg-container">
                 {Array.from({ length: YEARS }, (_, y) => {
                   const covered = y < c.warrantyYears;
                   const extended = !covered && y < c.warrantyYears + 2;
                   return (
                     <div
                       key={y}
-                      className="flex-1 border-r border-background"
+                      className="flex-1 border-r border-background last:border-r-0 transition-opacity hover:opacity-80"
                       style={{
                         background: covered
                           ? CHART_COLORS.blue
@@ -279,10 +390,10 @@ function WarrantyTab() {
                       }}
                       title={
                         covered
-                          ? "Full warranty"
+                          ? `Year ${y + 1}: Full warranty cover`
                           : extended
-                            ? "Extended option"
-                            : `Owner cost if failure: ${fmtCompact(c.replacementCost * 1.3)}`
+                            ? `Year ${y + 1}: Extended option cover`
+                            : `Year ${y + 1}: Owner cost on failure (~${fmtCompact(c.replacementCost * 1.3)})`
                       }
                     />
                   );
@@ -291,52 +402,35 @@ function WarrantyTab() {
             </div>
           ))}
         </div>
-        <div className="mt-2 flex gap-4 text-mini text-text-secondary">
-          <span>
-            <span className="mr-1 inline-block h-2 w-3 rounded-sm bg-primary" />
-            Full warranty
-          </span>
-          <span>
-            <span className="mr-1 inline-block h-2 w-3 rounded-sm bg-primary/40" />
-            Extended option
-          </span>
-          <span>
-            <span className="mr-1 inline-block h-2 w-3 rounded-sm bg-surface-3" />
-            Owner cost
-          </span>
-        </div>
-      </GlassCard>
-      <div className="grid gap-4 md:grid-cols-3">
-        <GlassCard>
-          <p className="text-xs text-text-secondary">Standard Warranty (3yr)</p>
-          <p className="font-display mt-1 text-xl font-bold text-primary">$420,000</p>
-          <p className="text-mini text-text-muted">component savings</p>
-        </GlassCard>
-        <GlassCard>
-          <p className="text-xs text-text-secondary">Extended Warranty (5yr)</p>
-          <p className="font-display mt-1 text-xl font-bold text-teal">$680,000</p>
-          <p className="text-mini text-text-muted">total savings · cost $85,000 one-time</p>
-        </GlassCard>
-        <GlassCard className="border-teal/30">
-          <p className="text-xs text-text-secondary">Net Benefit</p>
-          <p className="font-display mt-1 text-xl font-bold text-teal">$595,000 ★</p>
-          <p className="text-mini font-semibold text-teal">RECOMMENDED</p>
-        </GlassCard>
-      </div>
-    </>
+      </Panel>
+    </div>
   );
 }
 
 function HeatmapTab() {
   const YEARS = 20;
   return (
-    <GlassCard>
-      <SectionTitle className="mb-3">Failure Probability Heatmap — 1 − R(t) per Year</SectionTitle>
-      <div className="space-y-1">
+    <Panel
+      title="Failure Probability Heatmap — 1 − R(t) per Year"
+      action={
+        <div className="flex items-center gap-2 text-caption text-tertiary">
+          <span>Low risk</span>
+          <div
+            className="h-2 w-28 rounded-full"
+            style={{
+              background: `linear-gradient(90deg, ${alpha(CHART_COLORS.blue, 40)}, ${alpha(CHART_COLORS.yellow, 70)}, ${alpha(CHART_COLORS.red, 90)})`,
+            }}
+          />
+          <span>High risk</span>
+          <span className="ml-2 text-quaternary">(Assumes 5,500 hrs/yr)</span>
+        </div>
+      }
+    >
+      <div className="space-y-1.5">
         {COMPONENTS.map((c) => (
-          <div key={c.id} className="flex items-center gap-2 text-mini">
-            <span className="w-48 shrink-0 truncate text-text-secondary">{c.name}</span>
-            <div className="flex h-5 flex-1 gap-px">
+          <div key={c.id} className="flex items-center gap-3 text-caption">
+            <span className="w-52 shrink-0 truncate font-medium text-secondary">{c.name}</span>
+            <div className="flex h-6 flex-1 gap-0.5">
               {Array.from({ length: YEARS }, (_, y) => {
                 const p = weibullFailureProb((y + 1) * 5500, c.weibullBeta, c.weibullEta);
                 const color =
@@ -348,9 +442,9 @@ function HeatmapTab() {
                 return (
                   <div
                     key={y}
-                    className="flex-1 rounded-[2px]"
+                    className="flex-1 rounded-[2px] transition-transform hover:scale-105"
                     style={{ background: color }}
-                    title={`Year ${y + 1}: ${(p * 100).toFixed(0)}%`}
+                    title={`Year ${y + 1}: ${(p * 100).toFixed(0)}% probability of failure`}
                   />
                 );
               })}
@@ -358,17 +452,6 @@ function HeatmapTab() {
           </div>
         ))}
       </div>
-      <div className="mt-3 flex items-center gap-2 text-mini text-text-secondary">
-        <span>Low</span>
-        <div
-          className="h-2 w-40 rounded-full"
-          style={{
-            background: `linear-gradient(90deg, ${alpha(CHART_COLORS.blue, 40)}, ${alpha(CHART_COLORS.yellow, 70)}, ${alpha(CHART_COLORS.red, 90)})`,
-          }}
-        />
-        <span>High</span>
-        <span className="ml-4 text-text-muted">Assumes 5,500 operating hours / year</span>
-      </div>
-    </GlassCard>
+    </Panel>
   );
 }
