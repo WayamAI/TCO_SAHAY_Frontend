@@ -49,7 +49,7 @@ export function AppShell({
       >
         {children ?? (
           <div className="p-8">
-            <h1 className="text-xl font-semibold tracking-tight text-primary">Dashboard</h1>
+            <h1 className="font-display text-display-page text-primary">Dashboard</h1>
           </div>
         )}
       </main>
