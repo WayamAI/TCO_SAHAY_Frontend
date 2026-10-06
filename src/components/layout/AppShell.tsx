@@ -124,8 +124,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   }
 
   const horizonControls = (
-    <>
-      {/* Planning horizon — the same span, shown in years or kilometres */}
+    <div className="flex items-center gap-1.5">
       <FilterChipGroup>
         {[5, 10, 20, 30].map((n) => (
           <FilterChip
@@ -141,55 +140,52 @@ export function AppShell({ children }: { children: ReactNode }) {
       <FilterChipGroup>
         {(["years", "km"] as const).map((u) => (
           <FilterChip key={u} selected={horizonUnit === u} onClick={() => setHorizonUnit(u)}>
-            {u === "years" ? "Years" : "Kilometres"}
+            {u === "years" ? "Yr" : "Km"}
           </FilterChip>
         ))}
       </FilterChipGroup>
-      <span className="text-label-sm border-default bg-action text-fg-tertiary shrink-0 rounded-md border px-2 py-1">
-        ISO 55000
-      </span>
-    </>
+    </div>
   );
 
   const sidebarNav = (
     <>
-      <div className="border-stroke-muted border-b px-4 py-4">
-        <div className="flex items-center justify-start px-1 py-1">
+      <div className="flex h-14 shrink-0 items-center justify-between border-b border-muted px-4">
+        <div className="flex items-center gap-2.5">
           <img
             src={`${import.meta.env.BASE_URL}wayam-logo.svg`}
             alt="Wayam AI"
-            className="h-9 w-auto object-contain"
+            className="h-7 w-auto object-contain"
           />
         </div>
-        <p className="font-display text-caption text-fg-quaternary mt-2 uppercase">
-          TCO Intelligence
-        </p>
+        <span className="text-caption tracking-[0.08em] text-quaternary uppercase">
+          TCO SAHAY
+        </span>
       </div>
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-3">
         {NAV.map((item) => (
           <SidebarItem key={item.to} item={item} active={pathname === item.to} />
         ))}
       </nav>
-      <div className="border-stroke-muted space-y-2 border-t p-3">
-        <div className="bg-raised border-default rounded-lg border p-2.5">
-          <p className="text-caption text-fg-quaternary uppercase">Live scenario</p>
-          <p className="font-mono-data text-body-sm text-fg-secondary mt-1">
+      <div className="border-t border-muted space-y-2 p-3">
+        <div className="bg-container border border-muted rounded-lg p-2.5">
+          <p className="text-caption tracking-[0.08em] text-quaternary uppercase">Live scenario</p>
+          <p className="font-mono-data text-body-sm text-secondary mt-1 truncate">
             {activeScenarioName} · {shortModel} · {params.N}yr
           </p>
-          <p className="font-display text-display-base text-fg-primary mt-1 tabular-nums">
+          <p className="font-display text-display-base text-primary mt-1 tabular-nums">
             ${(result.totalTCO / 1e6).toFixed(2)}M TCO
           </p>
         </div>
         {session ? (
           <button
             onClick={handleLogout}
-            className="transition-ui text-body-md text-fg-tertiary hover:bg-raised-2 hover:text-fg-primary flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2"
+            className="transition-ui text-body-sm text-tertiary hover:bg-raised-2 hover:text-primary flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5"
             title={session.email}
             aria-label={`Sign out of ${session.email}`}
           >
-            <AppIcon name="logout" size="lg" className="text-icon-tertiary" />
+            <AppIcon name="logout" size="sm" className="text-icon-tertiary" />
             <span className="min-w-0 flex-1 truncate text-left">{session.email}</span>
-            <span className="text-caption text-fg-quaternary uppercase">Sign out</span>
+            <span className="text-caption text-quaternary uppercase">Sign out</span>
           </button>
         ) : null}
       </div>
@@ -197,9 +193,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
 
   return (
-    <div className="bg-page flex h-screen overflow-hidden">
-      {/* Desktop sidebar — hidden below lg, replaced by the drawer below */}
-      <aside className="bg-container border-stroke-muted fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r lg:flex">
+    <div className="bg-page flex h-screen w-full overflow-hidden text-primary font-sans antialiased">
+      {/* Desktop sidebar — fixed 240px */}
+      <aside className="bg-container border-r border-muted fixed inset-y-0 left-0 z-40 hidden w-60 flex-col lg:flex">
         {sidebarNav}
       </aside>
 
@@ -207,99 +203,106 @@ export function AppShell({ children }: { children: ReactNode }) {
       <Sheet open={navOpen} onOpenChange={setNavOpen}>
         <SheetContent
           side="left"
-          className="bg-container border-stroke-muted flex w-72 max-w-[85vw] flex-col p-0 lg:hidden"
+          className="bg-container border-r border-muted flex w-72 max-w-[85vw] flex-col p-0 lg:hidden"
         >
           <SheetTitle className="sr-only">Navigation</SheetTitle>
           {sidebarNav}
         </SheetContent>
       </Sheet>
 
-      {/* Main */}
+      {/* Main Canvas */}
       <div className="flex h-screen w-full min-w-0 flex-1 flex-col lg:ml-60">
-        {/* Top bar */}
-        <header className="border-stroke-muted bg-page flex shrink-0 items-center gap-3 border-b px-3 py-2.5 sm:px-4 lg:px-6 lg:py-3">
-          <IconButton
-            icon="menu"
-            aria-label="Open navigation"
-            variant="subtle"
-            size="sm"
-            className="lg:hidden"
-            onClick={() => setNavOpen(true)}
-          />
-
-          <div className="min-w-0 flex-1">
-            {/* Breadcrumb */}
-            <div className="text-label-sm text-fg-quaternary flex items-center gap-1.5">
-              <Link
-                to="/"
-                className="transition-ui hover:text-fg-secondary"
-                aria-label="Command Center"
-              >
-                <AppIcon name="home" size="xs" />
-              </Link>
-              <span aria-hidden="true">/</span>
-              <span className="truncate">{CRUMB[pathname] ?? "Platform"}</span>
-            </div>
+        {/* Chronos-aligned TopBar: h-14 with breadcrumb & scope controls */}
+        <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-muted bg-page px-4 sm:gap-4 sm:px-5">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <IconButton
+              icon="menu"
+              aria-label="Open navigation"
+              variant="subtle"
+              size="sm"
+              className="lg:hidden"
+              onClick={() => setNavOpen(true)}
+            />
+            <Link
+              to="/"
+              className="transition-ui text-quaternary hover:text-secondary hidden sm:inline"
+              aria-label="Command Center"
+            >
+              <AppIcon name="home" size="xs" />
+            </Link>
+            <span className="hidden text-quaternary sm:inline" aria-hidden="true">/</span>
+            <span className="hidden text-caption tracking-[0.08em] text-quaternary uppercase md:inline">
+              {CRUMB[pathname] ?? "TCO Intelligence"}
+            </span>
             <h1
-              className="font-display text-display-2xl lg:text-display-page text-fg-primary mt-1 truncate"
+              className="truncate font-display text-display-lg text-primary"
               title={ROUTE_TITLES[pathname] ?? "Lifecycle Intelligence"}
             >
               {ROUTE_TITLES[pathname] ?? "Lifecycle Intelligence"}
             </h1>
           </div>
 
-          <div className="hidden shrink-0 items-center gap-2.5 2xl:flex">
-            <span className="text-caption text-fg-quaternary hidden uppercase md:inline">
-              Fleet TCO
-            </span>
-            <span className="font-display text-display-xl text-fg-primary tabular-nums">
-              <CountUp
-                end={result.totalTCO}
-                duration={0.5}
-                separator=","
-                prefix="$"
-                preserveValue
-              />
+          <div className="flex shrink-0 items-center gap-2">
+            {/* Fleet TCO Live metric pill */}
+            <div className="hidden h-8 items-center gap-2 rounded-full border border-muted bg-action px-3 text-label-sm text-secondary md:flex">
+              <span className="text-caption text-quaternary uppercase">Fleet TCO</span>
+              <span className="font-display text-primary tabular-nums">
+                <CountUp
+                  end={result.totalTCO}
+                  duration={0.5}
+                  separator=","
+                  prefix="$"
+                  preserveValue
+                />
+              </span>
+            </div>
+
+            {/* Scope controls */}
+            <div className="hidden items-center gap-2 xl:flex">{horizonControls}</div>
+
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-muted bg-action px-2.5 py-1 text-caption text-secondary">
+              <span className="size-1.5 rounded-full bg-success" />
+              <span>Live</span>
             </span>
           </div>
-
-          <div className="hidden items-center gap-2 xl:flex">{horizonControls}</div>
         </header>
 
-        {/* Compact horizon controls for small screens, shown below the header so nothing gets clipped */}
-        <div className="border-stroke-muted bg-page flex shrink-0 items-center gap-2 overflow-x-auto border-b px-3 py-2 xl:hidden">
+        {/* Compact horizon controls on screens narrower than xl */}
+        <div className="border-b border-muted bg-page flex shrink-0 items-center gap-2 overflow-x-auto px-4 py-2 xl:hidden">
           {horizonControls}
         </div>
 
-        <main className="w-full min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-3 pb-24 sm:p-4 lg:p-6 lg:pb-16">
+        {/* Page canvas */}
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-page">
           {children}
         </main>
 
-        {/* Status bar */}
-        <footer className="border-stroke-muted bg-container text-body-sm fixed bottom-0 left-0 right-0 z-30 flex h-auto flex-wrap items-center gap-2 border-t px-3 py-2 sm:gap-4 lg:left-60 lg:h-10 lg:flex-nowrap lg:px-5 lg:py-0">
-          <span className="flex shrink-0 items-center gap-1.5">
-            <span className="bg-error-icon animate-pulse-glow h-1.5 w-1.5 rounded-full" />
-            <span className="text-caption text-fg-secondary uppercase">Live</span>
-          </span>
-          <span className="font-mono-data text-fg-tertiary min-w-0 truncate">
-            {activeScenarioName} | {shortModel} | {params.operatingProfile} | {params.N}yr |{" "}
-            <span className="text-fg-primary">
+        {/* Docked operational status bar */}
+        <footer className="h-9 shrink-0 border-t border-muted bg-container px-4 text-caption flex items-center justify-between text-secondary">
+          <div className="flex items-center gap-2 min-w-0 truncate">
+            <span className="size-1.5 rounded-full bg-success shrink-0" />
+            <span className="font-mono-data text-quaternary truncate">
+              {activeScenarioName} · {shortModel} · {params.operatingProfile} · {params.N}yr
+            </span>
+            <span className="text-quaternary">·</span>
+            <span className="font-mono-data text-primary tabular-nums font-medium">
               ${Math.round(result.totalTCO).toLocaleString("en-US")}
             </span>
-          </span>
-          <span className="hidden flex-1 lg:block" />
-          <Link
-            to="/simulation"
-            className="transition-ui text-label-sm bg-action-secondary text-fg-secondary hover:bg-action-secondary-hover hover:text-fg-primary flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1"
-          >
-            <AppIcon name="play" size="xs" /> Re-run
-          </Link>
-          <Link
-            to="/monte-carlo"
-            className="transition-ui text-fg-tertiary hover:text-fg-primary hidden shrink-0 items-center gap-1 sm:flex"
-          >
-            Monte Carlo <AppIcon name="arrowRight" size="xs" />
-          </Link>
+          </div>
+          <div className="flex items-center gap-3 shrink-0 ml-2">
+            <Link
+              to="/simulation"
+              className="text-tertiary hover:text-primary transition-colors flex items-center gap-1 text-label-sm"
+            >
+              <AppIcon name="play" size="xs" /> Re-run
+            </Link>
+            <Link
+              to="/monte-carlo"
+              className="text-tertiary hover:text-primary transition-colors hidden sm:flex items-center gap-1 text-label-sm"
+            >
+              Monte Carlo <AppIcon name="arrowRight" size="xs" />
+            </Link>
+          </div>
         </footer>
       </div>
     </div>
