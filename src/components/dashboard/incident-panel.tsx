@@ -44,29 +44,7 @@ export interface IncidentData {
   };
 }
 
-export const DEFAULT_INCIDENT: IncidentData = {
-  id: "SIM-0001",
-  title: "SIM-0001: Incident",
-  priority: "critical",
-  location: "Incident detected: M7 Highway, KM 45",
-  assetModel: "Wabtec ES44AC Heavy Haul",
-  vin: "WAB-SIM-0001-X",
-  driver: {
-    name: "Mike Ross",
-    initials: "MR",
-    conciergeStatus: "AI Concierge is active",
-    phone: "+1 (555) 019-2834",
-  },
-  primaryIssue: "Critical telemetry from SIM-0001",
-  primaryIssueDetail:
-    "Primary engine cooling jacket breached thermal limit (104°C > 90°C allowable). Immediate shutdown protocol advised.",
-  telemetry: {
-    temperature: { value: "104°C", status: "critical", subtext: "+14°C above max" },
-    voltage: { value: "23.4 V", status: "warning", subtext: "-0.6V nominal" },
-    coolantLevel: { value: "12%", status: "critical", subtext: "Below 15% cutoff" },
-    speed: { value: "68 km/h", status: "normal", subtext: "Decelerating" },
-  },
-};
+import { DEFAULT_INCIDENT } from "./mock-data";
 
 export interface DriverCardProps {
   driver: DriverInfo;
