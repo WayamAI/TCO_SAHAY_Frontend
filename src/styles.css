@@ -275,6 +275,11 @@
   --radius: 0.875rem; /* 14px */
 
   /* Command Center & Telemetry Design Tokens */
+  --app-bg: #080a0b;
+  --sidebar-bg: #0c0e0f;
+  --surface: #111314;
+  --sidebar-border: rgba(255, 255, 255, 0.07);
+
   --background: #090b0c;
   --foreground: rgba(255, 255, 255, 0.95);
   --surface-1: #111314;
@@ -458,6 +463,10 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-app-bg: var(--app-bg);
+  --color-sidebar-bg: var(--sidebar-bg);
+  --color-surface: var(--surface);
+  --color-sidebar-border: var(--sidebar-border);
   --color-surface-1: var(--surface-1);
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
