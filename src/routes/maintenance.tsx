@@ -1,7 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { ShieldCheck, ShieldOff, Wrench } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
 import { ChartTooltip } from "@/components/shared/ChartTooltip";
 import { COMPONENTS, CHART_COLORS } from "@/data/syntheticData";
@@ -17,6 +25,7 @@ import {
 } from "@/utils/tcoEngine";
 import { fmtCompact, fmtUSD } from "@/utils/formatters";
 import { cn } from "@/lib/utils";
+import { AppIcon } from "@/components/icons/AppIcon";
 
 export const Route = createFileRoute("/maintenance")({
   head: () => ({
@@ -24,7 +33,8 @@ export const Route = createFileRoute("/maintenance")({
       { title: "Maintenance & Service | TCO Intelligence" },
       {
         name: "description",
-        content: "Part-specific maintenance schedule — what is serviced at each event, with quantity, price, labour and warranty status.",
+        content:
+          "Part-specific maintenance schedule — what is serviced at each event, with quantity, price, labour and warranty status.",
       },
     ],
   }),
@@ -107,7 +117,12 @@ function buildVisits(parts: Part[], horizon: number, laborPct: number): ServiceV
           laborCost,
           totalCost: partsCost + laborCost,
           warrantyCovered: covered.reduce((s, e) => s + e.totalCost, 0),
-          status: covered.length === events.length ? "covered" : covered.length === 0 ? "expired" : "partial",
+          status:
+            covered.length === events.length
+              ? "covered"
+              : covered.length === 0
+                ? "expired"
+                : "partial",
         };
       });
 
@@ -183,12 +198,20 @@ function MaintenancePage() {
     <div className="space-y-5">
       {/* Controls */}
       <GlassCard className="flex flex-wrap items-center gap-3">
-        <div className="flex overflow-hidden rounded-md border border-border text-[11px]">
+        <div className="flex overflow-hidden rounded-md border border-border text-mini">
           {[5, 10, 20, 30].map((r) => (
             <button
               key={r}
-              onClick={() => { setRange(r); setOpenVisit(0); }}
-              className={cn("px-3 py-1.5", range === r ? "bg-primary font-semibold text-primary-foreground" : "bg-surface-2 text-text-secondary")}
+              onClick={() => {
+                setRange(r);
+                setOpenVisit(0);
+              }}
+              className={cn(
+                "px-3 py-1.5",
+                range === r
+                  ? "bg-raised-2 font-medium text-fg-primary"
+                  : "transition-ui bg-action text-fg-tertiary hover:text-fg-secondary",
+              )}
             >
               {r}yr
             </button>
@@ -196,7 +219,10 @@ function MaintenancePage() {
         </div>
         <select
           value={componentId}
-          onChange={(e) => { setComponentId(e.target.value); setOpenVisit(0); }}
+          onChange={(e) => {
+            setComponentId(e.target.value);
+            setOpenVisit(0);
+          }}
           className="rounded-md border border-border bg-surface-2 px-3 py-1.5 text-xs outline-none focus:border-primary/50"
         >
           <option value="all">All components ({parts.length} parts)</option>
@@ -206,23 +232,38 @@ function MaintenancePage() {
             </option>
           ))}
         </select>
-        <span className="ml-auto flex flex-wrap gap-3 text-[10px] text-text-secondary">
-          <span><ShieldCheck size={11} className="mr-1 inline text-blue" />Under warranty — company pays</span>
-          <span><ShieldOff size={11} className="mr-1 inline text-orange" />Out of warranty — customer pays</span>
+        <span className="ml-auto flex flex-wrap gap-3 text-mini text-text-secondary">
+          <span>
+            <AppIcon name="warrantyActive" size="xs" className="mr-1 inline text-blue" />
+            Under warranty — company pays
+          </span>
+          <span>
+            <AppIcon name="warrantyExpired" size="xs" className="mr-1 inline text-orange" />
+            Out of warranty — customer pays
+          </span>
         </span>
       </GlassCard>
 
       {/* Roll-up strip */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {[
-          { l: `Total maintenance (${range}yr)`, v: fmtCompact(totals.total), c: CHART_COLORS.teal },
+          {
+            l: `Total maintenance (${range}yr)`,
+            v: fmtCompact(totals.total),
+            c: CHART_COLORS.teal,
+          },
           { l: `Labour @ ${laborPct}%`, v: fmtCompact(totals.labor), c: CHART_COLORS.purple },
           { l: "Warranty covered", v: fmtCompact(totals.warranty), c: CHART_COLORS.blue },
           { l: "Customer pays", v: fmtCompact(totals.customer), c: CHART_COLORS.orange },
         ].map((k) => (
           <div key={k.l} className="glass-card p-2.5 text-center">
-            <p className="text-[9px] uppercase tracking-wider text-text-muted">{k.l}</p>
-            <p className="font-display font-mono-data mt-1 text-sm font-bold tabular-nums" style={{ color: k.c }}>{k.v}</p>
+            <p className="text-micro uppercase tracking-wider text-text-muted">{k.l}</p>
+            <p
+              className="font-display font-mono-data mt-1 text-sm font-bold tabular-nums"
+              style={{ color: k.c }}
+            >
+              {k.v}
+            </p>
           </div>
         ))}
       </div>
@@ -230,7 +271,8 @@ function MaintenancePage() {
       {/* Service events — what gets done at the 1st, 2nd, 3rd maintenance */}
       <GlassCard className="dot-grid" scanline>
         <SectionTitle className="mb-3 flex items-center gap-1.5">
-          <Wrench size={13} /> Service Events — which parts are replaced at each maintenance
+          <AppIcon name="maintenance" size="sm" /> Service Events — which parts are replaced at each
+          maintenance
         </SectionTitle>
         <div className="space-y-2">
           {visits.slice(0, 24).map((v, i) => (
@@ -243,29 +285,47 @@ function MaintenancePage() {
                 )}
               >
                 <span className="font-display w-36 shrink-0 text-xs font-semibold">{v.label}</span>
-                <span className="font-mono-data w-32 shrink-0 text-[10px] text-text-muted">
+                <span className="font-mono-data w-32 shrink-0 text-mini text-text-muted">
                   Yr {v.atYear.toFixed(1)} · {fmtKm(v.atKm)}
                 </span>
-                <span className="text-[10px] text-text-secondary">{v.lines.length} parts</span>
-                <span className="ml-auto flex items-center gap-3 text-[11px]">
-                  <span className="font-mono-data text-text-secondary">parts {fmtCompact(v.partsCost)}</span>
-                  <span className="font-mono-data text-purple">labour {fmtCompact(v.laborCost)}</span>
+                <span className="text-mini text-text-secondary">{v.lines.length} parts</span>
+                <span className="ml-auto flex items-center gap-3 text-mini">
+                  <span className="font-mono-data text-text-secondary">
+                    parts {fmtCompact(v.partsCost)}
+                  </span>
+                  <span className="font-mono-data text-purple">
+                    labour {fmtCompact(v.laborCost)}
+                  </span>
                   {v.warrantyCovered > 0 && (
                     <span className="font-mono-data rounded bg-blue/15 px-1.5 py-0.5 text-blue">
                       warranty {fmtCompact(v.warrantyCovered)}
                     </span>
                   )}
-                  <span className="font-mono-data font-bold tabular-nums">{fmtCompact(v.totalCost)}</span>
+                  <span className="font-mono-data font-bold tabular-nums">
+                    {fmtCompact(v.totalCost)}
+                  </span>
                 </span>
               </button>
 
               {openVisit === i && (
                 <div className="overflow-x-auto border-t border-border/60 bg-surface-1/60">
-                  <table className="w-full text-left text-[11px]">
+                  <table className="w-full text-left text-mini">
                     <thead>
-                      <tr className="border-b border-border/50 text-[9px] uppercase tracking-wider text-text-muted">
-                        {["Part", "Interval", "Qty", "Unit", "Price", "Parts cost", "Labour", "Total", "Warranty"].map((h) => (
-                          <th key={h} className="px-2.5 py-1.5 font-medium">{h}</th>
+                      <tr className="border-b border-border/50 text-micro uppercase tracking-wider text-text-muted">
+                        {[
+                          "Part",
+                          "Interval",
+                          "Qty",
+                          "Unit",
+                          "Price",
+                          "Parts cost",
+                          "Labour",
+                          "Total",
+                          "Warranty",
+                        ].map((h) => (
+                          <th key={h} className="px-2.5 py-1.5 font-medium">
+                            {h}
+                          </th>
                         ))}
                       </tr>
                     </thead>
@@ -276,34 +336,45 @@ function MaintenancePage() {
                             <span className="block max-w-[220px] truncate" title={l.part.name}>
                               {l.part.name}
                               {l.occurrences > 1 && (
-                                <span className="ml-1.5 rounded bg-surface-3 px-1 text-[9px] text-text-secondary">×{l.occurrences} due</span>
+                                <span className="ml-1.5 rounded bg-surface-3 px-1 text-micro text-text-secondary">
+                                  ×{l.occurrences} due
+                                </span>
                               )}
                             </span>
-                            <span className="text-[9px] text-text-muted">
+                            <span className="text-micro text-text-muted">
                               {COMPONENTS.find((c) => c.id === l.part.componentId)?.name ?? "—"}
                             </span>
                           </td>
-                          <td className="font-mono-data px-2.5 py-1.5 text-text-secondary">{formatInterval(l.part)}</td>
+                          <td className="font-mono-data px-2.5 py-1.5 text-text-secondary">
+                            {formatInterval(l.part)}
+                          </td>
                           <td className="font-mono-data px-2.5 py-1.5">{l.qty}</td>
                           <td className="px-2.5 py-1.5 text-text-secondary">{l.part.uom}</td>
-                          <td className="font-mono-data px-2.5 py-1.5">{fmtUSD(l.part.unitPriceNew)}</td>
+                          <td className="font-mono-data px-2.5 py-1.5">
+                            {fmtUSD(l.part.unitPriceNew)}
+                          </td>
                           <td className="font-mono-data px-2.5 py-1.5">{fmtUSD(l.partsCost)}</td>
-                          <td className="font-mono-data px-2.5 py-1.5 text-purple">{fmtUSD(l.laborCost)}</td>
-                          <td className="font-mono-data px-2.5 py-1.5 font-semibold">{fmtUSD(l.totalCost)}</td>
+                          <td className="font-mono-data px-2.5 py-1.5 text-purple">
+                            {fmtUSD(l.laborCost)}
+                          </td>
+                          <td className="font-mono-data px-2.5 py-1.5 font-semibold">
+                            {fmtUSD(l.totalCost)}
+                          </td>
                           <td className="px-2.5 py-1.5">
                             {l.status === "covered" && (
-                              <span className="inline-flex items-center gap-1 rounded bg-blue/15 px-1.5 py-0.5 text-[9px] font-semibold text-blue">
-                                <ShieldCheck size={10} /> {l.part.warrantyYears}yr / {(l.part.warrantyKm / 1000).toFixed(0)}k km
+                              <span className="inline-flex items-center gap-1 rounded bg-blue/15 px-1.5 py-0.5 text-micro font-semibold text-blue">
+                                <AppIcon name="warrantyActive" size="xs" /> {l.part.warrantyYears}yr
+                                / {(l.part.warrantyKm / 1000).toFixed(0)}k km
                               </span>
                             )}
                             {l.status === "partial" && (
-                              <span className="inline-flex items-center gap-1 rounded bg-yellow/15 px-1.5 py-0.5 text-[9px] font-semibold text-yellow">
-                                <ShieldCheck size={10} /> partly covered
+                              <span className="inline-flex items-center gap-1 rounded bg-yellow/15 px-1.5 py-0.5 text-micro font-semibold text-yellow">
+                                <AppIcon name="warrantyActive" size="xs" /> partly covered
                               </span>
                             )}
                             {l.status === "expired" && (
-                              <span className="inline-flex items-center gap-1 rounded bg-orange/15 px-1.5 py-0.5 text-[9px] font-semibold text-orange">
-                                <ShieldOff size={10} /> expired
+                              <span className="inline-flex items-center gap-1 rounded bg-orange/15 px-1.5 py-0.5 text-micro font-semibold text-orange">
+                                <AppIcon name="warrantyExpired" size="xs" /> expired
                               </span>
                             )}
                           </td>
@@ -322,8 +393,9 @@ function MaintenancePage() {
           )}
         </div>
         {visits.length > 24 && (
-          <p className="mt-2 text-[10px] text-text-muted">
-            Showing the first 24 of {visits.length} service visits — narrow the horizon or pick a component to see the rest.
+          <p className="mt-2 text-mini text-text-muted">
+            Showing the first 24 of {visits.length} service visits — narrow the horizon or pick a
+            component to see the rest.
           </p>
         )}
       </GlassCard>
@@ -335,31 +407,59 @@ function MaintenancePage() {
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={costPerYear}>
               <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
-              <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={10} tickFormatter={(v) => `Y${v}`} />
-              <YAxis stroke={CHART_COLORS.textMuted} fontSize={10} tickFormatter={(v: number) => fmtCompact(v)} />
+              <XAxis
+                dataKey="year"
+                stroke={CHART_COLORS.textMuted}
+                fontSize={10}
+                tickFormatter={(v) => `Y${v}`}
+              />
+              <YAxis
+                stroke={CHART_COLORS.textMuted}
+                fontSize={10}
+                tickFormatter={(v: number) => fmtCompact(v)}
+              />
               <Tooltip content={<ChartTooltip />} />
               <Legend wrapperStyle={{ fontSize: 10 }} />
-              <Bar dataKey="company" name="Company (warranty)" stackId="a" fill={CHART_COLORS.blue} radius={[0, 0, 0, 0]} />
-              <Bar dataKey="customer" name="Customer" stackId="a" fill={CHART_COLORS.orange} radius={[3, 3, 0, 0]} />
+              <Bar
+                dataKey="company"
+                name="Company (warranty)"
+                stackId="a"
+                fill={CHART_COLORS.blue}
+                radius={[0, 0, 0, 0]}
+              />
+              <Bar
+                dataKey="customer"
+                name="Customer"
+                stackId="a"
+                fill={CHART_COLORS.orange}
+                radius={[3, 3, 0, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </GlassCard>
 
         {/* Part-level maintenance drivers */}
         <GlassCard>
-          <SectionTitle className="mb-3">Maintenance Drivers — cost by part ({range}yr)</SectionTitle>
+          <SectionTitle className="mb-3">
+            Maintenance Drivers — cost by part ({range}yr)
+          </SectionTitle>
           <div className="max-h-[280px] space-y-1.5 overflow-y-auto pr-1">
             {drivers.map(({ part, tco }) => {
               const max = drivers[0].tco.totalCost;
               const every = partIntervalYears(part);
               return (
                 <div key={part.id} className="rounded-md bg-surface-2/50 px-2.5 py-1.5">
-                  <div className="flex items-center gap-2 text-[11px]">
-                    <span className="flex-1 truncate" title={part.name}>{part.name}</span>
-                    <span className="font-mono-data text-[9px] text-text-muted">
-                      every {every < 1 ? `${(every * 12).toFixed(0)}mo` : `${every.toFixed(1)}y`} · {tco.eventCount}×
+                  <div className="flex items-center gap-2 text-mini">
+                    <span className="flex-1 truncate" title={part.name}>
+                      {part.name}
                     </span>
-                    <span className="font-mono-data w-16 text-right tabular-nums">{fmtCompact(tco.totalCost)}</span>
+                    <span className="font-mono-data text-micro text-text-muted">
+                      every {every < 1 ? `${(every * 12).toFixed(0)}mo` : `${every.toFixed(1)}y`} ·{" "}
+                      {tco.eventCount}×
+                    </span>
+                    <span className="font-mono-data w-16 text-right tabular-nums">
+                      {fmtCompact(tco.totalCost)}
+                    </span>
                   </div>
                   <div className="mt-1 flex h-1.5 overflow-hidden rounded-full bg-surface-3">
                     <div
@@ -376,7 +476,11 @@ function MaintenancePage() {
                 </div>
               );
             })}
-            {drivers.length === 0 && <p className="py-6 text-center text-xs text-text-muted">No parts due in this horizon.</p>}
+            {drivers.length === 0 && (
+              <p className="py-6 text-center text-xs text-text-muted">
+                No parts due in this horizon.
+              </p>
+            )}
           </div>
         </GlassCard>
       </div>

@@ -1,7 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
-import { LOCOMOTIVES, SYSTEMS, ASSEMBLIES, COMPONENTS, STANDARDS_COMPLIANCE, type Component } from "@/data/syntheticData";
+import {
+  LOCOMOTIVES,
+  SYSTEMS,
+  ASSEMBLIES,
+  COMPONENTS,
+  STANDARDS_COMPLIANCE,
+  type Component,
+} from "@/data/syntheticData";
 import { fmtUSD } from "@/utils/formatters";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +16,11 @@ export const Route = createFileRoute("/configure")({
   head: () => ({
     meta: [
       { title: "Configuration | TCO Intelligence" },
-      { name: "description", content: "Product hierarchy configuration, maintenance rule builder and standards compliance." },
+      {
+        name: "description",
+        content:
+          "Product hierarchy configuration, maintenance rule builder and standards compliance.",
+      },
     ],
   }),
   component: ConfigurePage,
@@ -28,7 +39,12 @@ function ConfigurePage() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={cn("rounded-md px-3 py-1.5 text-xs", tab === t ? "bg-primary font-semibold text-primary-foreground" : "bg-surface-2 text-text-secondary hover:text-foreground")}
+            className={cn(
+              "rounded-md px-3 py-1.5 text-xs",
+              tab === t
+                ? "bg-raised-2 font-medium text-fg-primary"
+                : "transition-ui bg-action text-fg-tertiary hover:bg-raised-2 hover:text-fg-secondary",
+            )}
           >
             {t}
           </button>
@@ -53,7 +69,12 @@ function ConfigurePage() {
                             <button
                               key={c.id}
                               onClick={() => setSelected(c)}
-                              className={cn("ml-3 block w-full rounded px-1.5 py-0.5 text-left", selected?.id === c.id ? "bg-primary/15 text-primary" : "text-foreground/80 hover:bg-surface-2")}
+                              className={cn(
+                                "ml-3 block w-full rounded px-1.5 py-0.5 text-left",
+                                selected?.id === c.id
+                                  ? "bg-primary/15 text-primary"
+                                  : "text-foreground/80 hover:bg-surface-2",
+                              )}
                             >
                               {c.name}
                             </button>
@@ -76,20 +97,47 @@ function ConfigurePage() {
                   ["Purchase Cost", fmtUSD(selected.purchaseCost)],
                   ["Replacement Cost", fmtUSD(selected.replacementCost)],
                   ["Design Life", `${selected.lifeYears} yrs`],
-                  ["Weibull β / η", `${selected.weibullBeta} / ${selected.weibullEta.toLocaleString()}h`],
-                  ["MTBF / MTTR", `${selected.mtbfHours.toLocaleString()}h / ${selected.mttrHours}h`],
+                  [
+                    "Weibull β / η",
+                    `${selected.weibullBeta} / ${selected.weibullEta.toLocaleString()}h`,
+                  ],
+                  [
+                    "MTBF / MTTR",
+                    `${selected.mtbfHours.toLocaleString()}h / ${selected.mttrHours}h`,
+                  ],
                   ["Warranty", `${selected.warrantyYears} yrs`],
-                  ["PM: Time", selected.pmTrigger.intervalMonths ? `${selected.pmTrigger.intervalMonths} mo` : "—"],
-                  ["PM: Distance", selected.pmTrigger.intervalKm ? `${selected.pmTrigger.intervalKm.toLocaleString()} km` : "—"],
-                  ["PM: Hours", selected.pmTrigger.intervalHours ? `${selected.pmTrigger.intervalHours.toLocaleString()} hrs` : "—"],
+                  [
+                    "PM: Time",
+                    selected.pmTrigger.intervalMonths
+                      ? `${selected.pmTrigger.intervalMonths} mo`
+                      : "—",
+                  ],
+                  [
+                    "PM: Distance",
+                    selected.pmTrigger.intervalKm
+                      ? `${selected.pmTrigger.intervalKm.toLocaleString()} km`
+                      : "—",
+                  ],
+                  [
+                    "PM: Hours",
+                    selected.pmTrigger.intervalHours
+                      ? `${selected.pmTrigger.intervalHours.toLocaleString()} hrs`
+                      : "—",
+                  ],
                   ["Downtime $/day", fmtUSD(selected.downtimeCostPerDay)],
                 ].map(([l, v]) => (
                   <label key={l} className="text-text-secondary">
                     {l}
-                    <input readOnly value={v as string} className="font-mono-data mt-1 w-full rounded-md border border-border bg-surface-2 px-2 py-1.5 text-foreground outline-none" />
+                    <input
+                      readOnly
+                      value={v as string}
+                      className="font-mono-data mt-1 w-full rounded-md border border-border bg-surface-2 px-2 py-1.5 text-foreground outline-none"
+                    />
                   </label>
                 ))}
-                <p className="col-span-2 text-[10px] text-text-muted">In-memory demo data — edits persist for the session only.</p>
+                <p className="col-span-2 text-mini text-text-muted">
+                  In-memory demo data — edits persist for the session only.
+                </p>
               </div>
             ) : (
               <p className="text-xs text-text-muted">Select a component from the tree.</p>
@@ -100,17 +148,35 @@ function ConfigurePage() {
 
       {tab === "Maintenance Rules" && (
         <div className="grid gap-4 md:grid-cols-2">
-          {COMPONENTS.filter((c) => c.pmTrigger.intervalMonths).slice(0, 8).map((c) => (
-            <GlassCard key={c.id}>
-              <p className="font-display text-sm font-semibold">{c.name}</p>
-              <div className="font-mono-data mt-3 space-y-2 text-xs">
-                <div className="flex justify-between"><span className="text-text-secondary">Rule 1 · Time</span><span>every {c.pmTrigger.intervalMonths} months</span></div>
-                {c.pmTrigger.intervalKm && <div className="flex justify-between"><span className="text-text-secondary">Rule 2 · Km</span><span>every {c.pmTrigger.intervalKm.toLocaleString()} km</span></div>}
-                {c.pmTrigger.intervalHours && <div className="flex justify-between"><span className="text-text-secondary">Rule 3 · Hours</span><span>every {c.pmTrigger.intervalHours.toLocaleString()} hrs</span></div>}
-                <div className="flex justify-between border-t border-border/40 pt-2"><span className="text-text-secondary">Logic</span><span className="text-primary">Whichever comes first</span></div>
-              </div>
-            </GlassCard>
-          ))}
+          {COMPONENTS.filter((c) => c.pmTrigger.intervalMonths)
+            .slice(0, 8)
+            .map((c) => (
+              <GlassCard key={c.id}>
+                <p className="font-display text-sm font-semibold">{c.name}</p>
+                <div className="font-mono-data mt-3 space-y-2 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Rule 1 · Time</span>
+                    <span>every {c.pmTrigger.intervalMonths} months</span>
+                  </div>
+                  {c.pmTrigger.intervalKm && (
+                    <div className="flex justify-between">
+                      <span className="text-text-secondary">Rule 2 · Km</span>
+                      <span>every {c.pmTrigger.intervalKm.toLocaleString()} km</span>
+                    </div>
+                  )}
+                  {c.pmTrigger.intervalHours && (
+                    <div className="flex justify-between">
+                      <span className="text-text-secondary">Rule 3 · Hours</span>
+                      <span>every {c.pmTrigger.intervalHours.toLocaleString()} hrs</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between border-t border-border/40 pt-2">
+                    <span className="text-text-secondary">Logic</span>
+                    <span className="text-primary">Whichever comes first</span>
+                  </div>
+                </div>
+              </GlassCard>
+            ))}
         </div>
       )}
 
@@ -122,18 +188,31 @@ function ConfigurePage() {
               <div key={s.standard} className="flex items-center gap-3 text-xs">
                 <span className="font-mono-data w-28 shrink-0 font-semibold">{s.standard}</span>
                 <span className="w-64 shrink-0 text-text-secondary">{s.name}</span>
-                <span className={cn("w-20 shrink-0 rounded px-1.5 py-0.5 text-center text-[10px] font-semibold", s.status === "Aligned" ? "bg-teal/15 text-teal" : s.status === "Partial" ? "bg-yellow/15 text-yellow" : "bg-surface-3 text-text-secondary")}>
+                <span
+                  className={cn(
+                    "w-20 shrink-0 rounded px-1.5 py-0.5 text-center text-mini font-semibold",
+                    s.status === "Aligned"
+                      ? "bg-teal/15 text-teal"
+                      : s.status === "Partial"
+                        ? "bg-yellow/15 text-yellow"
+                        : "bg-surface-3 text-text-secondary",
+                  )}
+                >
                   {s.status}
                 </span>
                 <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-3">
-                  <div className="h-full rounded-full bg-primary" style={{ width: `${s.coverage}%` }} />
+                  <div
+                    className="h-full rounded-full bg-primary"
+                    style={{ width: `${s.coverage}%` }}
+                  />
                 </div>
                 <span className="font-mono-data w-10 text-right">{s.coverage}%</span>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-[11px] text-text-muted">
-            This platform is designed in alignment with RAMS methodology (EN 50126), LCC methodology (IEC 60300), and Asset Management principles (ISO 55000).
+          <p className="mt-4 text-mini text-text-muted">
+            This platform is designed in alignment with RAMS methodology (EN 50126), LCC methodology
+            (IEC 60300), and Asset Management principles (ISO 55000).
           </p>
         </GlassCard>
       )}

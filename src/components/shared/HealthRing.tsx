@@ -20,7 +20,14 @@ export function HealthRing({
     <div className="flex flex-col items-center gap-2">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="-rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} className="stroke-surface-3" />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={r}
+            fill="none"
+            strokeWidth={stroke}
+            className="stroke-raised-2"
+          />
           <circle
             cx={size / 2}
             cy={size / 2}
@@ -31,14 +38,14 @@ export function HealthRing({
             strokeLinecap="round"
             strokeDasharray={c}
             strokeDashoffset={c * (1 - score / 100)}
-            style={{ transition: "stroke-dashoffset 0.8s cubic-bezier(0.34,1.56,0.64,1)", filter: `drop-shadow(0 0 6px ${ringColor}66)` }}
+            style={{ transition: "stroke-dashoffset 0.6s var(--motion-ease)" }}
           />
         </svg>
-        <span className="font-display absolute inset-0 flex items-center justify-center text-lg font-bold tabular-nums">
+        <span className="font-display text-display-lg text-fg-primary absolute inset-0 flex items-center justify-center tabular-nums">
           {Math.round(score)}%
         </span>
       </div>
-      {label ? <span className="text-xs text-text-secondary">{label}</span> : null}
+      {label ? <span className="text-body-sm text-fg-tertiary">{label}</span> : null}
     </div>
   );
 }

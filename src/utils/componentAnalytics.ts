@@ -44,12 +44,19 @@ export type ConsumableCategory =
 
 export function classifyConsumable(name: string): ConsumableCategory {
   const n = name.toLowerCase();
-  if (n.includes("filter") || n.includes("cartridge") || n.includes("element") || n.includes("separator")) return "Filters";
+  if (
+    n.includes("filter") ||
+    n.includes("cartridge") ||
+    n.includes("element") ||
+    n.includes("separator")
+  )
+    return "Filters";
   if (n.includes("grease")) return "Grease";
   if (n.includes("coolant")) return "Coolant";
   if (n.includes("refrigerant")) return "Refrigerant";
   if (n.includes("oil")) return "Engine & Lube Oil";
-  if (n.includes("gasket") || n.includes("seal") || n.includes("o-ring") || n.includes("fire ring")) return "Seals & Gaskets";
+  if (n.includes("gasket") || n.includes("seal") || n.includes("o-ring") || n.includes("fire ring"))
+    return "Seals & Gaskets";
   if (n.includes("brush") || n.includes("shoe") || n.includes("pad")) return "Brushes & Wear";
   if (n.includes("hose") || n.includes("line")) return "Hoses & Lines";
   return "Other";
@@ -63,7 +70,7 @@ export const CONSUMABLE_COLORS: Record<ConsumableCategory, string> = {
   Refrigerant: CHART_COLORS.green,
   "Seals & Gaskets": CHART_COLORS.purple,
   "Brushes & Wear": CHART_COLORS.red,
-  "Hoses & Lines": "#8B9DC3",
+  "Hoses & Lines": "var(--ref-gray-400)",
   Other: CHART_COLORS.textMuted,
 };
 
@@ -95,11 +102,15 @@ export function replacementByComponent(params: SimParams): ReplacementRow[] {
 
     if (parts.length > 0) {
       for (const p of parts) {
-        const effInterval = (p.replacementIntervalYears / profile.wearMultiplier) * params.maintenanceIntervalMultiplier;
+        const effInterval =
+          (p.replacementIntervalYears / profile.wearMultiplier) *
+          params.maintenanceIntervalMultiplier;
         const events = Math.max(0, Math.floor(N / effInterval));
         if (events === 0) continue;
-        const partCost = p.repairable && p.unitPriceReman > 0 ? p.unitPriceReman - p.coreCredit : p.unitPriceNew;
-        const perEvent = partCost * p.qtyPerComponent + p.laborHoursPerReplacement * params.laborRatePerHour;
+        const partCost =
+          p.repairable && p.unitPriceReman > 0 ? p.unitPriceReman - p.coreCredit : p.unitPriceNew;
+        const perEvent =
+          partCost * p.qtyPerComponent + p.laborHoursPerReplacement * params.laborRatePerHour;
         rows.push({
           id: p.id,
           name: p.name,
@@ -113,7 +124,8 @@ export function replacementByComponent(params: SimParams): ReplacementRow[] {
         });
       }
     } else {
-      const effLife = (comp.lifeYears / profile.wearMultiplier) * params.maintenanceIntervalMultiplier;
+      const effLife =
+        (comp.lifeYears / profile.wearMultiplier) * params.maintenanceIntervalMultiplier;
       const events = Math.max(0, Math.floor(N / effLife));
       if (events === 0) continue;
       const perEvent = comp.replacementCost * (1 + comp.laborCostPct / 100);
@@ -170,7 +182,11 @@ export function consumablesBreakdown(params: SimParams): ConsumableRow[] {
     const intervalMonths = comp.pmTrigger.intervalMonths ?? 12;
     const servicesPerYear = (12 / intervalMonths) * (1 / params.maintenanceIntervalMultiplier);
     const annual =
-      servicesPerYear * comp.consumable.qtyPerService * comp.consumable.unitCost * qtyMult * profile.maintenanceFreqMultiplier;
+      servicesPerYear *
+      comp.consumable.qtyPerService *
+      comp.consumable.unitCost *
+      qtyMult *
+      profile.maintenanceFreqMultiplier;
     add(classifyConsumable(comp.consumable.name), comp.consumable.name, annual);
   }
 
@@ -178,7 +194,9 @@ export function consumablesBreakdown(params: SimParams): ConsumableRow[] {
   if (hasParts) {
     for (const p of PARTS) {
       if (p.capitalized) continue; // capitalized handled as replacements
-      const effInterval = (p.replacementIntervalYears / profile.wearMultiplier) * params.maintenanceIntervalMultiplier;
+      const effInterval =
+        (p.replacementIntervalYears / profile.wearMultiplier) *
+        params.maintenanceIntervalMultiplier;
       if (effInterval <= 0) continue;
       const annual = (p.qtyPerComponent * p.unitPriceNew * qtyMult) / effInterval;
       add(classifyConsumable(p.name), p.name, annual);
@@ -190,7 +208,9 @@ export function consumablesBreakdown(params: SimParams): ConsumableRow[] {
     annualCost: v.annual,
     totalCost: v.annual * N,
     color: CONSUMABLE_COLORS[category],
-    items: Array.from(v.items, ([name, annualCost]) => ({ name, annualCost })).sort((a, b) => b.annualCost - a.annualCost),
+    items: Array.from(v.items, ([name, annualCost]) => ({ name, annualCost })).sort(
+      (a, b) => b.annualCost - a.annualCost,
+    ),
   }));
 
   return rows.sort((a, b) => b.annualCost - a.annualCost);
@@ -213,15 +233,22 @@ export function fuelAndFluids(params: SimParams): { rows: FuelFluidRow[]; annual
 
   // Fluids from the consumables model (oil, grease, coolant, filters)
   const cons = consumablesBreakdown(params);
-  const fluidCats: ConsumableCategory[] = ["Engine & Lube Oil", "Grease", "Coolant", "Refrigerant", "Filters"];
+  const fluidCats: ConsumableCategory[] = [
+    "Engine & Lube Oil",
+    "Grease",
+    "Coolant",
+    "Refrigerant",
+    "Filters",
+  ];
   const fluidRows = cons.filter((c) => fluidCats.includes(c.category));
 
-
-  const raw: { name: string; annual: number; color: string; note?: string }[] = fluidRows.map((f) => ({
-    name: f.category,
-    annual: f.annualCost,
-    color: f.color,
-  }));
+  const raw: { name: string; annual: number; color: string; note?: string }[] = fluidRows.map(
+    (f) => ({
+      name: f.category,
+      annual: f.annualCost,
+      color: f.color,
+    }),
+  );
 
   const annualTotal = raw.reduce((s, r) => s + r.annual, 0);
   const rows: FuelFluidRow[] = raw

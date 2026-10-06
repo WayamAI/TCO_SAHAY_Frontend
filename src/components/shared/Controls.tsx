@@ -12,8 +12,8 @@ export function SliderRow({ label, min, max, step = 1, value, display, onChange 
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between text-xs">
-        <span className="font-medium text-text-secondary">{label}</span>
-        <span className="font-mono-data text-primary tabular-nums">{display}</span>
+        <span className="text-fg-secondary font-medium">{label}</span>
+        <span className="font-mono-data text-fg-primary tabular-nums">{display}</span>
       </div>
       <input
         type="range"
@@ -28,7 +28,15 @@ export function SliderRow({ label, min, max, step = 1, value, display, onChange 
   );
 }
 
-export function ToggleRow({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
+export function ToggleRow({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
+}) {
   return (
     <button
       type="button"
@@ -37,15 +45,15 @@ export function ToggleRow({ label, value, onChange }: { label: string; value: bo
       onClick={() => onChange(!value)}
       className="flex w-full items-center justify-between py-1 text-xs"
     >
-      <span className="font-medium text-text-secondary">{label}</span>
+      <span className="text-fg-secondary font-medium">{label}</span>
       <span
         className={`flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors ${
-          value ? "bg-primary" : "bg-surface-3"
+          value ? "bg-action-primary" : "bg-action"
         }`}
       >
         <span
-          className={`h-4 w-4 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.3)] transition-transform duration-200 ${
-            value ? "translate-x-4" : "translate-x-0"
+          className={`h-4 w-4 rounded-full transition-transform duration-200 ${
+            value ? "bg-page translate-x-4" : "bg-fg-tertiary translate-x-0"
           }`}
         />
       </span>

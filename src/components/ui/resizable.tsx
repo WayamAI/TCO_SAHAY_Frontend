@@ -1,7 +1,7 @@
-import { GripVertical } from "lucide-react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 
 import { cn } from "@/lib/utils";
+import { AppIcon } from "@/components/icons/AppIcon";
 
 const ResizablePanelGroup = ({ className, ...props }: React.ComponentProps<typeof Group>) => (
   <Group
@@ -28,7 +28,7 @@ const ResizableHandle = ({
   >
     {withHandle && (
       <div className="z-10 flex h-4 w-3 items-center justify-center rounded-sm border bg-border">
-        <GripVertical className="h-2.5 w-2.5" />
+        <AppIcon name="drag" className="h-2.5 w-2.5" />
       </div>
     )}
   </Separator>

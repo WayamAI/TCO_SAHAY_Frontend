@@ -9,31 +9,59 @@ interface KPICardProps {
   suffix?: string;
   decimals?: number;
   sub?: ReactNode;
+  /**
+   * Accent for the card's top rule. The prop name and values are unchanged so
+   * the 8 existing call sites keep working; the treatment is now a 1px accent
+   * instead of the old coloured glow.
+   */
   glow?: "blue" | "teal" | "purple" | "yellow" | "orange" | "red";
   className?: string;
   delay?: number;
 }
 
-const glowClass: Record<string, string> = {
-  blue: "shadow-[0_0_24px_oklch(0.69_0.18_49/15%)] border-primary/25",
-  teal: "shadow-[0_0_24px_oklch(0.78_0.14_175/15%)] border-teal/25",
-  purple: "shadow-[0_0_24px_oklch(0.54_0.22_293/18%)] border-purple/30",
-  yellow: "shadow-[0_0_24px_oklch(0.77_0.16_70/15%)] border-yellow/25",
-  orange: "shadow-[0_0_24px_oklch(0.7_0.18_40/15%)] border-orange/25",
-  red: "shadow-[0_0_24px_oklch(0.63_0.21_25/15%)] border-red/25",
+const accentClass: Record<string, string> = {
+  blue: "before:bg-info-icon",
+  teal: "before:bg-success-icon",
+  purple: "before:bg-purple",
+  yellow: "before:bg-warning-icon",
+  orange: "before:bg-warning-icon",
+  red: "before:bg-error-icon",
 };
 
-export function KPICard({ label, value, prefix, suffix, decimals = 0, sub, glow = "blue", className, delay = 0 }: KPICardProps) {
+export function KPICard({
+  label,
+  value,
+  prefix,
+  suffix,
+  decimals = 0,
+  sub,
+  glow = "blue",
+  className,
+  delay = 0,
+}: KPICardProps) {
   return (
     <div
-      className={cn("glass-card animate-fade-up p-5", glowClass[glow], className)}
+      className={cn(
+        "glass-card animate-fade-up relative overflow-hidden p-4",
+        "before:absolute before:inset-x-0 before:top-0 before:h-px before:content-['']",
+        accentClass[glow],
+        className,
+      )}
       style={{ animationDelay: `${delay}ms` }}
     >
-      <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary">{label}</p>
-      <p className="font-display mt-2 text-2xl font-bold tabular-nums">
-        <CountUp end={value} duration={1.6} separator="," decimals={decimals} prefix={prefix} suffix={suffix} preserveValue />
+      <p className="text-label-sm text-fg-tertiary uppercase">{label}</p>
+      <p className="font-display text-display-metric text-fg-primary mt-2 tabular-nums">
+        <CountUp
+          end={value}
+          duration={1.6}
+          separator=","
+          decimals={decimals}
+          prefix={prefix}
+          suffix={suffix}
+          preserveValue
+        />
       </p>
-      {sub ? <div className="mt-1.5 text-xs text-text-secondary">{sub}</div> : null}
+      {sub ? <div className="text-body-sm text-fg-tertiary mt-1.5">{sub}</div> : null}
     </div>
   );
 }
