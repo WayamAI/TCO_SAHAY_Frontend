@@ -26,7 +26,7 @@ import { alpha, cn } from "@/lib/utils";
 export const Route = createFileRoute("/reliability")({
   head: () => ({
     meta: [
-      { title: "Reliability & Warranty Analytics | TCO Intelligence" },
+      { title: "Reliability & Warranty Analytics | SAHAY" },
       {
         name: "description",
         content:

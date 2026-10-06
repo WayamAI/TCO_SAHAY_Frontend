@@ -19,7 +19,7 @@ import { AppIcon } from "@/components/icons/AppIcon";
 export const Route = createFileRoute("/benchmark")({
   head: () => ({
     meta: [
-      { title: "Benchmark Arena | TCO Intelligence" },
+      { title: "Benchmark Arena | SAHAY" },
       {
         name: "description",
         content: "Competitor TCO leaderboard, radar comparison and savings calculator.",
