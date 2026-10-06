@@ -8,7 +8,8 @@ import {
   Legend,
   Tooltip,
 } from "recharts";
-import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
+import { PageHeader, PageBody } from "@/components/layout/page-header";
+import { Panel, SplitRow, KpiTile, StatusBadge } from "@/components/ui/primitives";
 import { ChartTooltip } from "@/components/shared/ChartTooltip";
 import { COMPETITORS, CHART_COLORS } from "@/data/syntheticData";
 import { fmtCompact } from "@/utils/formatters";
@@ -80,165 +81,266 @@ function Benchmark() {
     best: (c: (typeof COMPETITORS)[0]) => boolean;
   }[] = [
     {
-      label: "Purchase Cost",
+      label: "Purchase Price",
       get: (c) => fmtCompact(c.purchaseCost),
       best: (c) => c.purchaseCost === Math.min(...COMPETITORS.map((x) => x.purchaseCost)),
     },
     {
-      label: "20yr TCO",
+      label: "20-Year TCO",
       get: (c) => fmtCompact(c.tco20yr),
       best: (c) => c.tco20yr === Math.min(...COMPETITORS.map((x) => x.tco20yr)),
     },
     {
-      label: "Maint $/km",
+      label: "Maint Cost / km",
       get: (c) => `$${c.maintenanceCostPerKm.toFixed(2)}`,
       best: (c) =>
         c.maintenanceCostPerKm === Math.min(...COMPETITORS.map((x) => x.maintenanceCostPerKm)),
     },
     {
-      label: "PM Interval",
-      get: (c) => `${c.pmIntervalDays}d`,
+      label: "PM Cycle Interval",
+      get: (c) => `${c.pmIntervalDays} days`,
       best: (c) => c.pmIntervalDays === Math.max(...COMPETITORS.map((x) => x.pmIntervalDays)),
     },
     {
-      label: "Warranty",
-      get: (c) => `${c.warrantyYears}yr`,
+      label: "Standard Warranty",
+      get: (c) => `${c.warrantyYears} yrs`,
       best: (c) => c.warrantyYears === Math.max(...COMPETITORS.map((x) => x.warrantyYears)),
     },
     {
-      label: "MTBF Engine",
-      get: (c) => `${c.mtbfHoursEngine.toLocaleString()}hr`,
+      label: "Engine MTBF",
+      get: (c) => `${c.mtbfHoursEngine.toLocaleString()} hrs`,
       best: (c) => c.mtbfHoursEngine === Math.max(...COMPETITORS.map((x) => x.mtbfHoursEngine)),
     },
     {
-      label: "10yr Overhaul",
+      label: "10-Year Overhaul",
       get: (c) => fmtCompact(c.overhaul10YrCost),
       best: (c) => c.overhaul10YrCost === Math.min(...COMPETITORS.map((x) => x.overhaul10YrCost)),
     },
     {
-      label: "Brake Life",
-      get: (c) => `${c.brakeLifeYears}yr`,
+      label: "Brake Lining Life",
+      get: (c) => `${c.brakeLifeYears} yrs`,
       best: (c) => c.brakeLifeYears === Math.max(...COMPETITORS.map((x) => x.brakeLifeYears)),
     },
     {
-      label: "Availability",
+      label: "Availability Rating",
       get: (c) => `${c.availabilityPct}%`,
       best: (c) => c.availabilityPct === Math.max(...COMPETITORS.map((x) => x.availabilityPct)),
     },
     {
-      label: "CO₂/km",
-      get: (c) => `${Math.round(c.co2PerKm * 1000)}g`,
+      label: "CO₂ Emission / km",
+      get: (c) => `${Math.round(c.co2PerKm * 1000)} g/km`,
       best: (c) => c.co2PerKm === Math.min(...COMPETITORS.map((x) => x.co2PerKm)),
     },
   ];
 
   return (
-    <div className="space-y-5">
-      {/* Leaderboard */}
-      <div className="space-y-2">
-        {ranked.map((c, i) => (
-          <GlassCard
-            key={c.id}
-            className={cn(
-              "flex items-center gap-4 py-3",
-              c.isOwn && "glow-border border-primary/40",
-            )}
-            scanline={c.isOwn}
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <PageHeader
+        title="Benchmark Arena — Competitive OEM Intelligence"
+        description="Head-to-head lifecycle economics and technical comparison across major freight locomotive platforms: Wabtec, GE, Alstom, and Siemens."
+      />
+
+      <PageBody className="flex flex-col gap-4">
+        {/* KPI Tiles */}
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4 shrink-0">
+          <KpiTile
+            label="Wabtec Fleet Rank"
+            value="#1 Lowest TCO"
+            delta="$3.82M vs $4.10M peer avg"
+            tone="success"
+            hint="Lowest total lifecycle expenditure"
+          />
+          <KpiTile
+            label="Fleet Advantage (12 units)"
+            value="-$1.92M"
+            delta="Cumulative savings vs GE"
+            tone="success"
+            hint="Over 20-year horizon"
+          />
+          <KpiTile
+            label="Availability Differential"
+            value="+2.8%"
+            delta="94.2% vs 91.4% peer mean"
+            tone="info"
+            hint="Operational availability score"
+          />
+          <KpiTile
+            label="Maintenance $/km"
+            value="$0.17/km"
+            delta="-$0.04/km lower than peer avg"
+            tone="neutral"
+            hint="Consumables & PM labor combined"
+          />
+        </div>
+
+        {/* OEM Leaderboard Panel */}
+        <Panel
+          title="OEM Lifecycle TCO Leaderboard"
+          action={
+            <span className="text-caption text-quaternary">
+              Ranked by 20-Year Cumulative Cost
+            </span>
+          }
+        >
+          <div className="space-y-2.5">
+            {ranked.map((c, i) => (
+              <div
+                key={c.id}
+                className={cn(
+                  "flex items-center gap-4 rounded-lg border p-3 transition-colors",
+                  c.isOwn
+                    ? "border-default bg-action-selected shadow-sm"
+                    : "border-muted bg-container hover:border-default hover:bg-hover",
+                )}
+              >
+                <span className="font-mono-data w-6 text-center text-body-sm font-bold text-quaternary">
+                  0{i + 1}
+                </span>
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span
+                    className="h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{ background: colors[c.id] }}
+                  />
+                  <span className="text-body-sm font-semibold text-primary truncate">
+                    {c.name}
+                  </span>
+                  {c.isOwn && (
+                    <StatusBadge tone="success">Active Baseline</StatusBadge>
+                  )}
+                  {i === 0 && (
+                    <StatusBadge tone="info">Lowest TCO</StatusBadge>
+                  )}
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="text-right">
+                    <p className="font-mono-data text-body-sm font-bold" style={{ color: colors[c.id] }}>
+                      {fmtCompact(c.tco20yr)}
+                    </p>
+                    <p className="text-caption text-quaternary">20-yr total</p>
+                  </div>
+                  <div className="text-right hidden sm:block">
+                    <p className="font-mono-data text-body-sm font-semibold text-secondary">
+                      {c.availabilityPct}%
+                    </p>
+                    <p className="text-caption text-quaternary">Availability</p>
+                  </div>
+                  <div className="text-right hidden md:block">
+                    <p className="font-mono-data text-body-sm font-medium text-tertiary">
+                      ${c.maintenanceCostPerKm.toFixed(2)}
+                    </p>
+                    <p className="text-caption text-quaternary">Maint / km</p>
+                  </div>
+                  <div className="flex items-center gap-0.5 text-warning text-xs">
+                    {Array.from({ length: 5 }, (_, starIndex) => (
+                      <AppIcon
+                        key={starIndex}
+                        name="star"
+                        size="xs"
+                        className={
+                          starIndex < Math.round(c.reliabilityAt10yr / 20)
+                            ? "text-warning"
+                            : "text-muted opacity-30"
+                        }
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Panel>
+
+        {/* Bottom Split: Six-Axis Radar & Comparison Table */}
+        <SplitRow from="xl" ratio="1/1" className="shrink-0">
+          <Panel
+            title="Six-Axis Competitive Radar"
+            action={<span className="text-caption text-quaternary">Normalized score across 6 key metrics</span>}
           >
-            <span className="font-display w-8 text-center text-lg font-bold text-text-muted">
-              {i + 1}
-            </span>
-            {i === 0 && <AppIcon name="benchmark" size="lg" className="text-yellow" />}
-            <span className="font-display flex-1 font-semibold">{c.name}</span>
-            {i === 0 && (
-              <span className="rounded bg-teal/15 px-2 py-0.5 text-mini font-bold text-teal">
-                LOWEST TCO
-              </span>
-            )}
-            <span className="font-mono-data text-lg font-bold" style={{ color: colors[c.id] }}>
-              {fmtCompact(c.tco20yr)}
-            </span>
-            <span className="font-mono-data w-24 text-right text-xs text-text-secondary">
-              {c.availabilityPct}% avail
-            </span>
-            <span className="text-xs text-yellow">
-              {"★".repeat(Math.round(c.reliabilityAt10yr / 20))}
-              {"☆".repeat(5 - Math.round(c.reliabilityAt10yr / 20))}
-            </span>
-          </GlassCard>
-        ))}
-      </div>
-
-      <div className="grid gap-5 xl:grid-cols-2">
-        <GlassCard>
-          <SectionTitle className="mb-2">Six-Axis Radar</SectionTitle>
-          <ResponsiveContainer width="100%" height={340}>
-            <RadarChart data={radarData}>
-              <PolarGrid stroke={CHART_COLORS.grid} />
-              <PolarAngleAxis
-                dataKey="axis"
-                tick={{ fontSize: 10, fill: CHART_COLORS.textSecondary }}
-              />
-              <Tooltip content={<ChartTooltip formatter={(v) => `${v}`} />} />
-              <Legend wrapperStyle={{ fontSize: 10 }} />
-              {COMPETITORS.map((c) => (
-                <Radar
-                  key={c.id}
-                  name={c.name}
-                  dataKey={c.name}
-                  stroke={colors[c.id]}
-                  fill={colors[c.id]}
-                  fillOpacity={0.12}
-                  strokeWidth={c.isOwn ? 2.5 : 1.5}
-                />
-              ))}
-            </RadarChart>
-          </ResponsiveContainer>
-        </GlassCard>
-
-        <GlassCard>
-          <SectionTitle className="mb-3">Comparison Table</SectionTitle>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-border text-mini uppercase text-text-muted">
-                  <th className="py-2 pr-2">Metric</th>
+            <div className="h-[340px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart data={radarData}>
+                  <PolarGrid stroke={CHART_COLORS.grid} />
+                  <PolarAngleAxis
+                    dataKey="axis"
+                    tick={{ fontSize: 10, fill: CHART_COLORS.textSecondary }}
+                  />
+                  <Tooltip content={<ChartTooltip formatter={(v) => `${v}`} />} />
+                  <Legend wrapperStyle={{ fontSize: 10, paddingTop: 5 }} />
                   {COMPETITORS.map((c) => (
-                    <th key={c.id} className="py-2 pr-2" style={{ color: colors[c.id] }}>
-                      {c.name.split(" ")[0]}
-                      {c.isOwn ? " ★" : ""}
-                    </th>
+                    <Radar
+                      key={c.id}
+                      name={c.name}
+                      dataKey={c.name}
+                      stroke={colors[c.id]}
+                      fill={colors[c.id]}
+                      fillOpacity={0.12}
+                      strokeWidth={c.isOwn ? 2.5 : 1.5}
+                    />
                   ))}
-                </tr>
-              </thead>
-              <tbody className="font-mono-data">
-                {rows.map((r) => (
-                  <tr key={r.label} className="border-b border-border/40">
-                    <td className="py-1.5 pr-2 font-sans text-text-secondary">{r.label}</td>
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+          </Panel>
+
+          <Panel
+            title="Comprehensive Specification Matrix"
+            action={<span className="text-caption text-quaternary">★ marks top performer</span>}
+            padded={false}
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-left">
+                <thead className="bg-container border-b border-muted">
+                  <tr>
+                    <th className="px-3 py-2 text-caption font-medium tracking-[0.08em] text-quaternary uppercase">
+                      Metric / Property
+                    </th>
                     {COMPETITORS.map((c) => (
-                      <td
+                      <th
                         key={c.id}
-                        className={cn("py-1.5 pr-2", r.best(c) && "font-bold text-teal")}
+                        className="px-3 py-2 text-right text-caption font-semibold uppercase tracking-[0.08em]"
+                        style={{ color: colors[c.id] }}
                       >
-                        {r.get(c)}
-                        {r.best(c) ? " ★" : ""}
-                      </td>
+                        {c.name.split(" ")[0]}
+                        {c.isOwn ? " (Wabtec)" : ""}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-4 rounded-md border border-teal/25 bg-teal/10 p-3 text-xs">
-            <span className="font-semibold text-teal">Savings calculator:</span>{" "}
-            <span className="text-text-secondary">
-              Wabtec vs GE — over 20 years with 12 locomotives, the fleet saves{" "}
-            </span>
-            <span className="font-mono-data font-bold text-teal">$1.92M</span>
-            <span className="text-text-secondary"> in TCO.</span>
-          </div>
-        </GlassCard>
-      </div>
+                </thead>
+                <tbody className="divide-y divide-muted font-mono-data text-body-sm">
+                  {rows.map((r) => (
+                    <tr key={r.label} className="transition-colors hover:bg-hover">
+                      <td className="px-3 py-2 font-sans font-medium text-secondary">
+                        {r.label}
+                      </td>
+                      {COMPETITORS.map((c) => {
+                        const isBest = r.best(c);
+                        return (
+                          <td
+                            key={c.id}
+                            className={cn(
+                              "px-3 py-2 text-right",
+                              isBest ? "font-bold text-teal" : "text-tertiary",
+                            )}
+                          >
+                            {r.get(c)}
+                            {isBest ? " ★" : ""}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="p-3 border-t border-muted bg-container/30">
+              <p className="text-caption text-secondary">
+                <span className="font-semibold text-teal">Lifecycle Savings:</span> Over 20 years with 12 locomotives, Wabtec saves{" "}
+                <span className="font-mono-data font-bold text-teal">$1.92M</span> in total lifecycle cost compared to the closest competitor.
+              </p>
+            </div>
+          </Panel>
+        </SplitRow>
+      </PageBody>
     </div>
   );
 }
