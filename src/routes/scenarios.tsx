@@ -170,6 +170,7 @@ function ScenarioComparator() {
 
         {/* Main Combined Chart */}
         <Panel
+          className="shrink-0"
           title="Annual Operating Cost & Cumulative Lifecycle Projection"
           action={
             <div className="flex items-center gap-3 text-caption text-quaternary">
@@ -178,7 +179,7 @@ function ScenarioComparator() {
             </div>
           }
         >
-          <div className="h-[340px] w-full">
+          <div className="h-[340px] min-h-[340px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
@@ -271,7 +272,7 @@ function ScenarioComparator() {
               </span>
             }
           >
-            <div className="h-[300px] w-full">
+            <div className="h-[300px] min-h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={deltaData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
