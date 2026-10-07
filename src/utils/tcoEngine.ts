@@ -227,7 +227,10 @@ export function fleetTCO(
  * Probability accumulates with wear and is normalised against the part's own
  * replacement interval, so a 6-month filter climbs far faster than a 20-year motor.
  */
-export function failureTrend(part: Part, years: number): Array<{ year: number; probability: number }> {
+export function failureTrend(
+  part: Part,
+  years: number,
+): Array<{ year: number; probability: number }> {
   const shape = 1.6; // mild wear-out — matches the Weibull betas used elsewhere
   const scale = Math.max(0.5, part.replacementIntervalYears);
   return Array.from({ length: years + 1 }, (_, year) => {

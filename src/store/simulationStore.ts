@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import { DEFAULT_PARAMS, runTCOSimulation, type SimParams, type SimResult } from "@/utils/simulationEngine";
+import {
+  DEFAULT_PARAMS,
+  runTCOSimulation,
+  type SimParams,
+  type SimResult,
+} from "@/utils/simulationEngine";
 import { PREDEFINED_SCENARIOS, type Scenario } from "@/data/syntheticData";
 
 /** Annual duty cycle used to express the planning horizon as distance. */

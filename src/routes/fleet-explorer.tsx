@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
+import { PageHeader, PageBody } from "@/components/layout/page-header";
+import { Panel, SplitRow, KpiTile, StatusBadge, EmptyState } from "@/components/ui/primitives";
+import { FilterChips } from "@/components/ui/data-table";
 import {
   LOCOMOTIVES,
   SYSTEMS,
@@ -12,12 +14,12 @@ import {
 } from "@/data/syntheticData";
 import { weibullReliability } from "@/utils/simulationEngine";
 import { fmtUSD, fmtCompact } from "@/utils/formatters";
-import { cn } from "@/lib/utils";
+import { AppIcon } from "@/components/icons/AppIcon";
 
 export const Route = createFileRoute("/fleet-explorer")({
   head: () => ({
     meta: [
-      { title: "Fleet Explorer | TCO Intelligence" },
+      { title: "Fleet Explorer | SAHAY" },
       {
         name: "description",
         content:
@@ -34,7 +36,7 @@ interface RadialNode {
   id: string;
   name: string;
   kind: NodeKind;
-  ring: number; // 0 loco, 1 system, 2 assembly, 3 component
+  ring: number;
   angle: number;
   color: string;
   dim: boolean;
@@ -42,13 +44,6 @@ interface RadialNode {
   component?: Component;
 }
 
-/**
- * Lay the hierarchy out as nested angular sectors: each system owns a slice of
- * the circle, its assemblies split that slice, and components split their
- * assembly's slice. Laying children out by a flat global index (the previous
- * approach) put unrelated nodes on top of each other, which made most of them
- * impossible to click.
- */
 function buildRadial(locoId: string, search: string): RadialNode[] {
   const loco = LOCOMOTIVES.find((l) => l.id === locoId)!;
   const systems = SYSTEMS.filter((s) => s.locomotiveId === locoId);
@@ -66,12 +61,10 @@ function buildRadial(locoId: string, search: string): RadialNode[] {
 
   const q = search.trim().toLowerCase();
   const matches = (name: string) => !q || name.toLowerCase().includes(q);
-
   const sectorPer = 360 / Math.max(1, systems.length);
 
   systems.forEach((s, si) => {
     const sysStart = si * sectorPer;
-    // Centre the system node in its own sector.
     nodes.push({
       id: s.id,
       name: s.name,
@@ -100,18 +93,17 @@ function buildRadial(locoId: string, search: string): RadialNode[] {
       });
 
       const comps = COMPONENTS.filter((c) => c.assemblyId === a.id);
-      const compPer = asmPer / Math.max(1, comps.length);
+      const cmpPer = asmPer / Math.max(1, comps.length);
 
       comps.forEach((c, ci) => {
-        const dim = !matches(c.name);
         nodes.push({
           id: c.id,
           name: c.name,
           kind: "component",
           ring: 3,
-          angle: asmStart + ci * compPer + compPer / 2,
-          color: dim ? "var(--ref-gray-800)" : healthColor(c.healthScore),
-          dim,
+          angle: asmStart + ci * cmpPer + cmpPer / 2,
+          color: healthColor(c.healthScore),
+          dim: !matches(c.name),
           parentId: a.id,
           component: c,
         });
@@ -122,9 +114,9 @@ function buildRadial(locoId: string, search: string): RadialNode[] {
   return nodes;
 }
 
-function polar(cx: number, cy: number, r: number, angleDeg: number) {
-  const a = ((angleDeg - 90) * Math.PI) / 180;
-  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+function polar(cx: number, cy: number, r: number, deg: number) {
+  const rad = ((deg - 90) * Math.PI) / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
 const RING_R = [0, 70, 130, 195];
@@ -142,169 +134,187 @@ function FleetExplorer() {
   const cx = size / 2;
   const cy = size / 2;
 
+  const locoOptions = LOCOMOTIVES.map((l) => ({
+    id: l.id,
+    label: l.model.split(" ")[0],
+    count: l.fleetCount,
+  }));
+
   return (
-    <div className="grid gap-6 xl:grid-cols-5">
-      {/* Radial tree */}
-      <GlassCard className="xl:col-span-2">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          {LOCOMOTIVES.map((l) => (
-            <button
-              key={l.id}
-              onClick={() => {
-                setLocoId(l.id);
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <PageHeader
+        title="Fleet & Product Hierarchy Explorer"
+        description="Interactive radial topology mapping Locomotive → System → Assembly → Component with real-time health scores and Weibull reliability."
+        actions={
+          <div className="flex items-center gap-2">
+            <FilterChips
+              options={locoOptions}
+              value={locoId}
+              onChange={(id) => {
+                setLocoId(id);
                 setSelectedId(null);
               }}
-              className={cn(
-                "rounded-full border px-3 py-1 text-xs transition-colors",
-                locoId === l.id
-                  ? "border-stroke-active bg-raised-2 font-medium text-fg-primary"
-                  : "transition-ui border-default text-fg-tertiary hover:bg-raised-2 hover:text-fg-secondary",
-              )}
-            >
-              {l.model.split(" ")[0]}
-            </button>
-          ))}
-        </div>
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search components…"
-          className="mb-3 w-full rounded-md border border-border bg-surface-2 px-3 py-1.5 text-xs outline-none placeholder:text-text-muted focus:border-primary/50"
-        />
-        <svg viewBox={`0 0 ${size} ${size}`} className="w-full">
-          {/* ring guides */}
-          {RING_R.slice(1).map((r) => (
-            <circle
-              key={r}
-              cx={cx}
-              cy={cy}
-              r={r}
-              fill="none"
-              stroke={CHART_COLORS.grid}
-              strokeDasharray="2 4"
             />
-          ))}
-          {/* links */}
-          {nodes
-            .filter((n) => n.parentId)
-            .map((n) => {
-              const parent = nodes.find((p) => p.id === n.parentId);
-              if (!parent) return null;
-              const p1 = polar(cx, cy, RING_R[parent.ring], parent.angle);
-              const p2 = polar(cx, cy, RING_R[n.ring], n.angle);
-              return (
-                <line
-                  key={`l-${n.id}`}
-                  x1={p1.x}
-                  y1={p1.y}
-                  x2={p2.x}
-                  y2={p2.y}
-                  stroke={CHART_COLORS.grid}
-                  strokeWidth={1}
-                />
-              );
-            })}
-          {/* nodes */}
-          {nodes.map((n) => {
-            const pos = polar(cx, cy, RING_R[n.ring], n.angle);
-            const rNode = n.ring === 0 ? 22 : n.ring === 1 ? 10 : n.ring === 2 ? 6 : 8;
-            const isSel = n.id === selectedId;
-            return (
-              <g
-                key={n.id}
-                className="cursor-pointer"
-                onClick={() => setSelectedId(n.id)}
-                role="button"
-                tabIndex={0}
-                aria-label={n.name}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setSelectedId(n.id);
-                  }
-                }}
-              >
-                {/* Transparent hit target — the visible dots are far too small to click reliably */}
-                <circle cx={pos.x} cy={pos.y} r={Math.max(rNode + 7, 13)} fill="transparent" />
-                {isSel && (
-                  <circle
-                    cx={pos.x}
-                    cy={pos.y}
-                    r={rNode + 5}
-                    fill="none"
-                    stroke={CHART_COLORS.blue}
-                    strokeWidth={2}
-                    opacity={0.8}
-                  />
-                )}
-                <circle
-                  cx={pos.x}
-                  cy={pos.y}
-                  r={rNode}
-                  fill={n.color}
-                  opacity={n.dim ? 0.25 : n.ring === 2 ? 0.6 : 0.95}
-                  style={{ transition: "all 0.2s" }}
-                  className="pointer-events-none"
-                />
-                {n.ring === 0 && (
-                  <text
-                    x={pos.x}
-                    y={pos.y + 3}
-                    textAnchor="middle"
-                    fontSize={9}
-                    fill="var(--ref-black)"
-                    fontWeight={700}
-                    className="pointer-events-none"
-                  >
-                    {n.name.split(" ")[0]}
-                  </text>
-                )}
-                <title>{n.name}</title>
-              </g>
-            );
-          })}
-        </svg>
-        <div className="mt-2 flex flex-wrap gap-3 text-mini text-text-secondary">
-          <span>
-            <span className="mr-1 inline-block h-2 w-2 rounded-full bg-green" />
-            Health ≥85
-          </span>
-          <span>
-            <span className="mr-1 inline-block h-2 w-2 rounded-full bg-yellow" />
-            70–84
-          </span>
-          <span>
-            <span className="mr-1 inline-block h-2 w-2 rounded-full bg-orange" />
-            55–69
-          </span>
-          <span>
-            <span className="mr-1 inline-block h-2 w-2 rounded-full bg-red" />
-            &lt;55
-          </span>
-        </div>
-      </GlassCard>
+          </div>
+        }
+      />
 
-      {/* Detail panel */}
-      <div className="space-y-4 xl:col-span-3">
-        {selectedComp ? (
-          <ComponentDetail comp={selectedComp} />
-        ) : selected ? (
-          // Systems, assemblies and the locomotive itself have no reliability
-          // curve of their own — show what they contain and let the user drill in.
-          <GroupDetail node={selected} onSelect={setSelectedId} />
-        ) : (
-          <GlassCard className="flex h-full min-h-[400px] items-center justify-center">
-            <p className="animate-pulse-glow text-sm text-text-secondary">
-              Select any node on the radial tree — system, assembly or component
-            </p>
-          </GlassCard>
-        )}
-      </div>
+      <PageBody className="flex flex-col gap-4">
+        <SplitRow from="xl" ratio="1/1.4" className="min-h-0 flex-1">
+          {/* Radial Tree Panel */}
+          <Panel
+            title="Radial Topology & Hierarchy"
+            action={
+              <div className="flex items-center gap-2">
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Filter hierarchy nodes..."
+                  className="h-7 w-48 rounded-full border border-muted bg-action px-2.5 text-label-sm text-secondary outline-none placeholder:text-quaternary focus-visible:border-default focus-visible:ring-1 focus-visible:ring-active"
+                />
+              </div>
+            }
+          >
+            <div className="flex flex-col items-center justify-center p-2">
+              <svg viewBox={`0 0 ${size} ${size}`} className="max-h-[380px] w-full">
+                {/* Ring guides */}
+                {RING_R.slice(1).map((r) => (
+                  <circle
+                    key={r}
+                    cx={cx}
+                    cy={cy}
+                    r={r}
+                    fill="none"
+                    stroke={CHART_COLORS.grid}
+                    strokeDasharray="2 4"
+                  />
+                ))}
+                {/* Structural links */}
+                {nodes
+                  .filter((n) => n.parentId)
+                  .map((n) => {
+                    const parent = nodes.find((p) => p.id === n.parentId);
+                    if (!parent) return null;
+                    const p1 = polar(cx, cy, RING_R[parent.ring], parent.angle);
+                    const p2 = polar(cx, cy, RING_R[n.ring], n.angle);
+                    return (
+                      <line
+                        key={`link-${n.id}`}
+                        x1={p1.x}
+                        y1={p1.y}
+                        x2={p2.x}
+                        y2={p2.y}
+                        stroke={CHART_COLORS.grid}
+                        strokeWidth={1}
+                      />
+                    );
+                  })}
+                {/* Nodes */}
+                {nodes.map((n) => {
+                  const pos = polar(cx, cy, RING_R[n.ring], n.angle);
+                  const rNode = n.ring === 0 ? 22 : n.ring === 1 ? 10 : n.ring === 2 ? 6 : 8;
+                  const isSel = n.id === selectedId;
+                  return (
+                    <g
+                      key={n.id}
+                      className="cursor-pointer"
+                      onClick={() => setSelectedId(n.id)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={n.name}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedId(n.id);
+                        }
+                      }}
+                    >
+                      <circle
+                        cx={pos.x}
+                        cy={pos.y}
+                        r={Math.max(rNode + 7, 13)}
+                        fill="transparent"
+                      />
+                      {isSel && (
+                        <circle
+                          cx={pos.x}
+                          cy={pos.y}
+                          r={rNode + 5}
+                          fill="none"
+                          stroke={CHART_COLORS.blue}
+                          strokeWidth={2}
+                          opacity={0.8}
+                        />
+                      )}
+                      <circle
+                        cx={pos.x}
+                        cy={pos.y}
+                        r={rNode}
+                        fill={n.color}
+                        opacity={n.dim ? 0.25 : n.ring === 2 ? 0.6 : 0.95}
+                        style={{ transition: "all 0.2s" }}
+                        className="pointer-events-none"
+                      />
+                      {n.ring === 0 && (
+                        <text
+                          x={pos.x}
+                          y={pos.y + 3}
+                          textAnchor="middle"
+                          fontSize={9}
+                          fill="var(--ref-black)"
+                          fontWeight={700}
+                          className="pointer-events-none font-display"
+                        >
+                          {n.name.split(" ")[0]}
+                        </text>
+                      )}
+                      <title>{n.name}</title>
+                    </g>
+                  );
+                })}
+              </svg>
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-caption text-secondary border-t border-muted pt-3 w-full">
+                <span className="flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-success" />
+                  Health ≥85
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-yellow" />
+                  70–84
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-warning" />
+                  55–69
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-error" />
+                  &lt;55
+                </span>
+              </div>
+            </div>
+          </Panel>
+
+          {/* Node Detail Inspector */}
+          <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
+            {selectedComp ? (
+              <ComponentDetail comp={selectedComp} />
+            ) : selected ? (
+              <GroupDetail node={selected} onSelect={setSelectedId} />
+            ) : (
+              <Panel title="Node Inspector">
+                <EmptyState
+                  title="Select any node on the radial tree"
+                  detail="Inspect system aggregates, component Weibull reliability curves, RUL and cost breakdowns."
+                />
+              </Panel>
+            )}
+          </div>
+        </SplitRow>
+      </PageBody>
     </div>
   );
 }
 
-/** Summary for a locomotive / system / assembly node: what it holds, and its cost and health. */
 function GroupDetail({ node, onSelect }: { node: RadialNode; onSelect: (id: string) => void }) {
   const comps = useMemo(() => {
     if (node.kind === "assembly") return COMPONENTS.filter((c) => c.assemblyId === node.id);
@@ -312,7 +322,6 @@ function GroupDetail({ node, onSelect }: { node: RadialNode; onSelect: (id: stri
       const asmIds = ASSEMBLIES.filter((a) => a.systemId === node.id).map((a) => a.id);
       return COMPONENTS.filter((c) => asmIds.includes(c.assemblyId));
     }
-    // Locomotive — every component beneath it
     const sysIds = SYSTEMS.filter((s) => s.locomotiveId === node.id).map((s) => s.id);
     const asmIds = ASSEMBLIES.filter((a) => sysIds.includes(a.systemId)).map((a) => a.id);
     return COMPONENTS.filter((c) => asmIds.includes(c.assemblyId));
@@ -320,86 +329,83 @@ function GroupDetail({ node, onSelect }: { node: RadialNode; onSelect: (id: stri
 
   const replacementValue = comps.reduce((s, c) => s + c.replacementCost, 0);
   const avgHealth = comps.length ? comps.reduce((s, c) => s + c.healthScore, 0) / comps.length : 0;
-  const worst = [...comps].sort((a, b) => a.healthScore - b.healthScore).slice(0, 3);
+  const worst = [...comps].sort((a, b) => a.healthScore - b.healthScore).slice(0, 4);
 
   const kindLabel =
     node.kind === "loco" ? "Locomotive" : node.kind === "system" ? "System" : "Assembly";
 
   return (
     <>
-      <GlassCard scanline>
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-mini uppercase tracking-wider text-text-muted">{kindLabel}</p>
-            <h2 className="font-display text-lg font-bold">{node.name}</h2>
-          </div>
-          {comps.length > 0 && (
+      <Panel
+        title={`${kindLabel} Overview — ${node.name}`}
+        action={
+          comps.length > 0 ? (
             <span
-              className="font-mono-data rounded-md px-2 py-1 text-xs font-bold"
+              className="font-mono-data rounded-full px-2.5 py-0.5 text-caption font-bold"
               style={{ background: `${healthColor(avgHealth)}22`, color: healthColor(avgHealth) }}
             >
-              Avg health {avgHealth.toFixed(0)}%
+              Avg Health {avgHealth.toFixed(0)}%
             </span>
-          )}
+          ) : null
+        }
+      >
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <KpiTile label="Components" value={`${comps.length}`} tone="neutral" />
+          <KpiTile label="Replacement Value" value={fmtCompact(replacementValue)} tone="info" />
+          <KpiTile
+            label="Shortest Life"
+            value={comps.length ? `${Math.min(...comps.map((c) => c.lifeYears))} yrs` : "—"}
+            tone="warning"
+          />
         </div>
+      </Panel>
 
-        <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
-          {[
-            { l: "Components", v: `${comps.length}` },
-            { l: "Replacement Value", v: fmtCompact(replacementValue) },
-            {
-              l: "Shortest Life",
-              v: comps.length ? `${Math.min(...comps.map((c) => c.lifeYears))} yrs` : "—",
-            },
-          ].map((x) => (
-            <div key={x.l} className="rounded-lg bg-surface-2/70 p-3">
-              <p className="text-mini uppercase tracking-wider text-text-muted">{x.l}</p>
-              <p className="font-mono-data mt-1 text-sm font-semibold">{x.v}</p>
-            </div>
-          ))}
-        </div>
-      </GlassCard>
-
-      <GlassCard>
-        <SectionTitle className="mb-3">
-          Components — select one to inspect reliability and cost
-        </SectionTitle>
-        <div className="grid gap-1.5 sm:grid-cols-2">
+      <Panel title="Sub-Components Breakdown" padded={false}>
+        <div className="grid gap-1 p-2 sm:grid-cols-2 max-h-[300px] overflow-y-auto">
           {comps.map((c) => (
             <button
               key={c.id}
               onClick={() => onSelect(c.id)}
-              className="flex items-center gap-2 rounded-md bg-surface-2/60 px-2.5 py-2 text-left text-xs transition-colors hover:bg-surface-2"
+              className="flex items-center gap-2 rounded-lg border border-transparent p-2 text-left text-body-sm transition-colors hover:border-muted hover:bg-raised"
             >
               <span
-                className="h-2 w-2 shrink-0 rounded-full"
+                className="size-2 shrink-0 rounded-full"
                 style={{ background: healthColor(c.healthScore) }}
               />
-              <span className="flex-1 truncate">{c.name}</span>
-              <span className="font-mono-data text-mini text-text-secondary">{c.healthScore}%</span>
-              <span className="font-mono-data w-14 text-right text-mini text-text-muted">
+              <span className="flex-1 truncate text-primary">{c.name}</span>
+              <span className="font-mono-data text-caption text-secondary tabular">
+                {c.healthScore}%
+              </span>
+              <span className="font-mono-data text-right text-caption text-quaternary tabular">
                 {fmtCompact(c.replacementCost)}
               </span>
             </button>
           ))}
           {comps.length === 0 && (
-            <p className="text-xs text-text-muted">No components under this node.</p>
+            <div className="col-span-2 p-4 text-center text-caption text-quaternary">
+              No components nested under this node.
+            </div>
           )}
         </div>
 
         {worst.length > 0 && (
-          <>
-            <SectionTitle className="mb-2 mt-4">Lowest Health</SectionTitle>
-            <div className="space-y-1.5">
+          <div className="border-t border-muted p-4">
+            <h4 className="text-caption tracking-[0.08em] uppercase text-quaternary mb-3">
+              Lowest Health Watchlist
+            </h4>
+            <div className="space-y-2">
               {worst.map((c) => (
                 <div key={c.id}>
-                  <div className="flex justify-between text-mini">
-                    <span className="text-text-secondary">{c.name}</span>
-                    <span className="font-mono-data" style={{ color: healthColor(c.healthScore) }}>
+                  <div className="flex justify-between text-caption">
+                    <span className="text-secondary">{c.name}</span>
+                    <span
+                      className="font-mono-data tabular"
+                      style={{ color: healthColor(c.healthScore) }}
+                    >
                       {c.healthScore}%
                     </span>
                   </div>
-                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-3">
+                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-raised-2">
                     <div
                       className="h-full rounded-full"
                       style={{ width: `${c.healthScore}%`, background: healthColor(c.healthScore) }}
@@ -408,9 +414,9 @@ function GroupDetail({ node, onSelect }: { node: RadialNode; onSelect: (id: stri
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
-      </GlassCard>
+      </Panel>
     </>
   );
 }
@@ -428,17 +434,17 @@ function ComponentDetail({ comp }: { comp: Component }) {
 
   const triggers = [
     {
-      label: "Calendar",
+      label: "Calendar Trigger",
       value: comp.pmTrigger.intervalMonths ? `${comp.pmTrigger.intervalMonths} months` : "—",
       pct: 62,
     },
     {
-      label: "Distance",
+      label: "Distance Interval",
       value: comp.pmTrigger.intervalKm ? `${comp.pmTrigger.intervalKm.toLocaleString()} km` : "—",
       pct: 48,
     },
     {
-      label: "Hours",
+      label: "Operating Hours",
       value: comp.pmTrigger.intervalHours
         ? `${comp.pmTrigger.intervalHours.toLocaleString()} hrs`
         : "—",
@@ -446,22 +452,16 @@ function ComponentDetail({ comp }: { comp: Component }) {
     },
   ];
 
-  // Semicircle gauge geometry
   const gaugeR = 60;
   const gaugeC = Math.PI * gaugeR;
 
   return (
     <>
-      <GlassCard scanline>
-        <div className="flex items-start justify-between">
-          <div>
-            <h2 className="font-display text-lg font-bold">{comp.name}</h2>
-            <p className="text-xs text-text-secondary">
-              {comp.category} · Impact: {comp.failureImpact}
-            </p>
-          </div>
+      <Panel
+        title={`Component Specification — ${comp.name}`}
+        action={
           <span
-            className="font-mono-data rounded-md px-2 py-1 text-xs font-bold"
+            className="font-mono-data rounded-full px-2.5 py-0.5 text-caption font-bold"
             style={{
               background: `${healthColor(comp.healthScore)}22`,
               color: healthColor(comp.healthScore),
@@ -469,33 +469,36 @@ function ComponentDetail({ comp }: { comp: Component }) {
           >
             Health {comp.healthScore}%
           </span>
+        }
+      >
+        <div className="mb-3">
+          <p className="text-body-sm text-secondary">
+            {comp.category} · Failure Impact Severity:{" "}
+            <strong className="text-primary">{comp.failureImpact}</strong>
+          </p>
         </div>
-
-        <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-          {[
-            { l: "Purchase", v: fmtUSD(comp.purchaseCost) },
-            { l: "Replacement", v: fmtUSD(comp.replacementCost) },
-            { l: "Design Life", v: `${comp.lifeYears} yrs` },
-            { l: "MTBF / MTTR", v: `${(comp.mtbfHours / 1000).toFixed(0)}k / ${comp.mttrHours}h` },
-          ].map((x) => (
-            <div key={x.l} className="rounded-lg bg-surface-2/70 p-3">
-              <p className="text-mini uppercase tracking-wider text-text-muted">{x.l}</p>
-              <p className="font-mono-data mt-1 text-sm font-semibold">{x.v}</p>
-            </div>
-          ))}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <KpiTile label="Purchase Cost" value={fmtUSD(comp.purchaseCost)} tone="neutral" />
+          <KpiTile label="Replace Cost" value={fmtUSD(comp.replacementCost)} tone="info" />
+          <KpiTile label="Design Life" value={`${comp.lifeYears} yrs`} tone="neutral" />
+          <KpiTile
+            label="MTBF / MTTR"
+            value={`${(comp.mtbfHours / 1000).toFixed(0)}k / ${comp.mttrHours}h`}
+            tone="warning"
+          />
         </div>
-      </GlassCard>
+      </Panel>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <GlassCard>
-          <SectionTitle className="mb-3">Weibull Reliability</SectionTitle>
-          <div className="flex items-center justify-center">
+      <SplitRow from="lg" ratio="1/1">
+        {/* Reliability & RUL Gauge Panel */}
+        <Panel title="Weibull Reliability & RUL">
+          <div className="flex flex-col items-center justify-center py-2">
             <svg width={160} height={95} viewBox="0 0 160 95">
               <path
                 d="M 20 85 A 60 60 0 0 1 140 85"
                 fill="none"
                 strokeWidth={12}
-                className="stroke-surface-3"
+                className="stroke-muted"
                 strokeLinecap="round"
               />
               <path
@@ -524,40 +527,52 @@ function ComponentDetail({ comp }: { comp: Component }) {
               </text>
               <text x={80} y={90} textAnchor="middle" fontSize={9} fill="var(--ref-gray-500)">
                 β={comp.weibullBeta} · η={comp.weibullEta.toLocaleString()}h ·{" "}
-                {comp.currentHours.toLocaleString()}h run
+                {comp.currentHours.toLocaleString()}h
               </text>
             </svg>
           </div>
 
-          <SectionTitle className="mb-2 mt-4">Remaining Useful Life</SectionTitle>
-          <div className="h-3 overflow-hidden rounded-full bg-surface-3">
-            <div
-              className="h-full rounded-full"
-              style={{
-                width: `${rulPct}%`,
-                background: healthColor(rulPct),
-                transition: "width 0.6s",
-              }}
-            />
+          <div className="mt-4 border-t border-muted pt-3">
+            <div className="flex justify-between text-caption mb-1">
+              <span className="text-quaternary uppercase tracking-[0.08em]">
+                Remaining Useful Life
+              </span>
+              <span className="font-mono-data text-secondary tabular">
+                {comp.rulYears} yrs ({rulPct.toFixed(0)}%)
+              </span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-raised-2">
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: `${rulPct}%`,
+                  background: healthColor(rulPct),
+                  transition: "width 0.6s",
+                }}
+              />
+            </div>
+            <p className="font-mono-data text-caption text-quaternary mt-1.5">
+              Confidence level: {comp.rulConfidence}% · based on fleet degradation model
+            </p>
           </div>
-          <p className="font-mono-data mt-1.5 text-xs text-text-secondary">
-            {comp.rulYears} years remaining — confidence {comp.rulConfidence}%
-          </p>
-        </GlassCard>
+        </Panel>
 
-        <GlassCard>
-          <SectionTitle className="mb-3">Maintenance Triggers (whichever first)</SectionTitle>
+        {/* Maintenance Triggers & Dependencies */}
+        <Panel title="Triggers & Dependencies">
           <div className="space-y-3">
+            <h4 className="text-caption tracking-[0.08em] uppercase text-quaternary">
+              Maintenance Triggers (whichever first)
+            </h4>
             {triggers.map((t) => (
               <div key={t.label}>
-                <div className="flex justify-between text-xs">
-                  <span className="text-text-secondary">{t.label}</span>
-                  <span className="font-mono-data">{t.value}</span>
+                <div className="flex justify-between text-body-sm">
+                  <span className="text-secondary">{t.label}</span>
+                  <span className="font-mono-data tabular text-primary">{t.value}</span>
                 </div>
                 {t.value !== "—" && (
-                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-3">
+                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-raised-2">
                     <div
-                      className="h-full rounded-full bg-primary"
+                      className="h-full rounded-full bg-action-primary"
                       style={{ width: `${t.pct}%` }}
                     />
                   </div>
@@ -566,36 +581,26 @@ function ComponentDetail({ comp }: { comp: Component }) {
             ))}
           </div>
 
-          <SectionTitle className="mb-2 mt-5">Dependency Chain</SectionTitle>
-          <div className="space-y-1.5 text-xs">
+          <div className="mt-5 border-t border-muted pt-3 space-y-2">
+            <h4 className="text-caption tracking-[0.08em] uppercase text-quaternary">
+              Dependency Chain
+            </h4>
             {dependsOn.length > 0 && (
-              <p className="text-text-secondary">
-                Depends on: <span className="text-foreground">{dependsOn.join(", ")}</span>
+              <p className="text-body-sm text-secondary">
+                Depends on: <span className="text-primary font-medium">{dependsOn.join(", ")}</span>
               </p>
             )}
             {affected.length > 0 ? (
-              <p className="text-text-secondary">
-                Failure cascades to: <span className="text-orange">{affected.join(", ")}</span>
+              <p className="text-body-sm text-secondary">
+                Failure cascades to:{" "}
+                <span className="text-warning font-medium">{affected.join(", ")}</span>
               </p>
             ) : (
-              <p className="text-text-muted">No downstream cascade on failure</p>
+              <p className="text-caption text-quaternary">No downstream cascade on failure</p>
             )}
           </div>
-
-          <SectionTitle className="mb-2 mt-5">Warranty & Downtime</SectionTitle>
-          <div className="flex h-4 overflow-hidden rounded-md">
-            <div
-              className="bg-primary/70"
-              style={{ width: `${(comp.warrantyYears / 20) * 100}%` }}
-              title="Warranty"
-            />
-            <div className="flex-1 bg-surface-3" title="Owner cost" />
-          </div>
-          <p className="font-mono-data mt-1.5 text-xs text-text-secondary">
-            {comp.warrantyYears}yr warranty · downtime {fmtCompact(comp.downtimeCostPerDay)}/day
-          </p>
-        </GlassCard>
-      </div>
+        </Panel>
+      </SplitRow>
     </>
   );
 }

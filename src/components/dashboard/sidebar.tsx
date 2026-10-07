@@ -82,7 +82,11 @@ export function Sidebar({ currentTab = "dashboard", onTabChange, className }: Si
     >
       {/* Top brand / logo */}
       <div className="flex flex-col items-center gap-6 w-full">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-b from-[#222527] to-[#141617] border border-white/[0.12] flex items-center justify-center text-white shadow-inner">
+        <div
+          className="w-10 h-10 rounded-xl bg-gradient-to-b from-[#222527] to-[#141617] border border-white/[0.12] flex items-center justify-center text-white shadow-inner"
+          aria-label="SAHAY Brand Mark"
+          role="img"
+        >
           <Shield size={20} className="text-white/90" />
         </div>
 

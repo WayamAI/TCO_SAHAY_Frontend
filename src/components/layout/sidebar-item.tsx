@@ -1,10 +1,11 @@
 import React from "react";
-import type { LucideIcon } from "lucide-react";
+import { AppIcon } from "@/components/icons/AppIcon";
+import type { IconName } from "@/components/icons/registry";
 import { cn } from "@/lib/utils";
 
 export interface SidebarItemProps {
-  /** The Lucide icon component to render */
-  icon: LucideIcon | React.ComponentType<{ className?: string; size?: number | string }>;
+  /** The semantic icon name from registry or custom component */
+  icon: IconName | React.ComponentType<{ className?: string; size?: number | string }>;
   /** Label for accessibility, tooltip, and screen readers */
   label: string;
   /** Whether this navigation item is currently selected/active */
@@ -19,17 +20,19 @@ export interface SidebarItemProps {
 
 /**
  * Reusable sidebar item component.
- * 36-40px circular/strongly rounded button with distinct active, inactive,
- * and hover states strictly conforming to Prompt 2 telemetry aesthetic.
+ * 36-40px circular button with distinct active, inactive,
+ * and hover states strictly conforming to Prompt 5 iconography and token system.
  */
 export function SidebarItem({
-  icon: Icon,
+  icon,
   label,
   active = false,
   onClick,
   className,
   badge,
 }: SidebarItemProps) {
+  const iconColor = active ? "text-on-color" : "text-icon-tertiary group-hover:text-icon-secondary";
+
   return (
     <button
       type="button"
@@ -45,13 +48,18 @@ export function SidebarItem({
         className,
       )}
     >
-      <Icon
-        size={18}
-        className={cn(
-          "transition-colors duration-150 shrink-0",
-          active ? "text-on-color" : "text-icon-tertiary group-hover:text-icon-secondary",
-        )}
-      />
+      {typeof icon === "string" ? (
+        <AppIcon
+          name={icon}
+          size="lg"
+          className={cn("transition-colors duration-150 shrink-0", iconColor)}
+        />
+      ) : (
+        React.createElement(icon, {
+          size: 18,
+          className: cn("transition-colors duration-150 shrink-0", iconColor),
+        })
+      )}
 
       {badge !== undefined && (
         <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-error px-1 text-[9px] font-bold text-on-color shadow-xs">

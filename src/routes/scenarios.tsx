@@ -11,7 +11,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
+import { PageHeader, PageBody } from "@/components/layout/page-header";
+import { Panel, SplitRow, StatusBadge } from "@/components/ui/primitives";
 import { ChartTooltip } from "@/components/shared/ChartTooltip";
 import { useSimulationStore } from "@/store/simulationStore";
 import { PREDEFINED_SCENARIOS, CHART_COLORS, type Scenario } from "@/data/syntheticData";
@@ -22,7 +23,7 @@ import { AppIcon } from "@/components/icons/AppIcon";
 export const Route = createFileRoute("/scenarios")({
   head: () => ({
     meta: [
-      { title: "Scenario Comparator | TCO Intelligence" },
+      { title: "Scenario Comparator | SAHAY" },
       {
         name: "description",
         content: "Compare up to three TCO scenarios side by side with synchronized charts.",
@@ -33,7 +34,6 @@ export const Route = createFileRoute("/scenarios")({
 });
 
 function scenarioYearly(s: Scenario) {
-  // Simple deterministic yearly cost derived from scenario TCO
   const annual = (s.tco - 2800000) / s.planningHorizonYears;
   return Array.from({ length: 20 }, (_, i) => {
     const t = i + 1;
@@ -74,189 +74,232 @@ function ScenarioComparator() {
   const kpiRows: { label: string; get: (s: Scenario) => string }[] = [
     { label: "Total TCO", get: (s) => fmtCompact(s.tco) },
     { label: "Annual O&M", get: (s) => fmtCompact((s.tco - 2800000) / s.planningHorizonYears) },
-    { label: "Cost/km", get: (s) => `$${(s.tco / (240000 * 20)).toFixed(2)}` },
+    { label: "Cost / km", get: (s) => `$${(s.tco / (240000 * 20)).toFixed(2)}` },
     { label: "Labor Rate", get: (s) => `$${s.laborRate}/hr` },
     { label: "Maint Interval ×", get: (s) => `${s.maintenanceIntervalMultiplier}×` },
     { label: "Failure Rate ×", get: (s) => `${s.failureRateMultiplier}×` },
     { label: "Extra Warranty", get: (s) => `${s.warrantyExtendedYears} yr` },
-    { label: "Inflation", get: (s) => (s.inflationEnabled ? "On" : "Off") },
-    { label: "Downtime Costs", get: (s) => (s.includeDowntime ? "Included" : "—") },
-    { label: "Profile", get: (s) => s.operatingProfile.replace("-", " ") },
+    { label: "Inflation", get: (s) => (s.inflationEnabled ? "Active" : "Disabled") },
+    { label: "Downtime Costs", get: (s) => (s.includeDowntime ? "Included" : "Excluded") },
+    { label: "Operating Profile", get: (s) => s.operatingProfile.replace("-", " ") },
   ];
 
   return (
-    <div className="space-y-5">
-      {/* Predefined pills */}
-      <div className="flex flex-wrap gap-2">
-        {PREDEFINED_SCENARIOS.map((s) => {
-          const active = comparisonScenarios.some((c) => c.id === s.id);
-          return (
-            <button
-              key={s.id}
-              onClick={() => (active ? removeComparisonScenario(s.id) : addComparisonScenario(s))}
-              className={cn(
-                "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all",
-                active ? "font-semibold" : "opacity-60 hover:opacity-100",
-              )}
-              style={{
-                borderColor: alpha(s.color, 40),
-                background: active ? alpha(s.color, 13) : "transparent",
-                color: s.color,
-              }}
-            >
-              {s.name}
-            </button>
-          );
-        })}
-        <span className="self-center text-mini text-text-muted">max 3 active</span>
-      </div>
-
-      {/* Active slots */}
-      <div className="grid gap-4 md:grid-cols-3">
-        {comparisonScenarios.map((s) => (
-          <GlassCard key={s.id} className="relative" scanline>
-            <button
-              onClick={() => removeComparisonScenario(s.id)}
-              className="absolute right-3 top-3 text-text-muted hover:text-foreground"
-            >
-              <AppIcon name="close" size="sm" />
-            </button>
-            <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full" style={{ background: s.color }} />
-              <p className="font-display font-semibold">{s.name}</p>
-              {s.id === best.id && <AppIcon name="star" size="sm" className="text-success" />}
-            </div>
-            <p
-              className="font-display font-mono-data mt-2 text-2xl font-bold"
-              style={{ color: s.color }}
-            >
-              {fmtCompact(s.tco)}
-            </p>
-            <p className="font-mono-data mt-1 text-mini text-text-secondary">
-              {s.planningHorizonYears}yr · {s.discountRate}% · ${s.laborRate}/hr ·{" "}
-              {s.operatingProfile.replace("-", " ")}
-            </p>
-          </GlassCard>
-        ))}
-        {comparisonScenarios.length < 3 && (
-          <div className="glass-card flex min-h-[120px] items-center justify-center border-dashed text-xs text-text-muted">
-            Select a scenario pill above to add ({3 - comparisonScenarios.length} slot
-            {comparisonScenarios.length === 2 ? "" : "s"} free)
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <PageHeader
+        title="Scenario Comparator — Multi-Track Evaluation"
+        description="Side-by-side parametric trade-off comparison. Evaluate up to three operational, maintenance, or inflation models concurrently."
+        actions={
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-caption text-tertiary mr-1">Predefined Scenarios:</span>
+            {PREDEFINED_SCENARIOS.map((s) => {
+              const active = comparisonScenarios.some((c) => c.id === s.id);
+              return (
+                <button
+                  key={s.id}
+                  onClick={() =>
+                    active ? removeComparisonScenario(s.id) : addComparisonScenario(s)
+                  }
+                  className={cn(
+                    "rounded-full border px-3 py-1 text-label-sm font-medium transition-all",
+                    active
+                      ? "border-default bg-action-selected text-primary shadow-sm"
+                      : "border-muted bg-container text-tertiary hover:border-default hover:text-secondary",
+                  )}
+                >
+                  <span
+                    className="mr-1.5 inline-block h-2 w-2 rounded-full"
+                    style={{ background: s.color }}
+                  />
+                  {s.name}
+                </button>
+              );
+            })}
           </div>
-        )}
-      </div>
+        }
+      />
 
-      {/* Comparison chart */}
-      <GlassCard className="dot-grid">
-        <SectionTitle className="mb-3">Annual Cost + Cumulative Overlay</SectionTitle>
-        <ResponsiveContainer width="100%" height={340}>
-          <ComposedChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
-            <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={11} />
-            <YAxis
-              yAxisId="l"
-              stroke={CHART_COLORS.textMuted}
-              fontSize={11}
-              tickFormatter={(v: number) => fmtCompact(v)}
-            />
-            <YAxis
-              yAxisId="r"
-              orientation="right"
-              stroke={CHART_COLORS.textMuted}
-              fontSize={11}
-              tickFormatter={(v: number) => fmtCompact(v)}
-            />
-            <Tooltip content={<ChartTooltip />} />
-            <Legend wrapperStyle={{ fontSize: 11 }} />
-            {comparisonScenarios.map((s) => (
-              <Bar key={s.id} yAxisId="l" dataKey={s.name} fill={s.color} fillOpacity={0.75} />
-            ))}
-            {comparisonScenarios.map((s) => (
-              <Line
-                key={`${s.id}-cum`}
-                yAxisId="r"
-                type="monotone"
-                dataKey={`${s.name} cum`}
-                stroke={s.color}
-                strokeWidth={2}
-                dot={false}
-                strokeDasharray="5 3"
-              />
-            ))}
-          </ComposedChart>
-        </ResponsiveContainer>
-      </GlassCard>
+      <PageBody className="flex flex-col gap-4">
+        {/* Active Comparison Cards (up to 3) */}
+        <div className="grid gap-3 md:grid-cols-3 shrink-0">
+          {comparisonScenarios.map((s) => {
+            const isBest = s.id === best.id;
+            return (
+              <Panel
+                key={s.id}
+                title={
+                  <div className="flex items-center gap-2">
+                    <span className="h-2.5 w-2.5 rounded-full" style={{ background: s.color }} />
+                    <span className="text-body-sm font-semibold text-primary">{s.name}</span>
+                    {isBest && <StatusBadge tone="success">Optimal</StatusBadge>}
+                  </div>
+                }
+                action={
+                  <button
+                    onClick={() => removeComparisonScenario(s.id)}
+                    className="text-tertiary transition-colors hover:text-primary"
+                    title="Remove scenario"
+                  >
+                    <AppIcon name="close" size="xs" />
+                  </button>
+                }
+              >
+                <div>
+                  <p
+                    className="font-display font-mono-data text-2xl font-bold"
+                    style={{ color: s.color }}
+                  >
+                    {fmtCompact(s.tco)}
+                  </p>
+                  <p className="font-mono-data mt-1 text-caption text-tertiary">
+                    {s.planningHorizonYears}yr horizon · {s.discountRate}% discount · ${s.laborRate}
+                    /hr · {s.operatingProfile.replace("-", " ")}
+                  </p>
+                </div>
+              </Panel>
+            );
+          })}
+          {comparisonScenarios.length < 3 && (
+            <div className="flex min-h-[110px] items-center justify-center rounded-lg border border-dashed border-muted bg-container/40 p-4 text-caption text-quaternary text-center">
+              Click a scenario pill in the header to activate ({3 - comparisonScenarios.length} free
+              slot
+              {comparisonScenarios.length === 2 ? "" : "s"})
+            </div>
+          )}
+        </div>
 
-      <div className="grid gap-5 xl:grid-cols-2">
-        {/* KPI grid */}
-        <GlassCard>
-          <SectionTitle className="mb-3">KPI & Parameter Comparison</SectionTitle>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-border text-mini uppercase text-text-muted">
-                  <th className="py-2 pr-3">Metric</th>
-                  {comparisonScenarios.map((s) => (
-                    <th key={s.id} className="py-2 pr-3" style={{ color: s.color }}>
-                      {s.name} {s.id === best.id ? "★" : ""}
+        {/* Main Combined Chart */}
+        <Panel
+          className="shrink-0"
+          title="Annual Operating Cost & Cumulative Lifecycle Projection"
+          action={
+            <div className="flex items-center gap-3 text-caption text-quaternary">
+              <span>Bars: Annual Run-rate</span>
+              <span>Dashed: Cumulative Horizon</span>
+            </div>
+          }
+        >
+          <div className="h-[340px] min-h-[340px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
+                <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={11} />
+                <YAxis
+                  yAxisId="l"
+                  stroke={CHART_COLORS.textMuted}
+                  fontSize={11}
+                  tickFormatter={(v: number) => fmtCompact(v)}
+                />
+                <YAxis
+                  yAxisId="r"
+                  orientation="right"
+                  stroke={CHART_COLORS.textMuted}
+                  fontSize={11}
+                  tickFormatter={(v: number) => fmtCompact(v)}
+                />
+                <Tooltip content={<ChartTooltip />} />
+                <Legend wrapperStyle={{ fontSize: 11, paddingTop: 10 }} />
+                {comparisonScenarios.map((s) => (
+                  <Bar key={s.id} yAxisId="l" dataKey={s.name} fill={s.color} fillOpacity={0.7} />
+                ))}
+                {comparisonScenarios.map((s) => (
+                  <Line
+                    key={`${s.id}-cum`}
+                    yAxisId="r"
+                    type="monotone"
+                    dataKey={`${s.name} cum`}
+                    stroke={s.color}
+                    strokeWidth={2}
+                    dot={false}
+                    strokeDasharray="5 3"
+                  />
+                ))}
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+        </Panel>
+
+        {/* Bottom Split: Metric Grid and Delta Chart */}
+        <SplitRow from="xl" ratio="1/1" className="shrink-0">
+          <Panel title="Parameter & Financial Delta Comparison" padded={false}>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-left">
+                <thead className="bg-container border-b border-muted">
+                  <tr>
+                    <th className="px-3 py-2 text-caption font-medium tracking-[0.08em] text-quaternary uppercase">
+                      Metric / Variable
                     </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="font-mono-data">
-                {kpiRows.map((row) => (
-                  <tr key={row.label} className="border-b border-border/40">
-                    <td className="py-2 pr-3 font-sans text-text-secondary">{row.label}</td>
                     {comparisonScenarios.map((s) => (
-                      <td
+                      <th
                         key={s.id}
-                        className={cn(
-                          "py-2 pr-3",
-                          s.id === best.id &&
-                            row.label === "Total TCO" &&
-                            "rounded bg-teal/10 text-teal",
-                        )}
+                        className="px-3 py-2 text-right text-caption font-semibold uppercase tracking-[0.08em]"
+                        style={{ color: s.color }}
                       >
-                        {row.get(s)}
-                      </td>
+                        {s.name} {s.id === best.id ? "★" : ""}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </GlassCard>
+                </thead>
+                <tbody className="divide-y divide-muted font-mono-data text-body-sm">
+                  {kpiRows.map((row) => (
+                    <tr key={row.label} className="transition-colors hover:bg-hover">
+                      <td className="px-3 py-2 font-sans font-medium text-secondary">
+                        {row.label}
+                      </td>
+                      {comparisonScenarios.map((s) => (
+                        <td
+                          key={s.id}
+                          className={cn(
+                            "px-3 py-2 text-right text-primary",
+                            s.id === best.id && row.label === "Total TCO" && "font-bold text-teal",
+                          )}
+                        >
+                          {row.get(s)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Panel>
 
-        {/* Delta chart */}
-        <GlassCard>
-          <SectionTitle className="mb-3">
-            Cumulative Delta vs {comparisonScenarios[0]?.name ?? "Baseline"}
-          </SectionTitle>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={deltaData}>
-              <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
-              <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={11} />
-              <YAxis
-                stroke={CHART_COLORS.textMuted}
-                fontSize={11}
-                tickFormatter={(v: number) => fmtCompact(v)}
-              />
-              <Tooltip content={<ChartTooltip />} />
-              <Legend wrapperStyle={{ fontSize: 11 }} />
-              {comparisonScenarios.slice(1).map((s) => (
-                <Line
-                  key={s.id}
-                  type="monotone"
-                  dataKey={`${s.name} Δ`}
-                  stroke={s.color}
-                  strokeWidth={2}
-                  dot={false}
-                />
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
-        </GlassCard>
-      </div>
+          <Panel
+            title={`Cumulative Variance vs ${comparisonScenarios[0]?.name ?? "Baseline"}`}
+            action={
+              <span className="text-caption text-quaternary">
+                Net lifecycle savings / surplus over time
+              </span>
+            }
+          >
+            <div className="h-[300px] min-h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={deltaData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
+                  <XAxis dataKey="year" stroke={CHART_COLORS.textMuted} fontSize={11} />
+                  <YAxis
+                    stroke={CHART_COLORS.textMuted}
+                    fontSize={11}
+                    tickFormatter={(v: number) => fmtCompact(v)}
+                  />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Legend wrapperStyle={{ fontSize: 11, paddingTop: 10 }} />
+                  {comparisonScenarios.slice(1).map((s) => (
+                    <Line
+                      key={s.id}
+                      type="monotone"
+                      dataKey={`${s.name} Δ`}
+                      stroke={s.color}
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </Panel>
+        </SplitRow>
+      </PageBody>
     </div>
   );
 }

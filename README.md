@@ -1,6 +1,6 @@
-# TCO Intelligence
+# SAHAY
 
-TCO simulation, forecasting, and risk intelligence platform for locomotive fleets, built by Wayam AI.
+Locomotive fleet lifecycle cost simulation, forecasting, and risk intelligence platform, built by Wayam AI.
 
 ## Live site
 

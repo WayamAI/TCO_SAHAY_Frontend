@@ -7,7 +7,7 @@ export interface BrandLogoProps {
 }
 
 /**
- * Abstract placeholder brand mark for the telemetry command center sidebar.
+ * Brand mark for the SAHAY telemetry command center sidebar.
  * Sized ~30–36px with a geometric automotive/telemetry glyph.
  */
 export function BrandLogo({ className, size = 32 }: BrandLogoProps) {
@@ -18,7 +18,7 @@ export function BrandLogo({ className, size = 32 }: BrandLogoProps) {
         className,
       )}
       style={{ width: size, height: size }}
-      aria-label="Automotive Telemetry Brand Mark"
+      aria-label="SAHAY Brand Mark"
       role="img"
     >
       <svg

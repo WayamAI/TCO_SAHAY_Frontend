@@ -1,15 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { GlassCard, SectionTitle } from "@/components/shared/GlassCard";
+import { PageHeader, PageBody } from "@/components/layout/page-header";
+import { Panel, KpiTile, StatusBadge, EmptyState } from "@/components/ui/primitives";
 import { CHART_COLORS } from "@/data/syntheticData";
-import { alpha, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { AppIcon } from "@/components/icons/AppIcon";
 import type { IconName } from "@/components/icons/registry";
 
 export const Route = createFileRoute("/glossary")({
   head: () => ({
     meta: [
-      { title: "Glossary & Definitions | TCO Intelligence" },
+      { title: "Glossary & Definitions | SAHAY" },
       {
         name: "description",
         content:
@@ -105,7 +106,7 @@ const DEFINITIONS: Definition[] = [
     formula: "Downtime Cost = Days Out of Service × Revenue per Active Day",
   },
   {
-    term: "Warranty",
+    term: "Warranty Coverage",
     group: "Warranty & risk",
     icon: "warrantyActive",
     color: CHART_COLORS.blue,
@@ -126,7 +127,7 @@ const DEFINITIONS: Definition[] = [
       "How likely a given part is to fail within its warranty window, expressed as a percentage. Trended against hours in service rather than held as a fixed number.",
     includes: [
       "Derived from criticality and replacement cadence",
-      "Rises with accumulated wear",
+      "Rises with accumulated wear (Weibull wear-out phase)",
       "Editable per part in the Library",
     ],
   },
@@ -136,10 +137,10 @@ const DEFINITIONS: Definition[] = [
     icon: "savings",
     color: CHART_COLORS.orange,
     summary:
-      "The money the organization should set aside per part to cover warranty claims it expects to receive.",
+      "The contingency fund the organization sets aside per part to cover warranty claims it expects to receive.",
     includes: [
-      "Held per part, then rolled up across the BOM",
-      "Recalculates whenever price or failure probability changes",
+      "Held per part, then rolled up across the BOM hierarchy",
+      "Recalculates in real-time whenever price or failure probability changes",
     ],
     formula: "Company Buffer = Part Cost × Failure Probability",
   },
@@ -151,9 +152,9 @@ const DEFINITIONS: Definition[] = [
     summary: "Everything the operator actually pays across the planning horizon.",
     includes: [
       "Maintenance parts and derived labour",
-      "Consumables",
+      "Consumables and fluids",
       "Out-of-warranty failures",
-      "Downtime",
+      "Downtime lost revenue",
     ],
     excludes: ["Anything the warranty covers", "The manufacturer's warranty reserve"],
     formula: "Customer TCO = Total Cost − Warranty-Covered Cost",
@@ -165,9 +166,9 @@ const DEFINITIONS: Definition[] = [
     color: CHART_COLORS.purple,
     summary: "What the manufacturer carries — the mirror image of the customer's bill.",
     includes: [
-      "Warranty replacement cost",
-      "Service forecasting",
-      "Company warranty reserve across all parts",
+      "Warranty replacement cost obligation",
+      "Service and spare parts provisioning risk",
+      "Company warranty reserve across all active parts",
     ],
     formula: "Organization TCO = Warranty-Covered Cost + Company Buffer",
   },
@@ -191,7 +192,7 @@ const DEFINITIONS: Definition[] = [
     color: CHART_COLORS.green,
     summary: "The cost of a whole part line rather than a single unit.",
     formula: "Extended Cost = Unit Price × Quantity per Component",
-    includes: ["Used for BOM roll-ups and depreciation"],
+    includes: ["Used for BOM roll-ups and depreciation calculations"],
   },
   {
     term: "Depreciation",
@@ -228,95 +229,145 @@ function Glossary() {
   }, [query, group]);
 
   return (
-    <div className="space-y-5">
-      <GlassCard className="flex flex-wrap items-center gap-2">
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search definitions…"
-          className="min-w-[200px] flex-1 rounded-md border border-border bg-surface-2 px-3 py-1.5 text-xs outline-none placeholder:text-text-muted focus:border-primary/50"
-        />
-        <div className="flex flex-wrap gap-1">
-          {(["All", ...GROUPS] as const).map((g) => (
-            <button
-              key={g}
-              onClick={() => setGroup(g as Group | "All")}
-              className={cn(
-                "rounded-md px-2.5 py-1.5 text-mini transition-colors",
-                group === g
-                  ? "bg-raised-2 font-medium text-fg-primary"
-                  : "transition-ui bg-action text-fg-tertiary hover:bg-raised-2 hover:text-fg-secondary",
-              )}
-            >
-              {g}
-            </button>
-          ))}
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <PageHeader
+        title="Glossary & Accounting Methodologies"
+        description="Standardized technical definitions, mathematical formulas, and accounting principles governing TCO calculations, warranty allocations, and risk reserves."
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="relative flex items-center">
+              <AppIcon
+                name="search"
+                size="xs"
+                className="absolute left-3 text-quaternary pointer-events-none"
+              />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search concepts, formulas…"
+                className="h-8 w-56 rounded-full border border-muted bg-action pl-8 pr-3 text-label-sm text-primary placeholder:text-quaternary outline-none transition-colors hover:border-default focus-visible:ring-1 focus-visible:ring-active"
+              />
+            </div>
+            <div className="flex items-center gap-1 rounded-full border border-muted bg-container p-0.5">
+              {(["All", ...GROUPS] as const).map((g) => (
+                <button
+                  key={g}
+                  onClick={() => setGroup(g as Group | "All")}
+                  className={cn(
+                    "rounded-full px-2.5 py-0.5 text-label-sm font-medium transition-colors",
+                    group === g
+                      ? "bg-action-selected text-primary shadow-sm"
+                      : "text-tertiary hover:bg-action hover:text-secondary",
+                  )}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+          </div>
+        }
+      />
+
+      <PageBody className="flex flex-col gap-4">
+        {/* KPI Tiles */}
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4 shrink-0">
+          <KpiTile
+            label="Methodology Library"
+            value={`${DEFINITIONS.length} terms`}
+            delta="Fully documented"
+            tone="neutral"
+            hint="Mathematical TCO standards"
+          />
+          <KpiTile
+            label="Cost Taxonomies"
+            value="4 groups"
+            delta="O&M, risk, views, rates"
+            tone="info"
+            hint="Canonical accounting buckets"
+          />
+          <KpiTile
+            label="Accounting Standard"
+            value="IAS 16"
+            delta="Component-level depreciation"
+            tone="neutral"
+            hint="IFRS compliant roll-up"
+          />
+          <KpiTile
+            label="Warranty Limit Rule"
+            value="Whichever-First"
+            delta="Dual threshold: Yrs & Km"
+            tone="success"
+            hint="Deterministic warranty end"
+          />
         </div>
-      </GlassCard>
 
-      <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-        {filtered.map((d) => {
-          return (
-            <GlassCard key={d.term} className="space-y-2.5">
-              <div className="flex items-center gap-2">
-                <span
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md"
-                  style={{ background: alpha(d.color, 12), color: d.color }}
-                >
-                  <AppIcon name={d.icon} size="sm" />
-                </span>
-                <div className="min-w-0">
-                  <h3 className="font-display text-sm font-bold leading-tight">{d.term}</h3>
-                  <p className="text-micro uppercase tracking-wider text-text-muted">{d.group}</p>
+        {/* Definitions Grid */}
+        <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+          {filtered.map((d) => (
+            <Panel
+              key={d.term}
+              title={
+                <div className="flex items-center gap-2">
+                  <span className="grid h-6 w-6 place-items-center rounded-md border border-muted bg-action text-secondary">
+                    <AppIcon name={d.icon} size="xs" />
+                  </span>
+                  <span className="text-body-sm font-semibold text-primary">{d.term}</span>
                 </div>
-              </div>
+              }
+              action={<StatusBadge tone="neutral">{d.group}</StatusBadge>}
+            >
+              <div className="space-y-3">
+                <p className="text-body-sm text-secondary leading-relaxed">{d.summary}</p>
 
-              <p className="text-mini leading-relaxed text-text-secondary">{d.summary}</p>
+                {d.formula && (
+                  <div className="font-mono-data rounded-md border border-muted bg-container p-2.5 text-caption font-medium text-teal">
+                    {d.formula}
+                  </div>
+                )}
 
-              {d.formula && (
-                <p
-                  className="font-mono-data rounded-md bg-surface-2/80 px-2 py-1.5 text-mini leading-relaxed"
-                  style={{ color: d.color }}
-                >
-                  {d.formula}
-                </p>
-              )}
-
-              <div>
-                <p className="text-micro uppercase tracking-wider text-text-muted">Includes</p>
-                <ul className="mt-1 space-y-0.5">
-                  {d.includes.map((i) => (
-                    <li key={i} className="flex gap-1.5 text-mini text-text-secondary">
-                      <span className="text-green">+</span>
-                      <span>{i}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {d.excludes && (
                 <div>
-                  <p className="text-micro uppercase tracking-wider text-text-muted">Excludes</p>
-                  <ul className="mt-1 space-y-0.5">
-                    {d.excludes.map((i) => (
-                      <li key={i} className="flex gap-1.5 text-mini text-text-muted">
-                        <span className="text-red">−</span>
+                  <p className="text-caption font-semibold uppercase tracking-wider text-quaternary mb-1.5">
+                    What is Included
+                  </p>
+                  <ul className="space-y-1">
+                    {d.includes.map((i) => (
+                      <li key={i} className="flex items-start gap-2 text-caption text-secondary">
+                        <span className="text-success font-bold">+</span>
                         <span>{i}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-              )}
-            </GlassCard>
-          );
-        })}
-      </div>
 
-      {filtered.length === 0 && (
-        <GlassCard className="py-10 text-center text-sm text-text-muted">
-          No definition matches “{query}”.
-        </GlassCard>
-      )}
+                {d.excludes && (
+                  <div>
+                    <p className="text-caption font-semibold uppercase tracking-wider text-quaternary mb-1.5">
+                      What is Excluded
+                    </p>
+                    <ul className="space-y-1">
+                      {d.excludes.map((i) => (
+                        <li key={i} className="flex items-start gap-2 text-caption text-tertiary">
+                          <span className="text-error font-bold">−</span>
+                          <span>{i}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </Panel>
+          ))}
+        </div>
+
+        {filtered.length === 0 && (
+          <div className="p-12 text-center">
+            <EmptyState
+              title={`No definitions match "${query}"`}
+              detail="Try searching for another financial term, accounting standard, or clearing the filter."
+            />
+          </div>
+        )}
+      </PageBody>
     </div>
   );
 }

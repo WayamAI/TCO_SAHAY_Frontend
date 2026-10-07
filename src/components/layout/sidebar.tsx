@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  LayoutDashboard,
-  Car,
-  TriangleAlert,
-  CalendarDays,
-  Wrench,
-  FileText,
-  SlidersHorizontal,
-  Settings,
-} from "lucide-react";
+import type { IconName } from "@/components/icons/registry";
 import { BrandLogo } from "./brand-logo";
 import { SidebarItem } from "./sidebar-item";
 import { cn } from "@/lib/utils";
@@ -16,17 +7,17 @@ import { cn } from "@/lib/utils";
 export interface NavItemDef {
   id: string;
   label: string;
-  icon: typeof LayoutDashboard;
+  icon: IconName;
   badge?: string | number;
 }
 
 const MAIN_NAV_ITEMS: NavItemDef[] = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "vehicles", label: "Vehicles", icon: Car },
-  { id: "alerts", label: "Alerts", icon: TriangleAlert },
-  { id: "calendar", label: "Calendar", icon: CalendarDays },
-  { id: "maintenance", label: "Maintenance", icon: Wrench },
-  { id: "documents", label: "Documents", icon: FileText },
+  { id: "dashboard", label: "Dashboard", icon: "dashboard" },
+  { id: "vehicles", label: "Vehicles", icon: "vehicle" },
+  { id: "alerts", label: "Alerts", icon: "warning" },
+  { id: "calendar", label: "Calendar", icon: "calendar" },
+  { id: "maintenance", label: "Maintenance", icon: "maintenance" },
+  { id: "documents", label: "Documents", icon: "document" },
 ];
 
 export interface SidebarProps {
@@ -37,8 +28,8 @@ export interface SidebarProps {
 
 /**
  * Left sidebar for the telemetry command center.
- * 68px width, full height, charcoal/near-black background (#0c0e0f),
- * subtle 1px border-r, vertically centered rounded icon buttons.
+ * 68px width, full height, surface.container (#101010) background,
+ * subtle 1px border-r (stroke.muted), vertically centered rounded icon buttons.
  */
 export function Sidebar({ activeId: controlledActiveId, onSelect, className }: SidebarProps) {
   const [internalActiveId, setInternalActiveId] = useState("dashboard");
@@ -85,13 +76,13 @@ export function Sidebar({ activeId: controlledActiveId, onSelect, className }: S
       {/* BOTTOM: Utility & Settings */}
       <div className="flex flex-col items-center gap-3 w-full">
         <SidebarItem
-          icon={SlidersHorizontal}
+          icon="settings"
           label="Telemetry & Display Settings"
           active={activeId === "utilities"}
           onClick={() => handleSelect("utilities")}
         />
         <SidebarItem
-          icon={Settings}
+          icon="tools"
           label="System Settings"
           active={activeId === "settings"}
           onClick={() => handleSelect("settings")}

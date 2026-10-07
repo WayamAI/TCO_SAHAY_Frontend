@@ -64,7 +64,8 @@ export function depreciationSchedule(
 export function annualMaintenanceCost(part: Part, laborRatePerHour = 95): number {
   if (part.replacementIntervalYears <= 0) return 0;
   const partCost = part.repairable ? part.unitPriceReman - part.coreCredit : part.unitPriceNew;
-  const perEvent = partCost * part.qtyPerComponent + part.laborHoursPerReplacement * laborRatePerHour;
+  const perEvent =
+    partCost * part.qtyPerComponent + part.laborHoursPerReplacement * laborRatePerHour;
   return perEvent / part.replacementIntervalYears;
 }
 

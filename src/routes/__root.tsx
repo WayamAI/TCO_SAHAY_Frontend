@@ -78,14 +78,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "TCO Intelligence Platform | Wayam AI" },
+      { title: "SAHAY | Wayam AI" },
       {
         name: "description",
         content:
           "Lifecycle cost intelligence for locomotive fleets — TCO simulation, Weibull reliability, Monte Carlo risk, forecasting and tender decision support.",
       },
+      { name: "application-name", content: "SAHAY" },
+      { name: "apple-mobile-web-app-title", content: "SAHAY" },
       { name: "author", content: "Wayam AI" },
-      { property: "og:title", content: "TCO Intelligence Platform" },
+      { property: "og:site_name", content: "SAHAY" },
+      { property: "og:title", content: "SAHAY — Fleet Lifecycle Intelligence" },
       {
         property: "og:description",
         content:
@@ -93,6 +96,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "SAHAY — Fleet Lifecycle Intelligence" },
     ],
     links: [
       {
@@ -106,6 +110,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Michroma&family=Geist:wght@400..700&display=swap",
       },
       { rel: "icon", href: `${import.meta.env.BASE_URL}favicon.svg`, type: "image/svg+xml" },
+      { rel: "manifest", href: `${import.meta.env.BASE_URL}manifest.json` },
     ],
   }),
   shellComponent: RootShell,
