@@ -231,14 +231,17 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="hidden text-quaternary sm:inline" aria-hidden="true">
               /
             </span>
-            <span className="hidden text-caption tracking-[0.08em] text-quaternary uppercase md:inline">
-              {CRUMB[pathname] ?? "SAHAY"}
+            <span className="hidden font-mono text-caption tracking-[0.08em] text-quaternary uppercase sm:inline">
+              SAHAY
+            </span>
+            <span className="hidden text-quaternary sm:inline" aria-hidden="true">
+              /
             </span>
             <h1
-              className="truncate font-display text-display-lg text-primary"
-              title={ROUTE_TITLES[pathname] ?? "SAHAY"}
+              className="truncate font-display text-display-md text-primary"
+              title={CRUMB[pathname] ?? "Command Center"}
             >
-              {ROUTE_TITLES[pathname] ?? "SAHAY"}
+              {CRUMB[pathname] ?? "Command Center"}
             </h1>
           </div>
 
