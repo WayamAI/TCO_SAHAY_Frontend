@@ -479,7 +479,7 @@ function ComponentDetail({ comp }: { comp: Component }) {
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <KpiTile label="Purchase Cost" value={fmtUSD(comp.purchaseCost)} tone="neutral" />
-          <KpiTile label="Replacement Cost" value={fmtUSD(comp.replacementCost)} tone="info" />
+          <KpiTile label="Replace Cost" value={fmtUSD(comp.replacementCost)} tone="info" />
           <KpiTile label="Design Life" value={`${comp.lifeYears} yrs`} tone="neutral" />
           <KpiTile
             label="MTBF / MTTR"
