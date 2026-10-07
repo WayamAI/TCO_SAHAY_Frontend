@@ -150,7 +150,7 @@ function SimulationPlayground() {
             hint="Normalized distance cost"
           />
           <KpiTile
-            label="Operational Availability"
+            label="Fleet Availability"
             value={`${result.availability.availabilityPct.toFixed(1)}%`}
             delta={`MTTR: ${result.availability.mttrAvg.toFixed(1)}h`}
             tone="success"
